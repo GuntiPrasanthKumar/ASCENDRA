@@ -2,35 +2,81 @@ import React, { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/common/PageTransition';
-import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, Users, ChevronRight } from 'lucide-react';
+import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, ChevronRight, Zap, Users, Star, Lock } from 'lucide-react';
 
 const HeroScene = lazy(() => import('../components/3d/HeroScene'));
 
 const features = [
   {
     title: 'AI Proctoring',
-    description: 'Advanced face detection, eye tracking, and posture analysis to ensure complete integrity.',
-    icon: <ShieldCheck className="w-8 h-8 text-accent" />
+    description: 'Real-time face detection, blink analysis, gaze tracking, and posture monitoring to ensure complete academic integrity.',
+    icon: <ShieldCheck className="w-8 h-8 text-accent" />,
+    color: 'accent',
   },
   {
     title: 'Adaptive Learning',
-    description: 'Smart question difficulty scaling based on real-time student performance.',
-    icon: <BrainCircuit className="w-8 h-8 text-accent2" />
+    description: 'Smart question difficulty scaling based on real-time student performance and learning patterns.',
+    icon: <BrainCircuit className="w-8 h-8 text-accent2" />,
+    color: 'accent2',
   },
   {
     title: 'Deep Analytics',
-    description: 'Comprehensive skill heatmaps, performance tracking, and actionable insights.',
-    icon: <BarChart3 className="w-8 h-8 text-success" />
-  }
+    description: 'Comprehensive skill heatmaps, performance trends, leaderboards and actionable AI-powered insights.',
+    icon: <BarChart3 className="w-8 h-8 text-success" />,
+    color: 'success',
+  },
+  {
+    title: 'Secure by Design',
+    description: 'End-to-end security with clipboard monitoring, fullscreen enforcement and keyboard shortcut blocking.',
+    icon: <Lock className="w-8 h-8 text-warning" />,
+    color: 'warning',
+  },
+  {
+    title: 'Community Echo',
+    description: 'A built-in discussion forum where students and faculty collaborate, share resources and form study groups.',
+    icon: <Users className="w-8 h-8 text-accent" />,
+    color: 'accent',
+  },
+  {
+    title: 'AI Tutor',
+    description: 'Your personal 24/7 AI learning companion that explains concepts, generates practice problems and tracks gaps.',
+    icon: <Zap className="w-8 h-8 text-accent2" />,
+    color: 'accent2',
+  },
 ];
 
 const departments = [
-  { name: 'Computer Science', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' },
-  { name: 'Electronics', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' },
-  { name: 'Mechanical', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' },
-  { name: 'Civil Eng', img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' },
-  { name: 'Data Science', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }
+  { name: 'Computer Science', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=500&q=80', courses: 24 },
+  { name: 'Electronics', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80', courses: 18 },
+  { name: 'Mechanical', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80', courses: 15 },
+  { name: 'Civil Eng', img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=500&q=80', courses: 12 },
+  { name: 'Data Science', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80', courses: 20 },
 ];
+
+const testimonials = [
+  { name: 'Sarah J.', dept: 'CS — Year 3', text: 'SkillTrove transformed how I prepare for exams. The AI proctoring ensures I stay focused!', rating: 5 },
+  { name: 'Dr. Alan T.', dept: 'Faculty — Electronics', text: "The detailed analytics let me identify struggling students before it's too late. Game changer.", rating: 5 },
+  { name: 'Marcus L.', dept: 'DS — Year 2', text: 'The AI Tutor explained recursion better than any textbook I had. Absolutely love the platform.', rating: 5 },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
 
 export default function Home() {
   return (
@@ -39,7 +85,8 @@ export default function Home() {
         <HeroScene />
       </Suspense>
 
-      <div className="relative z-10 pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[80vh] text-center">
+      {/* Hero */}
+      <div className="relative z-10 pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[88vh] text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -47,49 +94,57 @@ export default function Home() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-accent/20 mb-8"
         >
           <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          <span className="text-sm font-medium">Platform Live v2.0</span>
+          <span className="text-sm font-medium">Platform Live v2.0 — Now with AI Proctoring</span>
         </motion.div>
 
-        <motion.h1 
+        <motion.h1
           className="text-6xl md:text-8xl font-display font-extrabold text-primary mb-6 tracking-tight leading-tight"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
-          Learn. <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent2 relative">
+          Learn.{' '}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent2 relative">
             Assess.
-            <motion.div 
+            <motion.div
               className="absolute -bottom-2 left-0 w-full h-[4px] bg-gradient-to-r from-accent to-accent2 rounded-full"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 1, delay: 1 }}
             />
-          </span> Excel.
+          </span>{' '}
+          Excel.
         </motion.h1>
 
-        <motion.p 
+        <motion.p
           className="text-lg md:text-xl text-textMuted font-body max-w-2xl mb-12"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          An AI-powered secure assessment and adaptive learning platform tailored for university students. Experience integrity and intelligence combined.
+          An AI-powered secure assessment and adaptive learning platform tailored for university students. Experience integrity and intelligence — combined.
         </motion.p>
 
         <motion.div
+          className="flex flex-col sm:flex-row gap-4"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          <Link 
-            to="/signup" 
-            className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 bg-primary rounded-full hover:bg-accent overflow-hidden"
+          <Link
+            to="/signup"
+            className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 bg-primary rounded-full hover:bg-accent overflow-hidden shadow-lg hover:shadow-accent/30 hover:shadow-xl"
           >
-            <div className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></div>
             <span className="relative flex items-center gap-2">
-              Get Started
+              Get Started Free
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </span>
+          </Link>
+          <Link
+            to="/proctoring"
+            className="group inline-flex items-center justify-center px-8 py-4 font-bold transition-all duration-300 glass rounded-full border border-muted hover:border-accent"
+          >
+            See Live Demo
           </Link>
         </motion.div>
       </div>
@@ -97,26 +152,30 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-24 px-6 bg-surface relative z-10">
         <div className="max-w-7xl mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-display font-bold text-primary mb-4">Powered by Intelligence</h2>
-            <p className="text-textMuted max-w-2xl mx-auto">Our platform combines cutting-edge AI with intuitive design to deliver an unparalleled assessment experience.</p>
+            <p className="text-textMuted max-w-2xl mx-auto">
+              Our platform combines cutting-edge AI with intuitive design to deliver an unparalleled assessment experience.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.2 }}
-                whileHover={{ y: -10 }}
-                className="glass p-8 rounded-3xl border border-muted"
+                variants={itemVariants}
+                className="glass p-8 rounded-3xl border border-muted hover:-translate-y-2 transition-transform duration-300 cursor-default"
               >
                 <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center mb-6">
                   {feature.icon}
@@ -125,7 +184,7 @@ export default function Home() {
                 <p className="text-textMuted">{feature.description}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -142,7 +201,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="flex gap-6 overflow-x-auto pb-10 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex gap-6 overflow-x-auto pb-10 snap-x" style={{ scrollbarWidth: 'none' }}>
             {departments.map((dept, idx) => (
               <motion.div
                 key={idx}
@@ -150,19 +209,20 @@ export default function Home() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="min-w-[300px] h-[400px] rounded-3xl overflow-hidden relative snap-center group cursor-pointer"
+                className="min-w-[280px] h-[380px] rounded-3xl overflow-hidden relative snap-center group cursor-pointer flex-shrink-0"
               >
-                <img 
-                  src={dept.img} 
-                  alt={dept.name} 
+                <img
+                  src={dept.img}
+                  alt={dept.name}
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <h3 className="text-white text-2xl font-bold font-display mb-2">{dept.name}</h3>
-                  <div className="flex items-center gap-2 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300">
-                    <span>View Courses</span>
+                  <h3 className="text-white text-2xl font-bold font-display mb-1">{dept.name}</h3>
+                  <p className="text-white/60 text-sm mb-3">{dept.courses} Courses</p>
+                  <div className="flex items-center gap-2 text-white/80 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                    <span className="text-sm font-medium">Start Learning</span>
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -173,20 +233,23 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 px-6 bg-primary text-white relative z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="py-20 px-6 bg-primary text-white relative z-10 overflow-hidden">
+        <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent2/20 rounded-full blur-3xl" />
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
           {[
             { value: '50k+', label: 'Active Students' },
             { value: '1M+', label: 'Assessments Taken' },
-            { value: '99.9%', label: 'Uptime' },
-            { value: '100%', label: 'Secure' },
+            { value: '99.9%', label: 'Uptime SLA' },
+            { value: '100%', label: 'Client-side AI' },
           ].map((stat, idx) => (
             <motion.div 
               key={idx}
-              initial={{ opacity: 0, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, type: "spring" }}
+              transition={{ delay: idx * 0.1, type: "spring", stiffness: 100 }}
             >
               <div className="text-4xl md:text-5xl font-display font-bold text-accent2 mb-2">{stat.value}</div>
               <div className="text-white/70 font-body text-sm uppercase tracking-widest">{stat.label}</div>
@@ -195,6 +258,84 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials */}
+      <section className="py-24 px-6 bg-surface relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-display font-bold text-primary mb-4">Loved by Learners</h2>
+            <p className="text-textMuted">Don't just take our word for it.</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((t, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="glass p-8 rounded-3xl border border-muted"
+              >
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-warning fill-warning" />
+                  ))}
+                </div>
+                <p className="text-textMuted italic mb-6">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center font-bold text-accent font-display">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-primary text-sm">{t.name}</h4>
+                    <p className="text-textMuted text-xs">{t.dept}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-24 px-6 bg-background relative z-10">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass rounded-[2.5rem] p-16 border border-accent/20 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-accent/5 to-accent2/5 pointer-events-none" />
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-primary mb-6 relative z-10">
+              Ready to transform your learning?
+            </h2>
+            <p className="text-textMuted text-lg mb-8 relative z-10">
+              Join 50,000+ students already using SkillTrove. No credit card required.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+              <Link
+                to="/signup"
+                className="group inline-flex items-center justify-center px-8 py-4 font-bold text-white bg-primary rounded-full hover:bg-accent transition-all shadow-lg hover:shadow-accent/30 hover:shadow-xl gap-2"
+              >
+                Create Free Account
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                to="/about"
+                className="inline-flex items-center justify-center px-8 py-4 font-bold glass rounded-full border border-muted hover:border-accent transition-all"
+              >
+                Learn More
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
     </PageTransition>
   );
 }

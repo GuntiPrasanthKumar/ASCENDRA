@@ -4,56 +4,75 @@ const CustomCursor = () => {
   const cursorDotRef = useRef(null);
   const cursorOutlineRef = useRef(null);
   
-  // Track actual mouse position
+  // Use refs for positions to avoid re-renders
   const mousePos = useRef({ x: 0, y: 0 });
-  // Track outline position (for lerp)
+  const dotPos = useRef({ x: 0, y: 0 });
   const outlinePos = useRef({ x: 0, y: 0 });
+  const requestRef = useRef(null);
 
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (cursorDotRef.current) {
-        cursorDotRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-      }
-      if (cursorOutlineRef.current) {
-        cursorOutlineRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-      }
+      mousePos.current = { x: e.clientX, y: e.clientY };
     };
 
     const handleMouseOver = (e) => {
-      // Check if hovering over clickable element
-      if (
-        e.target.tagName.toLowerCase() === 'button' ||
-        e.target.tagName.toLowerCase() === 'a' ||
-        e.target.closest('button') ||
-        e.target.closest('a') ||
-        window.getComputedStyle(e.target).cursor === 'pointer'
-      ) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
+      const target = e.target;
+      const isClickable = 
+        target.tagName.toLowerCase() === 'button' ||
+        target.tagName.toLowerCase() === 'a' ||
+        target.closest('button') ||
+        target.closest('a') ||
+        window.getComputedStyle(target).cursor === 'pointer';
+      
+      setIsHovering(isClickable);
+    };
+
+    // Animation loop for smooth movement
+    const animate = () => {
+      // Smooth the dot slightly
+      dotPos.current.x += (mousePos.current.x - dotPos.current.x) * 1.0; // Instant for the center dot
+      dotPos.current.y += (mousePos.current.y - dotPos.current.y) * 1.0;
+
+      // Lerp for the outline (0.15 provides a nice lag/fluidity)
+      outlinePos.current.x += (mousePos.current.x - outlinePos.current.x) * 0.15;
+      outlinePos.current.y += (mousePos.current.y - outlinePos.current.y) * 0.15;
+
+      if (cursorDotRef.current) {
+        cursorDotRef.current.style.transform = `translate3d(${dotPos.current.x}px, ${dotPos.current.y}px, 0)`;
       }
+      if (cursorOutlineRef.current) {
+        cursorOutlineRef.current.style.transform = `translate3d(${outlinePos.current.x}px, ${outlinePos.current.y}px, 0)`;
+      }
+
+      requestRef.current = requestAnimationFrame(animate);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseover', handleMouseOver);
+    requestRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
+      cancelAnimationFrame(requestRef.current);
     };
   }, []);
 
   return (
     <>
+      {/* 
+          IMPORTANT: Remove CSS transition-transform from position. 
+          Only keep transitions for scale/color.
+      */}
       <div 
         ref={cursorDotRef}
-        className={`fixed top-0 left-0 w-2 h-2 rounded-full bg-primary pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-transform duration-100 ${isHovering ? 'scale-0' : 'scale-100'}`}
+        className={`fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-accent pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 will-change-transform ${isHovering ? 'scale-0' : 'scale-100'}`}
       />
       <div 
         ref={cursorOutlineRef}
-        className={`fixed top-0 left-0 rounded-full border pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${isHovering ? 'w-16 h-16 border-accent bg-accent/10' : 'w-10 h-10 border-primary/50'}`}
+        className={`fixed top-0 left-0 rounded-full border-2 pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 transition-[width,height,background-color,border-color] duration-500 ease-out will-change-transform ${isHovering ? 'w-14 h-14 border-accent bg-accent/5' : 'w-10 h-10 border-accent/30'}`}
       />
     </>
   );

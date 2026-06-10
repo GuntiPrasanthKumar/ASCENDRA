@@ -1,80 +1,94 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { Mail, Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
 import PageTransition from '../components/common/PageTransition';
 import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useToastStore } from '../components/common/Toast';
+import { useAuthStore } from '../store/authStore';
 
 const BlobScene = React.lazy(() => import('../components/3d/HeroScene'));
 
 export default function Signup() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'student' });
-  const [videoRef, setVideoRef] = useState(null);
+  const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
   
   const navigate = useNavigate();
   const { addToast } = useToastStore();
+  const { signup } = useAuthStore();
   
-  const { isDetecting, faceData, startDetection, stopDetection } = useFaceDetection(videoRef);
+  const { 
+    canvasRef, 
+    faceData, 
+    isModelLoaded,
+    startCamera,
+    startDetection, 
+    stopDetection, 
+    error: faceError
+  } = useFaceDetection();
 
-  const handleVideoReady = useCallback((ref) => {
-    setVideoRef(ref);
-  }, []);
+  const videoRef = useRef(null);
+  const isFaceDetected = faceData.detected;
+  const isModelsLoading = !isModelLoaded;
 
   const handleNextStep = (e) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.password) {
+    if (formData.name && formData.email) {
       setStep(2);
     } else {
       addToast('Please fill all fields', 'warning');
     }
   };
 
-  const handleEnroll = () => {
-    if (!isDetecting) {
-      startDetection();
-      addToast('Please look straight into the camera', 'info');
-      return;
-    }
-
-    if (faceData.detected && !faceData.multiple) {
-      stopDetection();
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#6C63FF', '#10B981', '#FF6584']
+  const handleCapture = async () => {
+    const descriptor = faceData.descriptor;
+    if (descriptor) {
+      // Store in localStorage as requested for demo/fallback
+      localStorage.setItem('faceDescriptor_' + formData.email, JSON.stringify(descriptor));
+      
+      // Also register with backend if available
+      const result = await signup({
+        ...formData,
+        faceDescriptor: descriptor
       });
-      addToast('Face captured successfully ✓', 'success');
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
-    } else if (faceData.multiple) {
-      addToast('Multiple faces detected. Please ensure only you are in frame.', 'error');
+
+      if (result.success) {
+        setEnrollmentSuccess(true);
+        stopDetection();
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+        addToast(`Welcome aboard, ${formData.name}! 🎉`, 'success');
+        setTimeout(() => navigate('/dashboard'), 2000);
+      } else {
+        addToast(result.message, 'error');
+      }
     } else {
-      addToast('Face not clearly detected. Move closer to the camera.', 'error');
+      addToast('Face not detected. Please look at the camera.', 'error');
     }
   };
 
   return (
     <PageTransition>
-      <div className="min-h-[90vh] flex">
-        {/* Left 3D side - hidden on mobile */}
+      <div className="min-h-[90vh] flex flex-col lg:flex-row">
+        {/* Left Side */}
         <div className="hidden lg:block lg:w-1/2 relative overflow-hidden bg-primary rounded-r-[4rem]">
           <React.Suspense fallback={<div className="absolute inset-0 bg-primary" />}>
             <BlobScene />
           </React.Suspense>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-transparent pointer-events-none" />
           <div className="absolute bottom-12 left-12 text-white">
             <h2 className="text-4xl font-display font-bold mb-4">Join the Future of Learning</h2>
             <p className="text-white/80 max-w-md font-body">Secure your academic journey with advanced AI proctoring and adaptive assessments.</p>
           </div>
         </div>
 
-        {/* Right Form side */}
+        {/* Right Side */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
           <div className="w-full max-w-md">
             <AnimatePresence mode="wait">
@@ -120,38 +134,19 @@ export default function Signup() {
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-sm font-medium text-primary ml-1">Password</label>
-                      <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-textMuted w-5 h-5" />
-                        <input 
-                          type="password" 
-                          required
-                          className="w-full bg-white/50 border border-muted rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-accent transition-colors"
-                          placeholder="••••••••"
-                          value={formData.password}
-                          onChange={e => setFormData({...formData, password: e.target.value})}
-                        />
-                      </div>
-                    </div>
-
                     <div className="space-y-1 pt-2">
                       <label className="text-sm font-medium text-primary ml-1">Role</label>
                       <div className="grid grid-cols-2 gap-4">
-                        <button 
-                          type="button"
-                          onClick={() => setFormData({...formData, role: 'student'})}
-                          className={`py-2 rounded-xl border ${formData.role === 'student' ? 'bg-primary text-white border-primary' : 'bg-white/50 text-textMuted border-muted'}`}
-                        >
-                          Student
-                        </button>
-                        <button 
-                          type="button"
-                          onClick={() => setFormData({...formData, role: 'faculty'})}
-                          className={`py-2 rounded-xl border ${formData.role === 'faculty' ? 'bg-primary text-white border-primary' : 'bg-white/50 text-textMuted border-muted'}`}
-                        >
-                          Faculty
-                        </button>
+                        {['student', 'faculty'].map(role => (
+                          <button 
+                            key={role}
+                            type="button"
+                            onClick={() => setFormData({...formData, role})}
+                            className={`py-2 rounded-xl border transition-all ${formData.role === role ? 'bg-primary text-white border-primary' : 'bg-white/50 text-textMuted border-muted'}`}
+                          >
+                            {role.charAt(0).toUpperCase() + role.slice(1)}
+                          </button>
+                        ))}
                       </div>
                     </div>
 
@@ -159,7 +154,7 @@ export default function Signup() {
                       type="submit"
                       className="w-full bg-primary text-white py-4 rounded-xl font-medium mt-6 hover:bg-accent flex items-center justify-center gap-2 group transition-all"
                     >
-                      Next Step
+                      Next: Face Enrollment
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </form>
@@ -173,37 +168,66 @@ export default function Signup() {
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
-                  className="glass p-8 rounded-3xl text-center flex flex-col items-center"
+                  className="glass p-8 rounded-3xl text-center flex flex-col items-center relative overflow-hidden"
                 >
-                  <ShieldCheck className="w-12 h-12 text-accent mb-4" />
+                  <ShieldCheck className="w-12 h-12 text-accent mb-2" />
                   <h2 className="text-3xl font-display font-bold text-primary mb-2">Face Enrollment</h2>
-                  <p className="text-textMuted mb-8">Step 2 of 2: Secure your account</p>
+                  <p className="text-textMuted mb-8 text-sm">Step 2 of 2: Secure your identity</p>
 
-                  <WebcamView 
-                    onVideoReady={handleVideoReady} 
-                    isScanning={isDetecting} 
-                    faceStatus={faceData} 
-                  />
-
-                  <div className="h-12 mt-6 flex items-center justify-center text-sm font-medium">
-                    {!isDetecting && <span className="text-textMuted">Click below to start scanning</span>}
-                    {isDetecting && !faceData.detected && <span className="text-warning animate-pulse">Position your face in the circle...</span>}
-                    {isDetecting && faceData.detected && !faceData.multiple && <span className="text-success">Face detected! Hold still...</span>}
-                    {isDetecting && faceData.multiple && <span className="text-error">Multiple faces detected!</span>}
+                  <div className="mb-12">
+                    <WebcamView 
+                      videoRef={videoRef} 
+                      canvasRef={canvasRef} 
+                      isFaceDetected={isFaceDetected} 
+                      onStart={async () => {
+                        const ok = await startCamera(videoRef.current);
+                        if (ok) startDetection();
+                      }}
+                      autoStart={true}
+                    />
                   </div>
 
-                  <div className="flex gap-4 w-full mt-4">
+                  {faceError && (
+                    <div className="mt-3 text-xs text-red-400 bg-red-900/10 rounded-lg px-4 py-2 mb-4 border border-red-500/20">
+                      ⚠ {faceError}
+                    </div>
+                  )}
+
+                  <div className="h-8 flex items-center justify-center mb-6">
+                    {isModelsLoading && (
+                      <div className="flex items-center gap-2 text-accent animate-pulse">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="text-xs font-bold uppercase tracking-widest">Loading AI Models...</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-4 w-full">
                     <button 
                       onClick={() => { stopDetection(); setStep(1); }}
-                      className="flex-1 py-4 rounded-xl border border-muted bg-white/50 text-textPrimary hover:bg-white transition-colors"
+                      className="flex-1 py-4 rounded-xl border border-muted bg-white/50 text-textPrimary hover:bg-white transition-colors font-semibold"
                     >
                       Back
                     </button>
                     <button 
-                      onClick={handleEnroll}
-                      className="flex-[2] bg-accent text-white py-4 rounded-xl font-medium hover:bg-primary transition-all flex items-center justify-center gap-2"
+                      onClick={handleCapture}
+                      disabled={!isFaceDetected || enrollmentSuccess}
+                      className={`flex-[2] py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
+                        isFaceDetected
+                          ? 'bg-primary text-white hover:bg-accent shadow-lg shadow-primary/20'
+                          : 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50'
+                      }`}
                     >
-                      {isDetecting ? 'Capture & Finish' : 'Start Camera'}
+                      {enrollmentSuccess ? (
+                        <>
+                          <CheckCircle2 className="w-5 h-5" />
+                          Enrolled
+                        </>
+                      ) : isFaceDetected ? (
+                        'Capture & Enroll Face'
+                      ) : (
+                        'Position Face in Camera'
+                      )}
                     </button>
                   </div>
                 </motion.div>

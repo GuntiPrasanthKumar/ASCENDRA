@@ -1,25 +1,27 @@
-const StudentAttempt = require('../models/StudentAttempt.model');
+const AssessmentResult = require('../models/AssessmentResult.model');
+const User = require('../models/User.model');
 
 // @desc    Get user performance data
 // @route   GET /api/analytics/performance
 // @access  Private
+// exports.getPerformance = async (req, res, next) => {
 exports.getPerformance = async (req, res, next) => {
   try {
-    const attempts = await StudentAttempt.find({ user: req.user.id, status: 'completed' })
+    const results = await AssessmentResult.find({ user: req.user.id })
       .sort('completedAt')
       .limit(10);
 
-    const data = attempts.map(a => ({
-      name: new Date(a.completedAt).toLocaleDateString(),
-      score: a.score
+    const data = results.map(r => ({
+      name: new Date(r.completedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+      score: Math.round(r.accuracy)
     }));
 
     if (data.length === 0) {
       return res.status(200).json([
-        { name: 'Mon', score: 400 },
-        { name: 'Tue', score: 300 },
-        { name: 'Wed', score: 550 },
-        { name: 'Thu', score: 450 },
+        { name: 'Mon', score: 40 },
+        { name: 'Tue', score: 30 },
+        { name: 'Wed', score: 55 },
+        { name: 'Thu', score: 45 },
       ]);
     }
 
@@ -34,15 +36,21 @@ exports.getPerformance = async (req, res, next) => {
 // @access  Private
 exports.getSummary = async (req, res, next) => {
   try {
-    const attempts = await StudentAttempt.find({ user: req.user.id, status: 'completed' });
-    const total = attempts.length;
-    const avgScore = total > 0 ? (attempts.reduce((acc, a) => acc + (a.score / a.maxScore), 0) / total * 100).toFixed(1) : 0;
+    const results = await AssessmentResult.find({ user: req.user.id });
+    const total = results.length;
+    const avgScore = total > 0 ? (results.reduce((acc, r) => acc + r.accuracy, 0) / total).toFixed(1) : 0;
+
+    const user = await User.findById(req.user.id);
+    const scoreVal = user?.points || user?.total_score || 0;
+    const usersCount = await User.countDocuments({ $or: [{ points: { $gt: scoreVal } }, { total_score: { $gt: scoreVal } }] });
+    const rank = `#${usersCount + 1}`;
+    const streak = `${user?.streak || 0} Days`;
 
     res.status(200).json({
       totalQuizzes: total,
       avgScore: `${avgScore}%`,
-      streak: '5 Days', // Mock logic for streak
-      rank: '#12'       // Mock logic for rank
+      streak,
+      rank
     });
   } catch (err) {
     next(err);
@@ -54,12 +62,19 @@ exports.getSummary = async (req, res, next) => {
 // @access  Private
 exports.getHeatmap = async (req, res, next) => {
   try {
-    // Basic mock implementation for heatmap
-    res.status(200).json([
-      { date: '2023-10-01', count: 2 },
-      { date: '2023-10-02', count: 0 },
-      { date: '2023-10-03', count: 5 }
-    ]);
+    const results = await AssessmentResult.find({ user: req.user.id });
+    const counts = {};
+    results.forEach(r => {
+      const dateStr = new Date(r.completedAt).toISOString().split('T')[0];
+      counts[dateStr] = (counts[dateStr] || 0) + 1;
+    });
+
+    const data = Object.keys(counts).map(date => ({
+      date,
+      count: counts[date]
+    }));
+
+    res.status(200).json(data);
   } catch (err) {
     next(err);
   }

@@ -5,7 +5,6 @@ import { AnimatePresence } from 'framer-motion';
 // Common Components
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
-import CustomCursor from './components/common/CustomCursor';
 import PageLoader from './components/common/PageLoader';
 import ToastContainer from './components/common/Toast';
 
@@ -14,23 +13,16 @@ const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Quiz = lazy(() => import('./pages/Quiz'));
-const MyVault = lazy(() => import('./pages/MyVault'));
-const Leaderboard = lazy(() => import('./pages/Leaderboard'));
-const AIAssistant = lazy(() => import('./pages/AIAssistant'));
-const Echo = lazy(() => import('./pages/Echo'));
-const AboutUs = lazy(() => import('./pages/AboutUs'));
-const Assessment = lazy(() => import('./pages/Assessment'));
+const MyLearning = lazy(() => import('./pages/MyLearning'));
+const AIMentor = lazy(() => import('./pages/AIMentor'));
+const Practice = lazy(() => import('./pages/Practice'));
 
 function AnimatedRoutes() {
   const location = useLocation();
 
-  // Do not show navbar/footer on Quiz page
-  const isQuizRoute = location.pathname.includes('/quiz');
-
   return (
     <div className="flex flex-col min-h-screen">
-      {!isQuizRoute && <Navbar />}
+      <Navbar />
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
@@ -38,18 +30,13 @@ function AnimatedRoutes() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/proctoring" element={<Assessment />} />
-            <Route path="/vault" element={<MyVault />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/assistant" element={<AIAssistant />} />
-            <Route path="/echo" element={<Echo />} />
-            <Route path="/about" element={<AboutUs />} />
+            <Route path="/practice" element={<Practice />} />
+            <Route path="/my-learning" element={<MyLearning />} />
+            <Route path="/ai-mentor" element={<AIMentor />} />
           </Routes>
         </AnimatePresence>
-
       </main>
-      {!isQuizRoute && <Footer />}
+      <Footer />
     </div>
   );
 }

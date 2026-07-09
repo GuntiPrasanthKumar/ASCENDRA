@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { Mail, Lock, User, ArrowRight, ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
+import { Mail, User, ArrowRight, ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
 import PageTransition from '../components/common/PageTransition';
 import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useToastStore } from '../components/common/Toast';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../hooks/useAuthStore';
 
 const BlobScene = React.lazy(() => import('../components/3d/HeroScene'));
 

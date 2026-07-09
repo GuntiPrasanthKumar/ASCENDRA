@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Award, Download, FileText, Lock, Shield, 
-  ExternalLink, Zap, Star, LayoutGrid, List, ChevronRight,
+  Zap, ChevronRight,
   TrendingUp, Activity
 } from 'lucide-react';
 import PageTransition from '../components/common/PageTransition';
 import HeatmapCard from '../components/dashboard/HeatmapCard';
 import AnalyticsChart from '../components/dashboard/AnalyticsChart';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../hooks/useAuthStore';
 import api from '../utils/api';
 
 const TIER_COLORS = {
@@ -18,10 +18,9 @@ const TIER_COLORS = {
   Bronze: 'text-orange-600 bg-orange-600/10 border-orange-600/20',
 };
 
-export default function MyVault() {
+export default function MyLearning() {
   const { user } = useAuthStore();
   const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchVaultData = async () => {
@@ -30,8 +29,6 @@ export default function MyVault() {
         setResults(res.data);
       } catch (err) {
         console.error("Vault fetch error:", err);
-      } finally {
-        setIsLoading(false);
       }
     };
     fetchVaultData();
@@ -54,10 +51,10 @@ export default function MyVault() {
                 <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20">
                   <Lock className="w-6 h-6" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-display font-black text-primary">The Vault</h1>
+                <h1 className="text-4xl md:text-5xl font-display font-black text-primary">My Learning</h1>
               </div>
               <p className="text-textMuted text-lg font-medium max-w-2xl">
-                Your encrypted repository of academic achievements, certified skills, and learning trajectory.
+                Your personalized repository of academic achievements, certified skills, and learning trajectory.
               </p>
             </div>
           </div>
@@ -133,7 +130,7 @@ export default function MyVault() {
                     <div className="flex items-center justify-between gap-6">
                       <div className="flex items-center gap-5">
                         <div className="w-14 h-14 rounded-2xl bg-accent2/5 flex items-center justify-center text-accent2 group-hover:bg-accent2 group-hover:text-white transition-all">
-                          <FileText className="w-7 h-7" />
+                           <FileText className="w-7 h-7" />
                         </div>
                         <div>
                           <div className="text-[10px] font-black text-accent2 uppercase tracking-widest mb-1">CERT-{cert._id.slice(-6).toUpperCase()}</div>
@@ -161,7 +158,7 @@ export default function MyVault() {
                     </div>
                     <h4 className="font-bold text-primary mb-1">Unlock your first certificate</h4>
                     <p className="text-xs text-textMuted max-w-xs mb-6">Complete a targeted knowledge path to earn your first verified academic digital asset.</p>
-                    <button onClick={() => window.location.href='/proctoring'} className="text-xs font-black uppercase tracking-widest text-accent hover:text-primary transition-colors flex items-center gap-2">
+                    <button onClick={() => window.location.href='/practice'} className="text-xs font-black uppercase tracking-widest text-accent hover:text-primary transition-colors flex items-center gap-2">
                         Browse Paths <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>

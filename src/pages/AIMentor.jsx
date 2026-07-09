@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import PageTransition from '../components/common/PageTransition';
 import { useToastStore } from '../components/common/Toast';
+import api from '../utils/api';
 
 // ─────────────────────────────────────────────
 // Simple Markdown Renderer
@@ -85,13 +86,13 @@ function SimpleMarkdown({ content }) {
 // ─────────────────────────────────────────────
 const SKILLS = [
   { id: 'general', name: 'General Tutor', icon: <Sparkles className="w-4 h-4" />, color: 'text-accent' },
-  { id: 'frontend', name: 'Frontend Eng.', icon: <Globe className="w-4 h-4" />, color: 'text-accent2' },
-  { id: 'backend', name: 'Backend & DB', icon: <Database className="w-4 h-4" />, color: 'text-success' },
-  { id: 'dsa', name: 'DSA Specialist', icon: <BrainCircuit className="w-4 h-4" />, color: 'text-warning' },
-  { id: 'os', name: 'Systems/OS', icon: <Cpu className="w-4 h-4" />, color: 'text-error' },
+  { id: 'science', name: 'Science & Nature', icon: <Globe className="w-4 h-4" />, color: 'text-accent2' },
+  { id: 'math', name: 'Mathematics', icon: <BrainCircuit className="w-4 h-4" />, color: 'text-success' },
+  { id: 'english', name: 'English & Grammar', icon: <BookOpen className="w-4 h-4" />, color: 'text-warning' },
+  { id: 'history', name: 'History & Geography', icon: <Network className="w-4 h-4" />, color: 'text-error' },
 ];
 
-export default function AIAssistant() {
+export default function AIMentor() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -100,10 +101,6 @@ export default function AIAssistant() {
   
   const endRef = useRef(null);
   const { addToast } = useToastStore();
-
-  useEffect(() => {
-    fetchChatHistory();
-  }, []);
 
   const fetchChatHistory = async () => {
     try {
@@ -120,6 +117,10 @@ export default function AIAssistant() {
       console.error("Fetch chat history error:", err);
     }
   };
+
+  useEffect(() => {
+    fetchChatHistory();
+  }, []);
 
   const scrollToBottom = () => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -181,9 +182,9 @@ export default function AIAssistant() {
   };
 
   const suggestions = [
-    { text: "Explain React Hooks", icon: <Code className="w-4 h-4" /> },
-    { text: "Quiz on Thermodynamics", icon: <BookOpen className="w-4 h-4" /> },
-    { text: "Big O for Sort algorithms", icon: <Zap className="w-4 h-4" /> }
+    { text: "Explain the Water Cycle", icon: <Globe className="w-4 h-4" /> },
+    { text: "How to add fractions?", icon: <BrainCircuit className="w-4 h-4" /> },
+    { text: "Nouns vs Adjectives", icon: <BookOpen className="w-4 h-4" /> }
   ];
 
   return (

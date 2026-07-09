@@ -15,20 +15,22 @@ import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useProctor } from '../hooks/useProctor';
 import { useAssessmentEngine } from '../hooks/useAssessmentEngine';
 import { useToastStore } from '../components/common/Toast';
+import { useAuthStore } from '../hooks/useAuthStore';
+import WebcamView from '../components/auth/WebcamView';
 import api from '../utils/api';
 
 // ─────────────────────────────────────────────
 // Initial Data
 // ─────────────────────────────────────────────
 const INITIAL_SUBJECTS = [
-  { id: 'cs', name: 'Computer Science', icon: <Terminal />, color: '#6366f1', subtopics: ['Algorithms', 'Data Structures', 'Operating Systems', 'Networking'] },
-  { id: 'fin', name: 'Finance', icon: <PieChart />, color: '#10b981', subtopics: ['Stock Market', 'Corporate Finance', 'Taxation', 'Wealth Management'] },
-  { id: 'psy', name: 'Psychology', icon: <BrainCircuit />, color: '#8b5cf6', subtopics: ['Cognitive', 'Behavioral', 'Neuroscience', 'Social Psychology'] },
-  { id: 'law', name: 'Law', icon: <Scale />, color: '#ef4444', subtopics: ['Constitutional', 'Criminal', 'Corporate Law', 'Human Rights'] },
-  { id: 'phy', name: 'Physics', icon: <FlaskConical />, color: '#f59e0b', subtopics: ['Quantum', 'Mechanics', 'Thermodynamics', 'Astrophysics'] }
+  { id: 'math', name: 'Mathematics', icon: <Terminal />, color: '#6366f1', subtopics: ['Addition & Subtraction', 'Multiplication & Division', 'Fractions & Decimals', 'Basic Geometry'] },
+  { id: 'sci', name: 'Science & Nature', icon: <FlaskConical />, color: '#10b981', subtopics: ['Photosynthesis', 'The Water Cycle', 'Solar System', 'Human Body'] },
+  { id: 'eng', name: 'English & Grammar', icon: <BrainCircuit />, color: '#8b5cf6', subtopics: ['Nouns & Verbs', 'Sentence Structure', 'Spelling Rules', 'Punctuation'] },
+  { id: 'hist', name: 'History & Geography', icon: <Scale />, color: '#ef4444', subtopics: ['Ancient Civilizations', 'World Map & Continents', 'US History', 'Exploration & Pioneers'] }
 ];
 
-export default function Assessment() {
+export default function Practice() {
+  const { user } = useAuthStore();
   const [step, setStep] = useState('config');
   const [subjects, setSubjects] = useState(INITIAL_SUBJECTS);
   const [config, setConfig] = useState({ subject: '', topic: '', level: 'Medium' });
@@ -390,11 +392,16 @@ export default function Assessment() {
                   </div>
                 </div>
                 <div className="w-80 border-l border-slate-100 p-8 flex flex-col gap-6 bg-slate-50/50">
-                  <div className="rounded-[2rem] overflow-hidden shadow-sm border-2 border-slate-200 aspect-video relative bg-black">
-                    <video ref={videoRef} autoPlay muted className="w-full h-full object-cover transform -scale-x-100" />
-                    <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+                  <div className="scale-90 origin-top">
+                    <WebcamView
+                      videoRef={videoRef}
+                      canvasRef={canvasRef}
+                      isFaceDetected={faceData.detected}
+                      onStart={null}
+                      autoStart={false}
+                    />
                   </div>
-                  <div className="bg-white p-6 rounded-3xl border border-slate-100">
+                  <div className="bg-white p-6 rounded-3xl border border-slate-100 mt-12">
                     <h4 className="text-xs font-black text-slate-400 uppercase mb-4">Proctoring Stats</h4>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
@@ -419,7 +426,7 @@ export default function Assessment() {
                   <button onClick={generateReportPDF} className="flex items-center gap-2 bg-[#1E293B] text-white px-6 py-3 rounded-xl font-bold shadow-xl hover:bg-black transition-all">
                     <FileDown className="w-5 h-5" /> Download Improvement Report
                   </button>
-                  <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold shadow-sm"><User className="w-4 h-4" /> Sarah Evaluation</button>
+                  <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold shadow-sm"><User className="w-4 h-4" /> {user?.name || 'Student'} Evaluation</button>
                 </div>
               </div>
 

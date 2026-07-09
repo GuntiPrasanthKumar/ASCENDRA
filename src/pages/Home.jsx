@@ -32,8 +32,8 @@ const features = [
     color: 'warning',
   },
   {
-    title: 'Community Echo',
-    description: 'A built-in discussion forum where students and faculty collaborate, share resources and form study groups.',
+    title: 'Self-Paced Practice',
+    description: 'Bite-sized quizzes and guided practice sessions tailored directly to elementary and middle school learning standards.',
     icon: <Users className="w-8 h-8 text-accent" />,
     color: 'accent',
   },
@@ -46,17 +46,16 @@ const features = [
 ];
 
 const departments = [
-  { name: 'Computer Science', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=500&q=80', courses: 24 },
-  { name: 'Electronics', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80', courses: 18 },
-  { name: 'Mechanical', img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80', courses: 15 },
-  { name: 'Civil Eng', img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=500&q=80', courses: 12 },
-  { name: 'Data Science', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80', courses: 20 },
+  { name: 'Mathematics', img: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=500&q=80', courses: 12 },
+  { name: 'Science & Nature', img: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80', courses: 10 },
+  { name: 'English & Grammar', img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=500&q=80', courses: 8 },
+  { name: 'History & Geography', img: 'https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=500&q=80', courses: 6 },
 ];
 
 const testimonials = [
-  { name: 'Sarah J.', dept: 'CS — Year 3', text: 'SkillTrove transformed how I prepare for exams. The AI proctoring ensures I stay focused!', rating: 5 },
-  { name: 'Dr. Alan T.', dept: 'Faculty — Electronics', text: "The detailed analytics let me identify struggling students before it's too late. Game changer.", rating: 5 },
-  { name: 'Marcus L.', dept: 'DS — Year 2', text: 'The AI Tutor explained recursion better than any textbook I had. Absolutely love the platform.', rating: 5 },
+  { name: 'Liam S.', dept: 'Grade 5 Student', text: 'SkillTrove is so fun! The AI tutor helps me understand math fractions easily like a game.', rating: 5 },
+  { name: 'Mrs. Davis', dept: 'Parent of Grade 3 & 7', text: "The detailed accuracy analytics and proctoring let me track my children's actual progress. Game changer.", rating: 5 },
+  { name: 'Sophia K.', dept: 'Grade 8 Student', text: 'The AI Tutor explained science concepts better than my textbook. Absolutely love the design!', rating: 5 },
 ];
 
 const containerVariants = {
@@ -122,7 +121,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          An AI-powered secure assessment and adaptive learning platform tailored for university students. Experience integrity and intelligence — combined.
+          An AI-powered secure assessment and adaptive learning platform tailored for Grades 1–10 students. Experience integrity and intelligence — combined.
         </motion.p>
 
         <motion.div
@@ -141,7 +140,7 @@ export default function Home() {
             </span>
           </Link>
           <Link
-            to="/proctoring"
+            to="/practice"
             className="group inline-flex items-center justify-center px-8 py-4 font-bold transition-all duration-300 glass rounded-full border border-muted hover:border-accent"
           >
             See Live Demo

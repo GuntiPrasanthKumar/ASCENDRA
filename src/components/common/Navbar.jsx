@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, BrainCircuit, LogOut, LayoutDashboard, User } from 'lucide-react';
-import { useAuthStore } from '../../store/authStore';
+import { useAuthStore } from '../../hooks/useAuthStore';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,19 +13,25 @@ const Navbar = () => {
 
   const guestLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
   ];
 
   const authLinks = [
     { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Proctoring', path: '/proctoring' },
-    { name: 'Vault', path: '/vault' },
-    { name: 'Leaderboard', path: '/leaderboard' },
-    { name: 'Echo', path: '/echo' },
-    { name: 'AI Tutor', path: '/assistant' },
-    { name: 'About', path: '/about' },
+    { name: 'Learn', path: '/learn' },
+    { name: 'Practice', path: '/practice' },
+    { name: 'CodeLab', path: '/codelab' },
+    { name: 'AI Mentor', path: '/ai-mentor' },
+    { name: 'Interview Studio', path: '/interview-studio' },
+    { name: 'Progress', path: '/progress' },
+    { name: 'Profile', path: '/profile' },
+    { name: 'Settings', path: '/settings' },
   ];
 
+  if (user?.role?.toLowerCase() === 'teacher' || user?.role?.toLowerCase() === 'faculty') {
+    authLinks.push({ name: 'Teacher Dashboard', path: '/teacher' });
+  } else if (user?.role?.toLowerCase() === 'admin') {
+    authLinks.push({ name: 'Admin Dashboard', path: '/admin' });
+  }
 
   const links = isAuthenticated ? authLinks : guestLinks;
 
@@ -105,11 +111,11 @@ const Navbar = () => {
                         <LayoutDashboard className="w-4 h-4" /> Dashboard
                       </Link>
                       <Link
-                        to="/vault"
+                        to="/my-learning"
                         onClick={() => setShowUserMenu(false)}
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-textPrimary hover:bg-primary/5 hover:text-primary transition-colors"
                       >
-                        <User className="w-4 h-4" /> My Vault
+                        <User className="w-4 h-4" /> My Learning
                       </Link>
                       <button
                         onClick={handleLogout}

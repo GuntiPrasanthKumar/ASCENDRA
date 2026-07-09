@@ -8,7 +8,7 @@ import {
 import PageTransition from '../components/common/PageTransition';
 import AnalyticsChart from '../components/dashboard/AnalyticsChart';
 import HeatmapCard from '../components/dashboard/HeatmapCard';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../hooks/useAuthStore';
 import api from '../utils/api';
 
 export default function Dashboard() {
@@ -73,8 +73,8 @@ export default function Dashboard() {
             </div>
             
             <div className="flex gap-4">
-              <button onClick={() => window.location.href='/proctoring'} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-accent transition-all shadow-lg shadow-primary/20">
-                <Zap className="w-4 h-4" /> Start New Assessment
+              <button onClick={() => window.location.href='/practice'} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-accent transition-all shadow-lg shadow-primary/20">
+                <Zap className="w-4 h-4" /> Start New Practice
               </button>
             </div>
           </div>
@@ -156,8 +156,8 @@ export default function Dashboard() {
               <p className="text-textMuted leading-relaxed mb-8">
                 Based on your recent <span className="text-accent font-bold">{summary?.totalQuizzes || 0}</span> sessions, your focus should be on higher complexity topics in <span className="text-accent font-bold">{recentResults[0]?.subject || 'your major'}</span> to boost your global rank.
               </p>
-              <button onClick={() => window.location.href='/assistant'} className="w-full py-4 rounded-2xl bg-primary text-white font-bold hover:bg-accent transition-all flex items-center justify-center gap-2 group">
-                Consult AI Assistant <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <button onClick={() => window.location.href='/ai-mentor'} className="w-full py-4 rounded-2xl bg-primary text-white font-bold hover:bg-accent transition-all flex items-center justify-center gap-2 group">
+                Consult AI Mentor <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>

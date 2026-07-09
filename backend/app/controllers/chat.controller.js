@@ -46,12 +46,16 @@ exports.sendMessage = async (req, res, next) => {
     let aiContent = "";
     const skillName = activeSkill || 'general';
 
-    if (activeSkill === 'frontend') {
-      aiContent = `As your **Frontend Engineer**, here's an insight on React state:\n\nAlways use functional updates when the next state depends on the previous one:\n\n\`\`\`javascript\nsetCount(prev => prev + 1);\n\`\`\`\n\nThis prevents race conditions in asynchronous closures! Shall we explore **React.memo** next?`;
-    } else if (activeSkill === 'dsa') {
-      aiContent = `In **Big O analysis**, your query seems to relate to logarithmic time. \n\n**O(log n)** typically occurs when you divide the problem size in half each step, like in a **Binary Search Tree**.\n\nWould you like me to generate a practice problem on **Heap Sort**?`;
+    if (activeSkill === 'science') {
+      aiContent = `As your **Science & Nature Tutor**, let's talk about the **Water Cycle**! \n\nWater evaporates from the sea, condenses into clouds, and falls back to Earth as rain or snow. This cycle keeps our fresh water clean and flowing!\n\nWould you like to learn about **Photosynthesis** next?`;
+    } else if (activeSkill === 'math') {
+      aiContent = `As your **Mathematics Tutor**, here is a tip on **Fractions**:\n\nWhen adding fractions like 1/4 and 2/4, keep the denominator (bottom number) the same and add the numerators (top numbers):\n\n$$\\frac{1}{4} + \\frac{2}{4} = \\frac{3}{4}$$\n\nWould you like to try a practice problem?`;
+    } else if (activeSkill === 'english') {
+      aiContent = `As your **English & Grammar Tutor**, remember that **Adjectives** describe nouns (like a *blue* sky) while **Adverbs** describe actions (like running *quickly*).\n\nLet's practice finding some in a sentence!`;
+    } else if (activeSkill === 'history') {
+      aiContent = `As your **History & Geography Tutor**, did you know that the **Ancient Egyptians** built the Great Pyramids thousands of years ago as tombs for their Pharaohs?\n\nThey are some of the oldest structures in the world!`;
     } else {
-      aiContent = `I've analyzed your question through my **${skillName}** core. \n\nThe core concept involves **Integrity** and **Efficiency**. \n\n\`\`\`javascript\nconst skillTrove = "Intelligence + Integrity";\nconsole.log(skillTrove);\n\`\`\`\n\nHow else can I assist your learning journey today?`;
+      aiContent = `Hello! I am your **SkillTrove AI Tutor** for Grades 1–10. I've activated my general assistant core to help you learn.\n\nSelect a subject like Science, Math, English, or History from the left, or ask me any question!`;
     }
 
     // Add AI message

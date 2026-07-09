@@ -1,30 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import * as faceapi from 'face-api.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, Fingerprint, LogIn, Loader2, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { Mail, Fingerprint, Loader2, CheckCircle2, ShieldAlert } from 'lucide-react';
 import PageTransition from '../components/common/PageTransition';
 import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useToastStore } from '../components/common/Toast';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../hooks/useAuthStore';
 
 export default function Login() {
-  const [loginMode, setLoginMode] = useState('password'); // 'password' or 'face'
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [loginError, setLoginError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
   const { addToast } = useToastStore();
-  const { login, faceLogin } = useAuthStore();
+  const { faceLogin } = useAuthStore();
   
   const { 
     canvasRef, 
     faceData, 
-    isModelLoaded,
     startCamera,
     startDetection, 
     stopDetection, 
@@ -33,28 +30,6 @@ export default function Login() {
 
   const videoRef = useRef(null);
   const isFaceDetected = faceData.detected;
-
-  // Reset errors when switching modes
-  useEffect(() => {
-    setLoginError(null);
-    if (loginMode === 'password') {
-      stopDetection();
-    }
-  }, [loginMode, stopDetection]);
-
-  const handlePasswordLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const result = await login({ email, password });
-    setIsLoading(false);
-
-    if (result.success) {
-      addToast('Login successful! Welcome back 👋', 'success');
-      navigate('/dashboard');
-    } else {
-      addToast(result.message, 'error');
-    }
-  };
 
   const handleFaceVerify = async () => {
     if (!email) {

@@ -7,7 +7,6 @@ exports.getLeaderboard = async (req, res, next) => {
   try {
     const users = await User.find()
       .select('name department points badges')
-      .populate('badges')
       .sort('-points')
       .limit(10);
 

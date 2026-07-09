@@ -25,23 +25,15 @@ app.use(cors({
 // Route files
 const authRoutes = require('./app/routes/auth.routes');
 const assessmentRoutes = require('./app/routes/assessment.routes');
-const attemptRoutes = require('./app/routes/attempt.routes');
-const proctoringRoutes = require('./app/routes/proctoring.routes');
 const analyticsRoutes = require('./app/routes/analytics.routes');
-const communityRoutes = require('./app/routes/community.routes');
 const leaderboardRoutes = require('./app/routes/leaderboard.routes');
-const badgeRoutes = require('./app/routes/badge.routes');
 const chatRoutes = require('./app/routes/chat.routes');
 
 // Mount routers
 app.use('/api/auth', authRoutes);
 app.use('/api/assessments', assessmentRoutes);
-app.use('/api/attempts', attemptRoutes);
-app.use('/api/proctoring', proctoringRoutes);
 app.use('/api/analytics', analyticsRoutes);
-app.use('/api/community', communityRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
-app.use('/api/badges', badgeRoutes);
 app.use('/api/chat', chatRoutes);
 
 // Base route

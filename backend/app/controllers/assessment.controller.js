@@ -114,6 +114,13 @@ exports.saveResult = async (req, res) => {
 
     await newResult.save();
 
+    // Increment points and total_score for the user
+    const User = require('../models/User.model');
+    await User.findByIdAndUpdate(req.user.id, {
+      $inc: { total_score: score, points: score },
+      $set: { last_active: new Date() }
+    });
+
     res.status(201).json({
       success: true,
       message: 'Assessment results saved successfully',

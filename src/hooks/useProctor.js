@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import { useToastStore } from '../components/common/Toast';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from './useAuthStore';
 
 export const useProctor = (isActive, faceData, onStrike) => {
   const { addToast } = useToastStore();

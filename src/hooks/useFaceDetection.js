@@ -27,7 +27,6 @@ export const useFaceDetection = () => {
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
       ]);
       setIsModelLoaded(true);
-      console.log("AI Models loaded successfully.");
     } catch (err) {
       setError("AI Models failed to load.");
     }

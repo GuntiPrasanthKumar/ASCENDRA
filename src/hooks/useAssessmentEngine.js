@@ -67,20 +67,6 @@ export const useAssessmentEngine = (config) => {
     }
   }, [addToast]);
 
-  const handleAnswer = useCallback((answer) => {
-    setUserAnswers(prev => {
-      const updated = [...prev];
-      updated[currentQ] = answer;
-      return updated;
-    });
-
-    if (currentQ < questions.length - 1) {
-      setCurrentQ(prev => prev + 1);
-    } else {
-      finishAssessment();
-    }
-  }, [currentQ, questions]);
-
   const finishAssessment = useCallback(async (finalStrikes = 0) => {
     if (isFinished) return;
     setIsFinished(true);
@@ -130,6 +116,20 @@ export const useAssessmentEngine = (config) => {
       console.error('Failed to save results:', err);
     }
   }, [isFinished, questions, userAnswers, config, addToast]);
+
+  const handleAnswer = useCallback((answer) => {
+    setUserAnswers(prev => {
+      const updated = [...prev];
+      updated[currentQ] = answer;
+      return updated;
+    });
+
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(prev => prev + 1);
+    } else {
+      finishAssessment();
+    }
+  }, [currentQ, questions, finishAssessment]);
 
   useEffect(() => {
     if (!isFinished && questions.length > 0 && timeLeft > 0) {

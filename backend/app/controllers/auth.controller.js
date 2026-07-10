@@ -109,7 +109,6 @@ const faceLogin = async (req, res) => {
 
     // Compare descriptors using Euclidean distance
     const distance = getEuclideanDistance(user.faceDescriptor, faceDescriptor);
-    console.log(`Face match distance: ${distance.toFixed(4)}`);
 
     // face-api.js recommended threshold is usually 0.6
     if (distance > 0.6) {

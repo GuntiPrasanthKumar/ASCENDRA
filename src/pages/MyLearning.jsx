@@ -9,6 +9,7 @@ import PageTransition from '../components/common/PageTransition';
 import HeatmapCard from '../components/dashboard/HeatmapCard';
 import AnalyticsChart from '../components/dashboard/AnalyticsChart';
 import { useAuthStore } from '../hooks/useAuthStore';
+import { EmptyState } from '../components/common/FeedbackStates';
 import api from '../utils/api';
 
 const TIER_COLORS = {
@@ -152,16 +153,13 @@ export default function MyLearning() {
                     </div>
                   </motion.div>
                 )) : (
-                  <div className="p-12 rounded-[2rem] bg-gradient-to-br from-accent/5 to-accent2/5 border-2 border-dashed border-muted flex flex-col items-center text-center">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-muted-foreground mb-4 opacity-30">
-                        <Award className="w-6 h-6" />
-                    </div>
-                    <h4 className="font-bold text-primary mb-1">Unlock your first certificate</h4>
-                    <p className="text-xs text-textMuted max-w-xs mb-6">Complete a targeted knowledge path to earn your first verified academic digital asset.</p>
-                    <button onClick={() => window.location.href='/practice'} className="text-xs font-black uppercase tracking-widest text-accent hover:text-primary transition-colors flex items-center gap-2">
-                        Browse Paths <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <EmptyState 
+                    icon={Award}
+                    title="Unlock your first certificate"
+                    description="Complete a targeted knowledge path to earn your first verified academic digital asset."
+                    actionText="Browse Paths"
+                    onAction={() => window.location.href = '/practice'}
+                  />
                 )}
               </div>
             </section>

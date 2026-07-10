@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const WebcamView = ({ videoRef, canvasRef, isFaceDetected, onStart, autoStart = true }) => {
+  const onStartRef = useRef(onStart);
 
   useEffect(() => {
-    if (autoStart && onStart) {
-      onStart();
+    onStartRef.current = onStart;
+  }, [onStart]);
+
+  useEffect(() => {
+    if (autoStart && onStartRef.current) {
+      onStartRef.current();
     }
-  }, []);
+  }, [autoStart]);
 
   return (
     <div className="relative flex items-center justify-center">

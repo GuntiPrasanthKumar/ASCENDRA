@@ -8,6 +8,22 @@ export default defineConfig({
   build: {
     rollupOptions: {
       external: ['fs', 'path', 'crypto'],
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('three') || id.includes('@react-three')) {
+              return 'vendor-three';
+            }
+            if (id.includes('face-api.js')) {
+              return 'vendor-faceapi';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-lucide';
+            }
+            return 'vendor';
+          }
+        }
+      }
     },
   },
   optimizeDeps: {

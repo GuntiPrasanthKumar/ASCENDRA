@@ -1,0 +1,5 @@
+export const mockLanguages = [
+  { id: 'javascript', name: 'JavaScript (Node.js)', extension: 'js' },
+  { id: 'python', name: 'Python (3.x)', extension: 'py' },
+  { id: 'cpp', name: 'C++ (GCC 14)', extension: 'cpp' }
+];

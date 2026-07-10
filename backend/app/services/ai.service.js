@@ -46,7 +46,6 @@ const generateAssessmentAI = async (subject, topic) => {
 
   for (const modelName of models) {
     try {
-      console.log(`Attempting generation with model: ${modelName}`);
       const model = genAI.getGenerativeModel({ 
         model: modelName,
         generationConfig: {
@@ -81,17 +80,9 @@ const generateAssessmentAI = async (subject, topic) => {
         Return ONLY the JSON array. No markdown, no conversational text.
       `;
 
-      console.log('--- GEMINI DIAGNOSTICS ---');
-      console.log(`Model Name: ${modelName}`);
-      console.log(`API Version: v1beta (default in SDK)`);
-      console.log(`Request Payload (Topic): ${topic} | Subject: ${subject}`);
-      
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
-      console.log(`Raw response received from ${modelName}:`, text.substring(0, 100) + '...');
-      console.log('--------------------------');
 
       let cleanText = text.replace(/```json/gi, '').replace(/```/g, '').trim();
       

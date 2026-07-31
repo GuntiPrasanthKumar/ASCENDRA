@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { Mail, User, ArrowRight, ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
+import { Mail, User, ArrowRight, ShieldCheck, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import PageTransition from '../components/common/PageTransition';
 import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
@@ -63,7 +63,7 @@ export default function Signup() {
           spread: 70,
           origin: { y: 0.6 }
         });
-        addToast(`Welcome aboard, ${formData.name}! 🎉`, 'success');
+        addToast(`Welcome aboard, ${formData.name}!`, 'success');
         setTimeout(() => navigate('/dashboard'), 2000);
       } else {
         addToast(result.message, 'error');
@@ -188,8 +188,8 @@ export default function Signup() {
                   </div>
 
                   {faceError && (
-                    <div className="mt-3 text-xs text-red-400 bg-red-900/10 rounded-lg px-4 py-2 mb-4 border border-red-500/20">
-                      ⚠ {faceError}
+                    <div className="mt-3 text-xs text-red-400 bg-red-900/10 rounded-lg px-4 py-2 mb-4 border border-red-500/20 flex items-center justify-center gap-1.5">
+                      <AlertCircle className="w-4 h-4 text-red-500 shrink-0" /> {faceError}
                     </div>
                   )}
 

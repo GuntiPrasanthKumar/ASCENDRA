@@ -37,7 +37,7 @@ export default function InterviewSetupCard({ camStatus, micStatus, faceStatus })
             <span className="text-xs font-semibold text-slate-700">Face Recognition Match</span>
           </div>
           <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${
-            faceStatus === 'Match Verified ✓' ? 'bg-success/5 border-success/10 text-success' : 'bg-red-500/5 border-red-500/10 text-red-600 animate-pulse'
+            faceStatus === 'Match Verified' ? 'bg-success/5 border-success/10 text-success' : 'bg-red-500/5 border-red-500/10 text-red-600 animate-pulse'
           }`}>
             {faceStatus}
           </span>

@@ -125,6 +125,33 @@ export default function PracticeSession() {
       timeTaken: '2m 15s'
     }));
 
+    // Progress System Sync:
+    const completedSets = JSON.parse(localStorage.getItem('completed_practice') || '[]');
+    if (!completedSets.includes(setId)) {
+      completedSets.push(setId);
+      localStorage.setItem('completed_practice', JSON.stringify(completedSets));
+    }
+
+    // Increment streak
+    const currentStreak = parseInt(localStorage.getItem('skilltrove_streak') || '7');
+    localStorage.setItem('skilltrove_streak', currentStreak + 1);
+
+    // Mark today's goals completed
+    const savedGoals = JSON.parse(localStorage.getItem('skilltrove_today_goals') || '[]');
+    if (savedGoals.length > 0) {
+      const updatedGoals = savedGoals.map(g => g.id === 'goal-2' ? { ...g, done: true } : g);
+      localStorage.setItem('skilltrove_today_goals', JSON.stringify(updatedGoals));
+    }
+
+    // Log recent activity
+    const activities = JSON.parse(localStorage.getItem('skilltrove_activities') || '[]');
+    activities.unshift({
+      title: `Practice Completed: ${activeSet.title} (${correctCount}/${setQuestions.length})`,
+      time: 'Just now',
+      xp: `+${correctCount * 50} XP`
+    });
+    localStorage.setItem('skilltrove_activities', JSON.stringify(activities.slice(0, 5)));
+
     addToast('Practice set assessment complete!', 'success');
     navigate(`/practice/${subjectId}/${setId}/results`);
   };

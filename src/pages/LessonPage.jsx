@@ -117,6 +117,27 @@ export default function LessonPage() {
       const updated = [...completedLessonIds, lesson.id];
       setCompletedLessonIds(updated);
       localStorage.setItem('completed_lessons', JSON.stringify(updated));
+
+      // 1. Increment streak
+      const currentStreak = parseInt(localStorage.getItem('skilltrove_streak') || '7');
+      localStorage.setItem('skilltrove_streak', currentStreak + 1);
+
+      // 2. Log recent activity
+      const activities = JSON.parse(localStorage.getItem('skilltrove_activities') || '[]');
+      activities.unshift({
+        title: `Lesson Completed: ${lesson.title}`,
+        time: 'Just now',
+        xp: `+${lesson.pointsAwarded} XP`
+      });
+      localStorage.setItem('skilltrove_activities', JSON.stringify(activities.slice(0, 5)));
+
+      // 3. Mark goal checklist item completed
+      const savedGoals = JSON.parse(localStorage.getItem('skilltrove_today_goals') || '[]');
+      if (savedGoals.length > 0) {
+        const updatedGoals = savedGoals.map(g => g.id === 'goal-2' ? { ...g, done: true } : g);
+        localStorage.setItem('skilltrove_today_goals', JSON.stringify(updatedGoals));
+      }
+
       addToast(`Lesson completed! +${lesson.pointsAwarded} points awarded.`, 'success');
     }
   };

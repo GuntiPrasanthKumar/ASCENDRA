@@ -72,7 +72,7 @@ const WebcamView = ({ videoRef, canvasRef, isFaceDetected, onStart, autoStart = 
         <div className={`w-2 h-2 rounded-full animate-pulse ${
           isFaceDetected ? 'bg-green-400' : 'bg-violet-400'
         }`} />
-        {isFaceDetected ? 'Face Detected ✓' : 'Scanning...'}
+        {isFaceDetected ? 'Face Detected' : 'Scanning...'}
       </div>
 
       <style>{`

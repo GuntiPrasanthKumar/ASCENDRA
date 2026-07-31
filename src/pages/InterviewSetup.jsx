@@ -80,7 +80,7 @@ export default function InterviewSetup() {
   // Monitor face recognition match verification
   useEffect(() => {
     if (faceData.detected) {
-      setFaceStatus('Match Verified ✓');
+      setFaceStatus('Match Verified');
     } else {
       setFaceStatus('Scanning...');
     }
@@ -120,7 +120,7 @@ export default function InterviewSetup() {
   const { activeInterview } = data;
 
   const handleStartInterview = () => {
-    if (faceStatus !== 'Match Verified ✓') {
+    if (faceStatus !== 'Match Verified') {
       addToast('Face match recognition verify checkpoint is pending.', 'warning');
       return;
     }

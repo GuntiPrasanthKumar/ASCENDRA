@@ -36,7 +36,7 @@ export default function MyLearning() {
   }, []);
 
   const badges = user?.badges || [
-    { name: 'Starter', icon: '🌱', desc: 'Welcome to SkillTrove', date: 'Joined', tier: 'Bronze' }
+    { name: 'Starter', icon: <Award className="w-8 h-8 text-amber-500" />, desc: 'Welcome to SkillTrove', date: 'Joined', tier: 'Bronze' }
   ];
 
   return (
@@ -94,8 +94,8 @@ export default function MyLearning() {
                          {badge.tier || 'Silver'}
                        </div>
                     </div>
-                    <div className="text-4xl mb-4 group-hover:scale-125 transition-transform duration-500 drop-shadow-md">
-                      {badge.icon || '🎖️'}
+                    <div className="mb-4 group-hover:scale-125 transition-transform duration-500 flex items-center justify-center">
+                      {badge.icon || <Award className="w-8 h-8 text-amber-500" />}
                     </div>
                     <h4 className="font-black text-primary text-xs uppercase tracking-tight mb-1">{badge.name}</h4>
                     <p className="text-[10px] text-textMuted leading-tight mb-3 px-2">{badge.desc || 'Unlocked achievement'}</p>

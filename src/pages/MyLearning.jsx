@@ -36,7 +36,7 @@ export default function MyLearning() {
   }, []);
 
   const badges = user?.badges || [
-    { name: 'Starter', icon: <Award className="w-8 h-8 text-amber-500" />, desc: 'Welcome to SkillTrove', date: 'Joined', tier: 'Bronze' }
+    { name: 'Starter', icon: <Award className="w-8 h-8 text-amber-500" />, desc: 'Welcome to ASCENDRA', date: 'Joined', tier: 'Bronze' }
   ];
 
   return (

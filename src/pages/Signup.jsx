@@ -100,8 +100,12 @@ export default function Signup() {
                   exit={{ opacity: 0, x: -50 }}
                   className="glass p-8 rounded-3xl"
                 >
-                  <h2 className="text-3xl font-display font-bold text-primary mb-2">Create Account</h2>
-                  <p className="text-textMuted mb-8">Step 1 of 2: Basic Details</p>
+                  <div className="text-center mb-6 flex flex-col items-center">
+                    <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-12 w-auto object-contain mb-2" />
+                    <h2 className="text-3xl font-display font-black text-primary tracking-widest uppercase">ASCENDRA</h2>
+                    <p className="text-accent text-xs font-bold uppercase tracking-wider mt-1">Where Intelligence Meets Ambition.</p>
+                    <p className="text-textMuted text-xs font-medium mt-1">Step 1 of 2: Account Registration</p>
+                  </div>
 
                   <form onSubmit={handleNextStep} className="space-y-4">
                     <div className="space-y-1">

@@ -1,6 +1,6 @@
-# Coding Guidelines - SkillTrove v2
+# Coding Guidelines - ASCENDRA v2
 
-This document defines the coding standards, patterns, and conventions to maintain code quality and scalability on the SkillTrove v2 platform.
+This document defines the coding standards, patterns, and conventions to maintain code quality and scalability on the ASCENDRA v2 platform.
 
 ---
 

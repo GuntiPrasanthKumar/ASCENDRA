@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component {
             </div>
             <h2 className="text-2xl font-display font-extrabold text-slate-800 mb-3">Something went wrong</h2>
             <p className="text-sm text-slate-500 mb-8 leading-relaxed">
-              SkillTrove encountered an unexpected rendering error. Don't worry, your learning progress is safe.
+              ASCENDRA encountered an unexpected rendering error. Don't worry, your learning progress is safe.
             </p>
             {this.state.error && (
               <pre className="w-full text-left bg-slate-900 text-slate-400 p-4 rounded-2xl text-[10px] font-mono overflow-x-auto mb-8 border border-white/5 max-h-40">

@@ -82,8 +82,8 @@ export default function Dashboard() {
           
           {/* Dashboard Header */}
           <DashboardHeader 
-            title="Command Center" 
-            description="Your personal learning stats, metrics, and coaching insight recommendations." 
+            title="ASCENDRA Command Center" 
+            description="Where Intelligence Meets Ambition. Track learning metrics, practice sets, and interview rehearsals." 
           />
 
           {/* 1. Welcome Hero */}

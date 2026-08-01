@@ -55,7 +55,7 @@ export default function Settings() {
                   <label className="text-[10px] font-black text-slate-500 uppercase pl-1 select-none">Email Address</label>
                   <input
                     type="email"
-                    defaultValue={user?.email || 'scholar@skilltrove.edu'}
+                    defaultValue={user?.email || 'scholar@ascendra.edu'}
                     disabled
                     className="w-full px-4 py-3 rounded-2xl bg-slate-100 border border-slate-150 text-xs font-semibold text-slate-500 cursor-not-allowed focus:outline-none"
                   />

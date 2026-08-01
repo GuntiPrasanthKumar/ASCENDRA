@@ -44,10 +44,8 @@ export default function Sidebar({ isOpen, onClose }) {
           {/* Logo header */}
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm">
-                S
-              </div>
-              <span className="font-display font-black text-white text-lg tracking-wider">SkillTrove</span>
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 w-auto object-contain rounded-lg" />
+              <span className="font-display font-black text-white text-lg tracking-widest uppercase">ASCENDRA</span>
             </div>
             <button onClick={onClose} className="p-1 text-slate-400 hover:text-white lg:hidden">
               <X className="w-5 h-5" />

@@ -53,7 +53,7 @@ const departments = [
 ];
 
 const testimonials = [
-  { name: 'Liam S.', dept: 'Grade 5 Student', text: 'SkillTrove is so fun! The AI tutor helps me understand math fractions easily like a game.', rating: 5 },
+  { name: 'Liam S.', dept: 'Grade 5 Student', text: 'ASCENDRA is so fun! The AI tutor helps me understand math fractions easily like a game.', rating: 5 },
   { name: 'Mrs. Davis', dept: 'Parent of Grade 3 & 7', text: "The detailed accuracy analytics and proctoring let me track my children's actual progress. Game changer.", rating: 5 },
   { name: 'Sophia K.', dept: 'Grade 8 Student', text: 'The AI Tutor explained science concepts better than my textbook. Absolutely love the design!', rating: 5 },
 ];
@@ -315,7 +315,7 @@ export default function Home() {
               Ready to transform your learning?
             </h2>
             <p className="text-textMuted text-lg mb-8 relative z-10">
-              Join 50,000+ students already using SkillTrove. No credit card required.
+              Join 50,000+ students already using ASCENDRA. No credit card required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
               <Link

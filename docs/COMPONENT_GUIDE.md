@@ -1,6 +1,6 @@
-# Component Guide - SkillTrove v2
+# Component Guide - ASCENDRA v2
 
-This document describes the core reusable UI components, layout structures, and feedback interfaces inside SkillTrove v2.
+This document describes the core reusable UI components, layout structures, and feedback interfaces inside ASCENDRA v2.
 
 ---
 

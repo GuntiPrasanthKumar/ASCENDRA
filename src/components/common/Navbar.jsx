@@ -44,13 +44,10 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-[100] glass px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="relative">
-            <BrainCircuit className="w-8 h-8 text-primary relative z-10 group-hover:text-accent transition-colors" />
-            <div className="absolute inset-0 bg-accent/20 blur-md rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </div>
-          <span className="font-display font-bold text-xl tracking-wide text-primary">
-            SkillTrove
+        <Link to="/" className="flex items-center gap-3 group">
+          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 w-auto object-contain rounded-lg" />
+          <span className="font-display font-black text-xl tracking-widest text-primary uppercase">
+            ASCENDRA
           </span>
         </Link>
 
@@ -100,7 +97,7 @@ const Navbar = () => {
                   >
                     <div className="p-4 border-b border-muted">
                       <p className="font-bold text-primary text-sm">{user?.name || 'Student'}</p>
-                      <p className="text-textMuted text-xs">{user?.email || 'student@skilltrove.ai'}</p>
+                      <p className="text-textMuted text-xs">{user?.email || 'student@ascendra.edu'}</p>
                     </div>
                     <div className="p-2">
                       <Link

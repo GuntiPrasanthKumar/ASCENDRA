@@ -5,7 +5,7 @@ import { PageSkeleton, EmptyState } from '../components/common/FeedbackStates';
 import { mockInterviews } from '../features/interview/mock/interviews';
 import InterviewCard from '../components/interview/InterviewCard';
 import SectionHeader from '../components/dashboard/SectionHeader';
-import { Video, PlayCircle, History, Star, ShieldCheck, Filter } from 'lucide-react';
+import { Video, PlayCircle, History, Star, ShieldCheck, ShieldAlert, Filter } from 'lucide-react';
 
 export default function InterviewHome() {
   const [interviews, setInterviews] = useState([]);

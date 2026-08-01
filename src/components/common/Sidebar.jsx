@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuthStore } from '../../hooks/useAuthStore';
 import { 
   LayoutDashboard, BookOpen, Activity, Sparkles, Award, 
-  User, Settings, ShieldCheck, Users, LogOut, X, Code
+  User, Settings, ShieldCheck, Users, LogOut, X, Code, Video 
 } from 'lucide-react';
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -15,7 +15,8 @@ export default function Sidebar({ isOpen, onClose }) {
     { path: '/learn', label: 'Learning', icon: <BookOpen className="w-4 h-4" /> },
     { path: '/practice', label: 'Practice', icon: <Activity className="w-4 h-4" /> },
     { path: '/codelab', label: 'CodeLab', icon: <Code className="w-4 h-4" /> },
-    { path: '/ai-mentor', label: 'Interview', icon: <Sparkles className="w-4 h-4" /> },
+    { path: '/interview', label: 'Interview Studio', icon: <Video className="w-4 h-4" /> },
+    { path: '/ai-mentor', label: 'AI Mentor', icon: <Sparkles className="w-4 h-4" /> },
     { path: '/my-learning', label: 'Insights', icon: <Award className="w-4 h-4" /> },
     { path: '/profile', label: 'Profile', icon: <User className="w-4 h-4" /> },
     { path: '/settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },

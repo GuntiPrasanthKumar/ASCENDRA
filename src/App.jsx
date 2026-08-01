@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Outlet, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 // Common Components
@@ -218,6 +218,8 @@ function AnimatedRoutes() {
                 <AdminDashboard />
               </ProtectedRoute>
             } />
+            {/* Catch-all Fallback */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
 
         </Routes>

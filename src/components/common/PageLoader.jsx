@@ -3,32 +3,37 @@ import { motion } from 'framer-motion';
 
 const PageLoader = () => {
   return (
-    <div className="fixed inset-0 bg-background flex flex-col items-center justify-center z-[10000] select-none">
-      <div className="relative flex flex-col items-center gap-4">
+    <div className="fixed inset-0 bg-background flex flex-col items-center justify-center z-[10000] select-none p-6">
+      <div className="relative flex flex-col items-center gap-6">
         <motion.div
-          className="w-16 h-16 rounded-2xl p-2 bg-white/5 border border-white/10 flex items-center justify-center shadow-xl"
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          className="p-4 rounded-3xl bg-white/90 border border-slate-200/50 shadow-2xl flex items-center justify-center"
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-12 w-auto object-contain" />
+          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-20 w-auto object-contain" />
         </motion.div>
 
-        <motion.div
-          className="w-12 h-12 rounded-full border-3 border-slate-200 border-t-indigo-600"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
+        <div className="relative flex items-center justify-center">
+          <motion.div
+            className="w-10 h-10 rounded-full border-3 border-indigo-600/20 border-t-indigo-600"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
       </div>
 
       <motion.div 
-        className="mt-6 flex flex-col items-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        className="mt-6 flex flex-col items-center text-center"
+        initial={{ opacity: 0, y: 5 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <h3 className="font-display font-black text-xl tracking-widest text-primary uppercase">ASCENDRA</h3>
-        <p className="mt-1 text-textMuted font-body text-xs font-semibold tracking-wider">
-          Initializing ASCENDRA...
+        <h3 className="font-display font-black text-2xl tracking-widest text-primary uppercase">ASCENDRA</h3>
+        <p className="mt-1 text-accent text-xs font-bold uppercase tracking-wider">
+          Where Intelligence Meets Ambition.
+        </p>
+        <p className="mt-2 text-textMuted font-body text-[11px] font-semibold tracking-wide animate-pulse">
+          Loading Application...
         </p>
       </motion.div>
     </div>

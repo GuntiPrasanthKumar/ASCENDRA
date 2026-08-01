@@ -45,7 +45,9 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full z-[100] glass px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 w-auto object-contain rounded-lg" />
+          <div className="bg-white p-1 rounded-xl shadow-sm border border-slate-200/50 flex items-center justify-center">
+            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-8 w-auto object-contain" />
+          </div>
           <span className="font-display font-black text-xl tracking-widest text-primary uppercase">
             ASCENDRA
           </span>

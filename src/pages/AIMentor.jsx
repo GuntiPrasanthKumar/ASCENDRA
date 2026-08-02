@@ -260,7 +260,7 @@ export default function AIMentor() {
                 </div>
                 <div>
                   <h2 className="font-display font-extrabold text-primary flex items-center gap-2">
-                    SkillTrove AI <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full uppercase tracking-tighter">Pro</span>
+                    ASCENDRA AI <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded-full uppercase tracking-tighter">Pro</span>
                   </h2>
                   <p className="text-xs font-bold text-success flex items-center gap-1">
                     Active Core: {SKILLS.find(s => s.id === activeSkill)?.name}
@@ -354,7 +354,7 @@ export default function AIMentor() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSend()}
-                  placeholder={`Message SkillTrove AI (${SKILLS.find(s => s.id === activeSkill)?.name})...`}
+                  placeholder={`Message ASCENDRA AI (${SKILLS.find(s => s.id === activeSkill)?.name})...`}
                   className="w-full bg-white border-2 border-muted rounded-2xl py-4 pl-6 pr-16 focus:outline-none focus:border-accent transition-all shadow-sm group-hover:border-muted/80"
                 />
                 <button 

@@ -8,10 +8,22 @@ const WebcamView = ({ videoRef, canvasRef, isFaceDetected, onStart, autoStart = 
   }, [onStart]);
 
   useEffect(() => {
+    const videoEl = videoRef?.current;
     if (autoStart && onStartRef.current) {
       onStartRef.current();
     }
-  }, [autoStart]);
+
+    return () => {
+      // Ensure webcam media tracks stop when WebcamView unmounts
+      if (videoEl?.srcObject) {
+        const stream = videoEl.srcObject;
+        if (stream && typeof stream.getTracks === 'function') {
+          stream.getTracks().forEach(track => track.stop());
+        }
+        videoEl.srcObject = null;
+      }
+    };
+  }, [autoStart, videoRef]);
 
   return (
     <div className="relative flex items-center justify-center">

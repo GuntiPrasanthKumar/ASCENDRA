@@ -108,9 +108,9 @@ export default function Login() {
               )}
             </AnimatePresence>
 
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-display font-bold text-primary mb-2">Welcome Back</h2>
-              <p className="text-textMuted">Log in to continue your journey</p>
+            <div className="text-center mb-6 flex flex-col items-center">
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-20 md:h-28 w-auto object-contain mb-2" />
+              <p className="text-textMuted text-xs font-medium">AI-powered learning and career platform</p>
             </div>
 
             <div className="flex flex-col items-center">
@@ -172,7 +172,7 @@ export default function Login() {
             </div>
 
             <p className="text-center mt-8 text-textMuted text-sm font-medium">
-              New to SkillTrove? <Link to="/signup" className="text-accent font-bold hover:underline">Create Account</Link>
+              New to ASCENDRA? <Link to="/signup" className="text-accent font-bold hover:underline">Create Account</Link>
             </p>
           </motion.div>
         </div>

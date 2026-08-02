@@ -1,13 +1,14 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../hooks/useAuthStore';
 import { 
   LayoutDashboard, BookOpen, Activity, Sparkles, Award, 
-  User, Settings, ShieldCheck, Users, LogOut, X, Code
+  User, Settings, ShieldCheck, Users, LogOut, X, Code, Video 
 } from 'lucide-react';
 
 export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
   const userRole = user?.role?.toLowerCase() || 'student';
 
   const menuItems = [
@@ -15,7 +16,8 @@ export default function Sidebar({ isOpen, onClose }) {
     { path: '/learn', label: 'Learning', icon: <BookOpen className="w-4 h-4" /> },
     { path: '/practice', label: 'Practice', icon: <Activity className="w-4 h-4" /> },
     { path: '/codelab', label: 'CodeLab', icon: <Code className="w-4 h-4" /> },
-    { path: '/ai-mentor', label: 'Interview', icon: <Sparkles className="w-4 h-4" /> },
+    { path: '/interview', label: 'Interview Studio', icon: <Video className="w-4 h-4" /> },
+    { path: '/ai-mentor', label: 'AI Mentor', icon: <Sparkles className="w-4 h-4" /> },
     { path: '/my-learning', label: 'Insights', icon: <Award className="w-4 h-4" /> },
     { path: '/profile', label: 'Profile', icon: <User className="w-4 h-4" /> },
     { path: '/settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
@@ -23,7 +25,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const handleSignOut = () => {
     logout();
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   return (
@@ -42,11 +44,8 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="flex flex-col gap-8">
           {/* Logo header */}
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm">
-                S
-              </div>
-              <span className="font-display font-black text-white text-lg tracking-wider">SkillTrove</span>
+            <div className="flex items-center">
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-10 md:h-12 w-auto object-contain" />
             </div>
             <button onClick={onClose} className="p-1 text-slate-400 hover:text-white lg:hidden">
               <X className="w-5 h-5" />

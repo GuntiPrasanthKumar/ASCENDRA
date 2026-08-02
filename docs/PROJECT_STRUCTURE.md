@@ -1,6 +1,6 @@
-# Project Structure - SkillTrove v2
+# Project Structure - ASCENDRA v2
 
-This document details the file directory layout and architectural mappings of the SkillTrove v2 project.
+This document details the file directory layout and architectural mappings of the ASCENDRA v2 project.
 
 ---
 

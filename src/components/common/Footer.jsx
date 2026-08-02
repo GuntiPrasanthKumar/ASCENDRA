@@ -1,19 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BrainCircuit, ExternalLink, X, Link2, Mail } from 'lucide-react';
+import { ExternalLink, X, Link2, Mail } from 'lucide-react';
 
 const Footer = () => {
   const links = {
     Platform: [
       { name: 'Dashboard', path: '/dashboard' },
-      { name: 'Quiz', path: '/quiz' },
-      { name: 'Leaderboard', path: '/leaderboard' },
-      { name: 'My Vault', path: '/vault' },
+      { name: 'Learning', path: '/learn' },
+      { name: 'Practice Hub', path: '/practice' },
+      { name: 'CodeLab Workspace', path: '/codelab' },
+      { name: 'AI Interview Studio', path: '/interview' },
     ],
     Community: [
-      { name: 'Echo Forum', path: '/echo' },
-      { name: 'AI Tutor', path: '/assistant' },
-      { name: 'About Us', path: '/about' },
+      { name: 'AI Mentor', path: '/ai-mentor' },
+      { name: 'My Insights', path: '/my-learning' },
+      { name: 'Profile Settings', path: '/settings' },
     ],
   };
 
@@ -25,17 +26,19 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-primary text-white mt-auto">
+    <footer className="bg-primary text-white mt-auto border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <BrainCircuit className="w-7 h-7 text-accent2" />
-              <span className="font-display font-bold text-xl">SkillTrove</span>
+            <Link to="/" className="flex items-center mb-4">
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-12 md:h-14 w-auto object-contain" />
             </Link>
+            <p className="text-accent text-xs font-bold uppercase tracking-wider mb-2">
+              Where Intelligence Meets Ambition.
+            </p>
             <p className="text-white/60 font-body text-sm leading-relaxed max-w-sm">
-              An AI-powered secure assessment and adaptive learning platform for university students. Experience integrity and intelligence combined.
+              AI-powered learning and career platform designed to help students master coding, practice adaptive diagnostics, and excel in technical & placement interviews.
             </p>
             <div className="flex gap-3 mt-6">
               {socials.map((s, i) => (
@@ -61,7 +64,7 @@ const Footer = () => {
                   <li key={item.name}>
                     <Link
                       to={item.path}
-                      className="text-white/60 hover:text-accent2 text-sm font-body transition-colors"
+                      className="text-white/60 hover:text-accent text-sm font-body transition-colors"
                     >
                       {item.name}
                     </Link>
@@ -75,7 +78,7 @@ const Footer = () => {
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-xs font-body">
-            © {new Date().getFullYear()} SkillTrove. All rights reserved. Built for learners, by learners.
+            © {new Date().getFullYear()} ASCENDRA. All rights reserved. Where Intelligence Meets Ambition.
           </p>
           <div className="flex gap-6 text-xs text-white/40">
             <a href="#" className="hover:text-white/70 transition-colors">Privacy Policy</a>

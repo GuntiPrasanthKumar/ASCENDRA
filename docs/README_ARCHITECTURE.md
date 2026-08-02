@@ -1,12 +1,12 @@
-# README Architecture - SkillTrove v2
+# README Architecture - ASCENDRA v2
 
-This document provides a high-level overview of the architectural decisions, design philosophies, and technological structures of the SkillTrove v2 platform.
+This document provides a high-level overview of the architectural decisions, design philosophies, and technological structures of the ASCENDRA v2 platform.
 
 ---
 
 ## 1. System Topology
 
-SkillTrove v2 operates on a decoupled client-server architecture:
+ASCENDRA v2 operates on a decoupled client-server architecture:
 
 ```text
 ┌─────────────────┐        HTTP / REST        ┌─────────────────┐

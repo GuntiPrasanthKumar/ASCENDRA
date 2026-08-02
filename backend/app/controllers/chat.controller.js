@@ -13,7 +13,7 @@ exports.getChatHistory = async (req, res, next) => {
         messages: [
           {
             role: 'ai',
-            content: 'Hello! I am your **SkillTrove AI Tutor**. I am specialized in multiple domains. \n\nSelect a **Knowledge Core** from the left to focus our session, or just ask me anything!'
+            content: 'Hello! I am your **ASCENDRA AI Tutor**. I am specialized in multiple domains. \n\nSelect a **Knowledge Core** from the left to focus our session, or just ask me anything!'
           }
         ]
       });
@@ -55,7 +55,7 @@ exports.sendMessage = async (req, res, next) => {
     } else if (activeSkill === 'history') {
       aiContent = `As your **History & Geography Tutor**, did you know that the **Ancient Egyptians** built the Great Pyramids thousands of years ago as tombs for their Pharaohs?\n\nThey are some of the oldest structures in the world!`;
     } else {
-      aiContent = `Hello! I am your **SkillTrove AI Tutor** for Grades 1–10. I've activated my general assistant core to help you learn.\n\nSelect a subject like Science, Math, English, or History from the left, or ask me any question!`;
+      aiContent = `Hello! I am your **ASCENDRA AI Tutor** for Grades 1–10. I've activated my general assistant core to help you learn.\n\nSelect a subject like Science, Math, English, or History from the left, or ask me any question!`;
     }
 
     // Add AI message

@@ -15,6 +15,7 @@ import ConsolePanel from '../components/codelab/ConsolePanel';
 import OutputPanel from '../components/codelab/OutputPanel';
 import TestCasePanel from '../components/codelab/TestCasePanel';
 import AIReviewCard from '../components/codelab/AIReviewCard';
+import SubmissionSummary from '../components/codelab/SubmissionSummary';
 import Toolbar from '../components/codelab/Toolbar';
 
 // Icons
@@ -37,32 +38,32 @@ export default function CodingWorkspace() {
   const [outputResult, setOutputResult] = useState(null);
   const [submitResult, setSubmitResult] = useState(null);
   const [aiReview, setAiReview] = useState(null);
+  const [testStatus, setTestStatus] = useState(null);
 
   const navigate = useNavigate();
   const { addToast } = useToastStore();
 
+  // Load Problem Info
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const activeProblem = mockProblems.find(p => p.id === problemId);
-      if (activeProblem) {
-        setData({ activeProblem });
-        // Set default code from template
-        setCode(activeProblem.starterTemplates[selectedLangId] || '');
-      }
-      setIsLoading(false);
-    }, 600);
-    return () => clearTimeout(timer);
+    const activeProblem = mockProblems.find(p => p.id === problemId);
+    if (activeProblem) {
+      setData({ activeProblem });
+      setCode(activeProblem.starterTemplates[selectedLangId] || '');
+    }
+    setIsLoading(false);
   }, [problemId, selectedLangId]);
 
-  // Update code when language changes
-  useEffect(() => {
+  // Update code template when language changes
+  const handleSelectLanguage = (langId) => {
+    setSelectedLangId(langId);
     if (data?.activeProblem) {
-      setCode(data.activeProblem.starterTemplates[selectedLangId] || '');
+      setCode(data.activeProblem.starterTemplates[langId] || '');
       setOutputResult(null);
       setSubmitResult(null);
       setAiReview(null);
+      setTestStatus(null);
     }
-  }, [selectedLangId, data]);
+  };
 
   if (isLoading) {
     return (
@@ -99,32 +100,51 @@ export default function CodingWorkspace() {
 
   const handleRunCode = () => {
     setIsRunning(true);
-    addToast('Compiling and running against test cases...', 'info');
+    addToast('Compiling and running code simulator against public test cases...', 'info');
     
     setTimeout(() => {
       setIsRunning(false);
+      setTestStatus({ 0: true, 1: true });
       setOutputResult({
         status: mockResults.run.status,
         stdout: customInput 
-          ? `Input received: ${customInput}\nOutput: ["o","l","l","e","h"]`
+          ? `Custom Input: ${customInput}\nOutput: ${activeProblem.examples[0]?.output || 'Success'}`
           : mockResults.run.stdout,
         time: mockResults.run.time,
         memory: mockResults.run.memory
       });
       addToast('Code execution completed successfully!', 'success');
-    }, 1500);
+    }, 1200);
   };
 
   const handleSubmitCode = () => {
     setIsSubmitting(true);
-    addToast('Submitting code to edge servers...', 'info');
+    addToast('Submitting solution to automated test suite...', 'info');
 
     setTimeout(() => {
       setIsSubmitting(false);
+      setTestStatus({ 0: true, 1: true });
       setSubmitResult(mockResults.submit);
       setAiReview(mockResults.submit.aiReview);
-      addToast('Solution Accepted! Dynamic AI Review generated.', 'success');
-    }, 2000);
+
+      // Progress Sync: Store completed coding problem in local storage
+      const completedCoding = JSON.parse(localStorage.getItem('completed_coding') || '[]');
+      if (!completedCoding.includes(activeProblem.id)) {
+        completedCoding.push(activeProblem.id);
+        localStorage.setItem('completed_coding', JSON.stringify(completedCoding));
+      }
+
+      // Log activity
+      const activities = JSON.parse(localStorage.getItem('skilltrove_activities') || '[]');
+      activities.unshift({
+        title: `CodeLab Accepted: ${activeProblem.title}`,
+        time: 'Just now',
+        xp: '+150 XP'
+      });
+      localStorage.setItem('skilltrove_activities', JSON.stringify(activities.slice(0, 5)));
+
+      addToast('Solution Accepted! Passed all test cases. AI Review generated.', 'success');
+    }, 1500);
   };
 
   const handleResetCode = () => {
@@ -133,6 +153,7 @@ export default function CodingWorkspace() {
       setOutputResult(null);
       setSubmitResult(null);
       setAiReview(null);
+      setTestStatus(null);
       addToast('Editor reset completed.', 'info');
     }
   };
@@ -151,7 +172,7 @@ export default function CodingWorkspace() {
           {/* Core Split Layout Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             
-            {/* Left Column: Problem Statements description */}
+            {/* Left Column: Problem Statements description & AI Review */}
             <div className="flex flex-col gap-6">
               <ProblemDescription
                 description={activeProblem.description}
@@ -162,13 +183,13 @@ export default function CodingWorkspace() {
               {aiReview && <AIReviewCard review={aiReview} />}
             </div>
 
-            {/* Right Column: Code Editor workspace */}
+            {/* Right Column: Code Editor workspace & Console panels */}
             <div className="flex flex-col gap-6">
               
               <Toolbar
                 languages={mockLanguages}
                 selectedLangId={selectedLangId}
-                onSelectLang={setSelectedLangId}
+                onSelectLang={handleSelectLanguage}
                 onRun={handleRunCode}
                 onSubmit={handleSubmitCode}
                 onReset={handleResetCode}
@@ -186,6 +207,7 @@ export default function CodingWorkspace() {
                 examples={activeProblem.examples}
                 activeCaseIdx={activeCaseIdx}
                 onSelectCase={setActiveCaseIdx}
+                testStatus={testStatus}
               />
 
               <ConsolePanel
@@ -201,10 +223,7 @@ export default function CodingWorkspace() {
               )}
 
               {submitResult && !isSubmitting && (
-                <div className="p-5 rounded-2xl bg-success/5 border border-success/15 text-success text-[11px] font-bold">
-                  <span className="block text-[8px] uppercase tracking-widest text-success mb-1">Submission Verdict</span>
-                  Solution Accepted! Passed {submitResult.passedCount} of {submitResult.totalCount} tests. Runtime: {submitResult.runtime}. Memory: {submitResult.memory}.
-                </div>
+                <SubmissionSummary result={submitResult} />
               )}
 
             </div>

@@ -1,11 +1,12 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Outlet, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 // Common Components
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import PageLoader from './components/common/PageLoader';
+import SplashScreen from './components/common/SplashScreen';
 import ToastContainer from './components/common/Toast';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -218,6 +219,8 @@ function AnimatedRoutes() {
                 <AdminDashboard />
               </ProtectedRoute>
             } />
+            {/* Catch-all Fallback */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
 
         </Routes>
@@ -229,6 +232,7 @@ function AnimatedRoutes() {
 function App() {
   return (
     <ThemeProvider>
+      <SplashScreen />
       <Router>
         <ToastContainer />
         <Suspense fallback={<PageLoader />}>

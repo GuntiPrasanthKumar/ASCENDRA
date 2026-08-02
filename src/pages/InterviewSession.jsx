@@ -132,6 +132,26 @@ export default function InterviewSession() {
     if (currentIdx < interviewQuestions.length - 1) {
       setCurrentIdx(prev => prev + 1);
     } else {
+      // Progress Sync:
+      const completed = JSON.parse(localStorage.getItem('completed_interviews') || '[]');
+      if (!completed.includes(activeInterview.id)) {
+        completed.push(activeInterview.id);
+        localStorage.setItem('completed_interviews', JSON.stringify(completed));
+      }
+
+      // Increment streak
+      const currentStreak = parseInt(localStorage.getItem('skilltrove_streak') || '7');
+      localStorage.setItem('skilltrove_streak', currentStreak + 1);
+
+      // Log recent activity
+      const activities = JSON.parse(localStorage.getItem('skilltrove_activities') || '[]');
+      activities.unshift({
+        title: `Interview Rehearsal: ${activeInterview.title}`,
+        time: 'Just now',
+        xp: '+200 XP'
+      });
+      localStorage.setItem('skilltrove_activities', JSON.stringify(activities.slice(0, 5)));
+
       addToast('Session completed successfully!', 'success');
       navigate(`/interview/${activeInterview.id}/results`);
     }

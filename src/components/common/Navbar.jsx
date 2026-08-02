@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-[100] glass px-6 py-4">
+    <nav className="fixed top-0 left-0 w-full z-[100] glass px-6 py-4" aria-label="Global Main Navigation">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center group">
           <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-13 md:h-15 w-auto object-contain transition-transform hover:scale-105" />

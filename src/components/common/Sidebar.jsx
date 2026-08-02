@@ -38,7 +38,7 @@ export default function Sidebar({ isOpen, onClose }) {
         />
       )}
 
-      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-slate-900 text-slate-400 border-r border-white/5 flex flex-col justify-between p-6 transition-transform duration-300 transform lg:translate-x-0 ${
+      <aside aria-label="Sidebar Navigation" className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-slate-900 text-slate-400 border-r border-white/5 flex flex-col justify-between p-6 transition-transform duration-300 transform lg:translate-x-0 ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex flex-col gap-8">

@@ -79,14 +79,14 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-slate-200 mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-accent/20 mb-8"
         >
-          <span className="w-2 h-2 rounded-full bg-black animate-pulse"></span>
-          <span className="text-sm font-medium text-black">Platform Live v2.0 — Now with AI Proctoring</span>
+          <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+          <span className="text-sm font-medium">Platform Live v2.0 — Now with AI Proctoring</span>
         </motion.div>
 
         <motion.h1
-          className="text-6xl md:text-8xl font-display font-extrabold text-black mb-6 tracking-tight leading-tight"
+          className="text-6xl md:text-8xl font-display font-extrabold text-primary mb-6 tracking-tight leading-tight"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -121,7 +121,7 @@ export default function Home() {
         >
           <Link
             to="/signup"
-            className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 bg-black rounded-full hover:bg-slate-800 overflow-hidden shadow-lg hover:shadow-xl"
+            className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 bg-primary rounded-full hover:bg-accent overflow-hidden shadow-lg hover:shadow-accent/30 hover:shadow-xl"
           >
             <span className="relative flex items-center gap-2">
               Get Started Free
@@ -130,7 +130,7 @@ export default function Home() {
           </Link>
           <Link
             to="/practice"
-            className="group inline-flex items-center justify-center px-8 py-4 font-bold transition-all duration-300 bg-white rounded-full border border-slate-300 hover:border-black text-black"
+            className="group inline-flex items-center justify-center px-8 py-4 font-bold transition-all duration-300 glass rounded-full border border-muted hover:border-accent"
           >
             See Live Demo
           </Link>

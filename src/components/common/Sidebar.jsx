@@ -44,7 +44,7 @@ export default function Sidebar({ isOpen, onClose }) {
           {/* Logo header */}
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-12 w-auto object-contain" />
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-10 md:h-12 w-auto object-contain" />
             </div>
             <button onClick={onClose} className="p-1 text-slate-400 hover:text-white lg:hidden">
               <X className="w-5 h-5" />

@@ -45,7 +45,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full z-[100] glass px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center group">
-          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-12 w-auto object-contain" />
+          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-10 md:h-12 w-auto object-contain transition-transform hover:scale-105" />
         </Link>
 
         {/* Desktop Links */}
@@ -54,9 +54,8 @@ const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
-              className={`relative font-body text-sm font-medium transition-colors ${
-                location.pathname === link.path ? 'text-accent' : 'text-textPrimary hover:text-accent'
-              }`}
+              className={`relative font-body text-sm font-medium transition-colors ${location.pathname === link.path ? 'text-accent' : 'text-textPrimary hover:text-accent'
+                }`}
             >
               {link.name}
               {location.pathname === link.path && (
@@ -158,9 +157,8 @@ const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`font-body text-lg ${
-                    location.pathname === link.path ? 'text-accent font-bold' : 'text-textPrimary'
-                  }`}
+                  className={`font-body text-lg ${location.pathname === link.path ? 'text-accent font-bold' : 'text-textPrimary'
+                    }`}
                 >
                   {link.name}
                 </Link>

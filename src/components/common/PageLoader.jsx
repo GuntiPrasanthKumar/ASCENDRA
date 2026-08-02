@@ -10,7 +10,7 @@ const PageLoader = () => {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="flex items-center justify-center"
         >
-          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-32 md:h-44 w-auto object-contain" />
+          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-28 md:h-36 w-auto object-contain" />
         </motion.div>
 
         <div className="relative flex items-center justify-center mt-2">

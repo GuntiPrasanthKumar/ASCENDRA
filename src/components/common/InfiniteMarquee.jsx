@@ -1,40 +1,16 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export default function InfiniteMarquee({ items, direction = 'left', speed = 30, className = '' }) {
-  const animationClass = direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right';
+  // Duplicate array 4 times for seamless continuous infinite looping
+  const marqueeItems = [...items, ...items, ...items, ...items];
 
-  const renderCard = (item, idx) => (
-    <div
-      key={`${item.title}-${idx}`}
-      className="group/card relative shrink-0 rounded-2xl bg-slate-900/80 border border-slate-800/90 px-5 py-4 min-w-[240px] md:min-w-[270px] backdrop-blur-xl hover:border-indigo-500/50 hover:bg-slate-800/90 hover:shadow-[0_0_30px_rgba(99,102,241,0.22)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-4 cursor-pointer overflow-hidden"
-    >
-      {/* Soft Ambient Card Accent Radial Gradient */}
-      <div className="absolute -top-10 -right-10 w-28 h-28 bg-indigo-500/10 rounded-full blur-xl group-hover/card:scale-150 transition-transform duration-500 pointer-events-none" />
-
-      {/* Icon Container */}
-      {item.icon && (
-        <div className="w-11 h-11 rounded-2xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center shrink-0 shadow-inner group-hover/card:scale-110 group-hover/card:border-indigo-500/40 transition-all duration-300">
-          {item.icon}
-        </div>
-      )}
-
-      {/* Card Content */}
-      <div className="overflow-hidden">
-        <h4 className="text-xs md:text-sm font-display font-extrabold text-white tracking-tight group-hover/card:text-indigo-300 transition-colors truncate">
-          {item.title}
-        </h4>
-        {item.subtitle && (
-          <p className="text-[11px] font-semibold text-slate-400 truncate mt-0.5">
-            {item.subtitle}
-          </p>
-        )}
-      </div>
-    </div>
-  );
+  // Calculate motion start and end coordinates
+  const animateX = direction === 'left' ? ['0%', '-50%'] : ['-50%', '0%'];
 
   return (
-    <div className={`relative overflow-hidden w-full group py-1 ${className}`}>
-      {/* Edge Fade Masking Wrapper */}
+    <div className={`relative overflow-hidden w-full group py-1.5 select-none ${className}`}>
+      {/* Edge Fade Gradients */}
       <div 
         className="flex overflow-hidden w-full"
         style={{
@@ -42,22 +18,47 @@ export default function InfiniteMarquee({ items, direction = 'left', speed = 30,
           WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
         }}
       >
-        {/* Track 1 */}
-        <div 
-          className={`flex shrink-0 gap-4 min-w-full justify-around pr-4 ${animationClass}`}
-          style={{ animationDuration: `${speed}s` }}
+        <motion.div
+          className="flex shrink-0 gap-4"
+          animate={{ x: animateX }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: 'loop',
+              duration: speed,
+              ease: 'linear',
+            },
+          }}
         >
-          {items.map((item, idx) => renderCard(item, `t1-${idx}`))}
-        </div>
+          {marqueeItems.map((item, idx) => (
+            <div
+              key={`${item.title}-${idx}`}
+              className="group/card relative shrink-0 rounded-none bg-slate-900/90 border border-slate-800 px-5 py-4 min-w-[240px] md:min-w-[270px] backdrop-blur-xl hover:border-indigo-500/60 hover:bg-slate-800/95 hover:shadow-[0_0_25px_rgba(99,102,241,0.25)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-4 cursor-pointer overflow-hidden"
+            >
+              {/* Ambient Glow */}
+              <div className="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl group-hover/card:scale-150 transition-transform duration-500 pointer-events-none" />
 
-        {/* Track 2 (Duplicate for Seamless Infinite Loop) */}
-        <div 
-          aria-hidden="true"
-          className={`flex shrink-0 gap-4 min-w-full justify-around pr-4 ${animationClass}`}
-          style={{ animationDuration: `${speed}s` }}
-        >
-          {items.map((item, idx) => renderCard(item, `t2-${idx}`))}
-        </div>
+              {/* Icon Container - Sharp Edges */}
+              {item.icon && (
+                <div className="w-10 h-10 rounded-none bg-slate-800 border border-slate-700/80 flex items-center justify-center shrink-0 shadow-inner group-hover/card:scale-105 group-hover/card:border-indigo-500/50 transition-all duration-300">
+                  {item.icon}
+                </div>
+              )}
+
+              {/* Text Label */}
+              <div className="overflow-hidden">
+                <h4 className="text-xs md:text-sm font-display font-extrabold text-white tracking-tight group-hover/card:text-indigo-300 transition-colors truncate">
+                  {item.title}
+                </h4>
+                {item.subtitle && (
+                  <p className="text-[11px] font-semibold text-slate-400 truncate mt-0.5">
+                    {item.subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </div>
   );

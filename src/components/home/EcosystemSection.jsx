@@ -124,7 +124,7 @@ export default function EcosystemSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.08, duration: 0.5 }}
-              className={`group relative rounded-[2rem] p-8 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 ${card.borderHover} transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-lg`}
+              className={`group relative rounded-none p-8 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 ${card.borderHover} transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-lg hover:-translate-y-1`}
             >
               {/* Card Ambient Radial Glow */}
               <div className={`absolute -top-12 -right-12 w-44 h-44 rounded-full bg-gradient-to-br ${card.gradient} blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none`} />
@@ -132,10 +132,10 @@ export default function EcosystemSection() {
               <div>
                 {/* Header Badge & Icon */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-none bg-slate-800/80 border border-slate-700/60 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
                     {card.icon}
                   </div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${card.badgeColor}`}>
+                  <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-none border ${card.badgeColor}`}>
                     AI Module
                   </span>
                 </div>
@@ -152,7 +152,7 @@ export default function EcosystemSection() {
               {/* Action Button */}
               <Link
                 to={card.actionPath}
-                className="w-full py-3.5 px-5 rounded-2xl bg-slate-800/80 hover:bg-indigo-600 border border-slate-700/60 hover:border-indigo-500 text-white text-xs font-bold transition-all duration-200 flex items-center justify-between group/btn shadow-md active:scale-[0.98]"
+                className="w-full py-3.5 px-5 rounded-none bg-slate-800/80 hover:bg-indigo-600 border border-slate-700/60 hover:border-indigo-500 text-white text-xs font-bold transition-all duration-200 flex items-center justify-between group/btn shadow-md active:scale-[0.98]"
               >
                 <span>{card.actionText}</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />

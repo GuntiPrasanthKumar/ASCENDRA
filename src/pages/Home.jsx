@@ -2,7 +2,8 @@ import React, { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/common/PageTransition';
-import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, ChevronRight, Zap, Users, Star, Lock } from 'lucide-react';
+import EcosystemSection from '../components/home/EcosystemSection';
+import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, Zap, Users, Star, Lock } from 'lucide-react';
 
 const HeroScene = lazy(() => import('../components/3d/HeroScene'));
 
@@ -41,15 +42,7 @@ const features = [
     title: 'AI Tutor',
     description: 'Your personal 24/7 AI learning companion that explains concepts, generates practice problems and tracks gaps.',
     icon: <Zap className="w-8 h-8 text-accent2" />,
-    color: 'accent2',
   },
-];
-
-const departments = [
-  { name: 'Mathematics', img: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=500&q=80', courses: 12 },
-  { name: 'Science & Nature', img: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80', courses: 10 },
-  { name: 'English & Grammar', img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=500&q=80', courses: 8 },
-  { name: 'History & Geography', img: 'https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=500&q=80', courses: 6 },
 ];
 
 const testimonials = [
@@ -187,49 +180,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Departments Carousel */}
-      <section className="py-24 px-6 bg-background relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <h2 className="text-4xl font-display font-bold text-primary mb-4">Explore Departments</h2>
-              <p className="text-textMuted max-w-xl">Tailored assessments and learning paths for every major.</p>
-            </div>
-            <button className="hidden md:flex items-center gap-2 text-accent font-medium hover:text-primary transition-colors">
-              View All <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="flex gap-6 overflow-x-auto pb-10 snap-x" style={{ scrollbarWidth: 'none' }}>
-            {departments.map((dept, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="min-w-[280px] h-[380px] rounded-3xl overflow-hidden relative snap-center group cursor-pointer flex-shrink-0"
-              >
-                <img
-                  src={dept.img}
-                  alt={dept.name}
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <h3 className="text-white text-2xl font-bold font-display mb-1">{dept.name}</h3>
-                  <p className="text-white/60 text-sm mb-3">{dept.courses} Courses</p>
-                  <div className="flex items-center gap-2 text-white/80 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                    <span className="text-sm font-medium">Start Learning</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ASCENDRA Ecosystem Section */}
+      <EcosystemSection />
 
       {/* Stats Section */}
       <section className="py-20 px-6 bg-primary text-white relative z-10 overflow-hidden">

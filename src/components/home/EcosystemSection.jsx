@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
-  Sparkles, Target, Code2, MessageSquare, Bot, TrendingUp, ArrowRight 
+  Sparkles, Target, Code2, MessageSquare, Bot, TrendingUp, ChevronRight, Zap
 } from 'lucide-react';
 
 export default function EcosystemSection() {
@@ -10,113 +10,219 @@ export default function EcosystemSection() {
     {
       id: 'ai-learning',
       title: 'AI Learning',
-      description: 'Personalized learning paths powered by intelligent recommendations.',
-      icon: <Sparkles className="w-6 h-6 text-indigo-500" />,
-      actionText: 'Start Learning',
+      subtitle: 'Personalized learning paths powered by intelligent recommendations.',
       actionPath: '/learn',
-      gradient: 'from-indigo-500/10 via-purple-500/5 to-transparent',
-      borderHover: 'hover:border-indigo-500/40 hover:shadow-indigo-500/10',
-      badgeColor: 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20'
+      tag: 'AI Module',
+      visual: (
+        <div className="w-full h-full bg-[#0c0d14] rounded-[1.75rem] p-6 flex flex-col justify-between relative overflow-hidden group-hover:shadow-xl transition-all duration-500 border border-slate-800/60">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 opacity-30 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700" />
+          <div className="flex justify-between items-center z-10">
+            <span className="text-[10px] font-bold tracking-widest text-cyan-400 uppercase bg-cyan-950/60 px-2.5 py-1 rounded-full border border-cyan-800/40 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-cyan-400" /> Gemini 3.5 Flash
+            </span>
+          </div>
+          <div className="relative z-10 my-auto text-center">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-3 shadow-lg group-hover:scale-110 transition-transform">
+              <Sparkles className="w-7 h-7" />
+            </div>
+            <h4 className="text-white font-display font-bold text-lg tracking-tight">ASCENDRA Core</h4>
+          </div>
+          <div className="relative z-10 text-[10px] text-slate-400 font-mono flex justify-between">
+            <span>v2.4 Active</span>
+            <span>Adaptive Engine</span>
+          </div>
+        </div>
+      )
     },
     {
       id: 'practice-arena',
       title: 'Practice Arena',
-      description: 'Master aptitude, reasoning, logic, and technical assessments.',
-      icon: <Target className="w-6 h-6 text-emerald-500" />,
-      actionText: 'Practice Now',
+      subtitle: 'Master aptitude, reasoning, logic, and technical assessments.',
       actionPath: '/practice',
-      gradient: 'from-emerald-500/10 via-teal-500/5 to-transparent',
-      borderHover: 'hover:border-emerald-500/40 hover:shadow-emerald-500/10',
-      badgeColor: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+      tag: 'Aptitude & Logic',
+      visual: (
+        <div className="w-full h-full bg-[#0c0d14] rounded-[1.75rem] p-6 flex flex-col justify-between relative overflow-hidden group-hover:shadow-xl transition-all duration-500 border border-slate-800/60">
+          <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-gradient-to-br from-emerald-500 via-teal-400 to-lime-300 opacity-25 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700" />
+          <div className="flex justify-between items-center z-10">
+            <span className="text-[10px] font-bold tracking-widest text-emerald-400 uppercase bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800/40 flex items-center gap-1">
+              <Target className="w-3 h-3" /> Diagnostic Mode
+            </span>
+          </div>
+          <div className="relative z-10 my-auto text-center">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-3 shadow-lg group-hover:scale-110 transition-transform">
+              <Target className="w-7 h-7" />
+            </div>
+            <h4 className="text-white font-display font-bold text-lg tracking-tight">99.4% Accuracy</h4>
+          </div>
+          <div className="relative z-10 text-[10px] text-slate-400 font-mono flex justify-between">
+            <span>Multi-Topic</span>
+            <span>Live Timers</span>
+          </div>
+        </div>
+      )
     },
     {
       id: 'codelab',
       title: 'CodeLab',
-      description: 'Solve coding challenges in a modern development workspace.',
-      icon: <Code2 className="w-6 h-6 text-cyan-500" />,
-      actionText: 'Open CodeLab',
+      subtitle: 'Solve coding challenges in a modern development workspace.',
       actionPath: '/codelab',
-      gradient: 'from-cyan-500/10 via-blue-500/5 to-transparent',
-      borderHover: 'hover:border-cyan-500/40 hover:shadow-cyan-500/10',
-      badgeColor: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20'
+      tag: 'Monaco IDE',
+      visual: (
+        <div className="w-full h-full bg-[#0c0d14] rounded-[1.75rem] p-5 flex flex-col justify-between relative overflow-hidden group-hover:shadow-xl transition-all duration-500 border border-slate-800/60">
+          {/* Simulated CodeLab Window Header */}
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2 z-10">
+            <div className="flex gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
+              /codelab-preview
+            </span>
+          </div>
+          <div className="my-auto z-10 font-mono text-[11px] text-slate-300 space-y-1.5 bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-2 text-indigo-400">
+              <Code2 className="w-3.5 h-3.5" />
+              <span>function solve(nums) &#123;</span>
+            </div>
+            <div className="pl-4 text-slate-400">// Optimized DP Solution</div>
+            <div className="pl-4 text-cyan-400">return dp[n - 1];</div>
+            <div className="text-indigo-400">&#125;</div>
+          </div>
+          <div className="z-10 text-[10px] text-emerald-400 font-mono flex justify-between items-center">
+            <span>Passes Testcases (12/12)</span>
+            <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/50">Fast</span>
+          </div>
+        </div>
+      )
     },
     {
       id: 'interview-studio',
       title: 'Interview Studio',
-      description: 'Prepare with AI-powered mock interviews and detailed feedback.',
-      icon: <MessageSquare className="w-6 h-6 text-amber-500" />,
-      actionText: 'Start Interview',
+      subtitle: 'Prepare with AI-powered mock interviews and detailed feedback.',
       actionPath: '/interview',
-      gradient: 'from-amber-500/10 via-orange-500/5 to-transparent',
-      borderHover: 'hover:border-amber-500/40 hover:shadow-amber-500/10',
-      badgeColor: 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+      tag: 'Proctoring Certified',
+      visual: (
+        <div className="w-full h-full bg-[#0c0d14] rounded-[1.75rem] p-6 flex flex-col justify-between relative overflow-hidden group-hover:shadow-xl transition-all duration-500 border border-slate-800/60">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-purple-600 via-amber-500 to-rose-500 opacity-25 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700" />
+          <div className="flex justify-between items-center z-10">
+            <span className="text-[10px] font-bold tracking-widest text-amber-400 uppercase bg-amber-950/60 px-2.5 py-1 rounded-full border border-amber-800/40 flex items-center gap-1">
+              <MessageSquare className="w-3 h-3" /> Agent Rehearsal
+            </span>
+          </div>
+          <div className="relative z-10 my-auto text-center">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-3 shadow-lg group-hover:scale-110 transition-transform">
+              <MessageSquare className="w-7 h-7" />
+            </div>
+            <h4 className="text-white font-display font-bold text-lg tracking-tight">AI Interview Teams</h4>
+          </div>
+          <div className="relative z-10 text-[10px] text-slate-400 font-mono flex justify-between">
+            <span>Gaze Certified</span>
+            <span>Live Audio</span>
+          </div>
+        </div>
+      )
     },
     {
       id: 'ai-mentor',
-      title: 'AI Mentor',
-      description: 'Receive intelligent guidance based on your learning journey.',
-      icon: <Bot className="w-6 h-6 text-violet-500" />,
-      actionText: 'Meet Mentor',
+      title: 'AI Mentor Guidance',
+      subtitle: 'Receive intelligent guidance based on your learning journey.',
       actionPath: '/ai-mentor',
-      gradient: 'from-violet-500/10 via-fuchsia-500/5 to-transparent',
-      borderHover: 'hover:border-violet-500/40 hover:shadow-violet-500/10',
-      badgeColor: 'bg-violet-500/10 text-violet-600 border-violet-500/20'
+      tag: '24/7 AI Coach',
+      visual: (
+        <div className="w-full h-full bg-[#0c0d14] rounded-[1.75rem] p-6 flex flex-col justify-between relative overflow-hidden group-hover:shadow-xl transition-all duration-500 border border-slate-800/60">
+          <div className="absolute bottom-0 left-0 w-44 h-44 bg-gradient-to-tr from-violet-600 via-fuchsia-500 to-indigo-400 opacity-25 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700" />
+          <div className="flex justify-between items-center z-10">
+            <span className="text-[10px] font-bold tracking-widest text-violet-400 uppercase bg-violet-950/60 px-2.5 py-1 rounded-full border border-violet-800/40 flex items-center gap-1">
+              <Bot className="w-3 h-3" /> Career Coach
+            </span>
+          </div>
+          <div className="relative z-10 my-auto text-center">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400 mb-3 shadow-lg group-hover:scale-110 transition-transform">
+              <Bot className="w-7 h-7" />
+            </div>
+            <h4 className="text-white font-display font-bold text-lg tracking-tight">Antigravity Mentor</h4>
+          </div>
+          <div className="relative z-10 text-[10px] text-slate-400 font-mono flex justify-between">
+            <span>Real-time Tips</span>
+            <span>Weak Topics</span>
+          </div>
+        </div>
+      )
     },
     {
       id: 'career-insights',
       title: 'Career Insights',
-      description: 'Track your progress and measure industry readiness.',
-      icon: <TrendingUp className="w-6 h-6 text-blue-500" />,
-      actionText: 'View Insights',
+      subtitle: 'Track your progress and measure industry readiness.',
       actionPath: '/my-learning',
-      gradient: 'from-blue-500/10 via-indigo-500/5 to-transparent',
-      borderHover: 'hover:border-blue-500/40 hover:shadow-blue-500/10',
-      badgeColor: 'bg-blue-500/10 text-blue-600 border-blue-500/20'
+      tag: 'Placement Telemetry',
+      visual: (
+        <div className="w-full h-full bg-[#0c0d14] rounded-[1.75rem] p-6 flex flex-col justify-between relative overflow-hidden group-hover:shadow-xl transition-all duration-500 border border-slate-800/60">
+          <div className="absolute top-1/2 right-0 w-44 h-44 bg-gradient-to-l from-blue-600 via-sky-500 to-indigo-400 opacity-25 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700" />
+          <div className="flex justify-between items-center z-10">
+            <span className="text-[10px] font-bold tracking-widest text-blue-400 uppercase bg-blue-950/60 px-2.5 py-1 rounded-full border border-blue-800/40 flex items-center gap-1">
+              <TrendingUp className="w-3 h-3" /> Scorecard 100
+            </span>
+          </div>
+          <div className="relative z-10 my-auto text-center">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-3 shadow-lg group-hover:scale-110 transition-transform">
+              <TrendingUp className="w-7 h-7" />
+            </div>
+            <h4 className="text-white font-display font-bold text-lg tracking-tight">Placement Index 86</h4>
+          </div>
+          <div className="relative z-10 text-[10px] text-slate-400 font-mono flex justify-between">
+            <span>Top 5% Tier</span>
+            <span>Resume Ready</span>
+          </div>
+        </div>
+      )
     }
   ];
 
   return (
-    <section className="py-28 px-6 bg-slate-950 relative z-10 overflow-hidden text-white">
-      {/* Background Soft Glow & Ambient Grid Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/30 via-slate-950 to-slate-950 pointer-events-none" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto relative z-10">
+    <section className="py-28 px-6 bg-white relative z-10 overflow-hidden text-slate-900 border-t border-slate-100">
+      <div className="max-w-7xl mx-auto">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <motion.span
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest bg-indigo-500/10 border border-indigo-500/20 text-indigo-400"
-          >
-            <Sparkles className="w-3.5 h-3.5" /> ASCENDRA Architecture
-          </motion.span>
+        {/* Section Header - Clean Google Antigravity Style */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-5xl font-display font-medium text-slate-900 tracking-tight mb-3"
+            >
+              Explore the ASCENDRA Ecosystem
+            </motion.h2>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl md:text-5xl font-display font-black text-white tracking-tight"
-          >
-            Explore the ASCENDRA Ecosystem
-          </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-slate-600 text-sm md:text-base font-body max-w-2xl leading-relaxed"
+            >
+              Discover AI-powered experiences that help you learn, practice, code, prepare for interviews, and become industry-ready.
+            </motion.p>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-slate-400 text-sm md:text-base font-medium leading-relaxed"
           >
-            Discover AI-powered experiences that help you learn, practice, code, prepare for interviews, and become industry-ready.
-          </motion.p>
+            <Link
+              to="/learn"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-medium text-xs md:text-sm transition-all"
+            >
+              <span>Explore all modules</span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </motion.div>
         </div>
 
-        {/* 3x2 Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 3x2 Grid of Google Antigravity Style Squircle Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {ecosystemCards.map((card, idx) => (
             <motion.div
               key={card.id}
@@ -124,38 +230,27 @@ export default function EcosystemSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.08, duration: 0.5 }}
-              className={`group relative rounded-none p-8 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 ${card.borderHover} transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-lg hover:-translate-y-1`}
+              className="group flex flex-col justify-between"
             >
-              {/* Card Ambient Radial Glow */}
-              <div className={`absolute -top-12 -right-12 w-44 h-44 rounded-full bg-gradient-to-br ${card.gradient} blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none`} />
-
-              <div>
-                {/* Header Badge & Icon */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 rounded-none bg-slate-800/80 border border-slate-700/60 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                    {card.icon}
-                  </div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-none border ${card.badgeColor}`}>
-                    AI Module
-                  </span>
+              <Link to={card.actionPath} className="block">
+                {/* Dark Inner Squircle Card Image Box */}
+                <div className="w-full aspect-[4/3] mb-5">
+                  {card.visual}
                 </div>
 
-                {/* Card Title & Description */}
-                <h3 className="text-xl font-bold font-display text-white mb-2 group-hover:text-indigo-400 transition-colors">
-                  {card.title}
-                </h3>
-                <p className="text-slate-400 text-xs font-medium leading-relaxed mb-8">
-                  {card.description}
-                </p>
-              </div>
-
-              {/* Action Button */}
-              <Link
-                to={card.actionPath}
-                className="w-full py-3.5 px-5 rounded-none bg-slate-800/80 hover:bg-indigo-600 border border-slate-700/60 hover:border-indigo-500 text-white text-xs font-bold transition-all duration-200 flex items-center justify-between group/btn shadow-md active:scale-[0.98]"
-              >
-                <span>{card.actionText}</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                {/* Text Content Below Image Box - Google Antigravity Style */}
+                <div className="space-y-1.5">
+                  <h3 className="text-xl md:text-2xl font-display font-medium text-slate-900 group-hover:text-indigo-600 transition-colors tracking-tight">
+                    {card.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 font-body leading-relaxed max-w-sm">
+                    {card.subtitle}
+                  </p>
+                  <div className="pt-2 flex items-center gap-1 text-xs font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                    <span>Explore module</span>
+                    <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </div>
               </Link>
             </motion.div>
           ))}

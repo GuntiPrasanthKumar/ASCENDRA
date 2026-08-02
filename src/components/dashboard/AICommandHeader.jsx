@@ -26,7 +26,7 @@ export default function AICommandHeader({ greeting, name, streak, aiInsight }) {
   ];
 
   return (
-    <div className="bg-white p-6 md:p-8 border border-slate-200 relative overflow-hidden mb-8">
+    <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 relative overflow-hidden mb-8 shadow-xs">
 
       <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         
@@ -38,14 +38,14 @@ export default function AICommandHeader({ greeting, name, streak, aiInsight }) {
             </span>
 
             {timeString && (
-              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1 rounded-full flex items-center gap-1.5 border border-slate-200">
+              <span className="text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1 rounded-full flex items-center gap-1.5 border border-slate-200/60">
                 <Clock className="w-3.5 h-3.5 text-slate-400" /> {timeString}
               </span>
             )}
 
             {streak && (
               <span className="text-xs font-bold text-black bg-slate-100 border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1.5">
-                <Flame className="w-3.5 h-3.5" /> {streak} Streak Active
+                <Flame className="w-3.5 h-3.5 text-black" /> {streak} Streak Active
               </span>
             )}
           </div>
@@ -55,8 +55,8 @@ export default function AICommandHeader({ greeting, name, streak, aiInsight }) {
           </h1>
 
           {aiInsight && (
-            <div className="p-3.5 bg-slate-50 border border-slate-200 text-xs text-slate-700 font-medium leading-relaxed max-w-3xl flex items-start gap-2">
-              <Zap className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs text-slate-700 font-medium leading-relaxed max-w-3xl flex items-start gap-2">
+              <Zap className="w-4 h-4 text-black shrink-0 mt-0.5" />
               <span><strong className="font-extrabold text-black">AI Insight:</strong> {aiInsight}</span>
             </div>
           )}
@@ -68,7 +68,7 @@ export default function AICommandHeader({ greeting, name, streak, aiInsight }) {
             <button
               key={action.label}
               onClick={() => navigate(action.path)}
-              className="px-4 py-3 border border-slate-200 bg-white text-black text-xs font-bold transition-all flex items-center justify-center gap-2 hover:bg-black hover:text-white hover:border-black"
+              className="px-4 py-3 rounded-2xl border border-slate-200/80 bg-white text-black text-xs font-bold transition-all flex items-center justify-center gap-2 hover:bg-slate-900 hover:text-white hover:border-slate-300"
             >
               {action.icon}
               <span>{action.label}</span>

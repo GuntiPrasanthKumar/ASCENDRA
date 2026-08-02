@@ -34,15 +34,15 @@ export default function AIMentor() {
     return (
       <PageTransition>
         <div className="min-h-screen bg-background pt-32 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-rose-500 mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 mb-2">AI Coach Unavailable</h2>
+          <div className="max-w-md w-full p-8 border border-slate-200 bg-white text-center flex flex-col items-center">
+            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4" />
+            <h2 className="text-xl font-bold text-black mb-2">AI Coach Unavailable</h2>
             <p className="text-xs text-slate-500 mb-6 leading-relaxed">
               We encountered an issue connecting to your career guidance engine.
             </p>
             <button
               onClick={() => setHasError(false)}
-              className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-indigo-600 transition-all"
+              className="w-full py-4 bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all"
             >
               Retry Connection
             </button>
@@ -55,10 +55,6 @@ export default function AIMentor() {
   return (
     <PageTransition>
       <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
-        {/* Ambient Lighting */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-10 left-0 w-96 h-96 bg-cyan-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
-
         <div className="max-w-7xl mx-auto relative z-10">
           
           {/* AI Mentor Header */}

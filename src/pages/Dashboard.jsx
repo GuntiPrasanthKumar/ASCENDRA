@@ -20,7 +20,7 @@ import ChallengeCard from '../components/dashboard/ChallengeCard';
 import AchievementCard from '../components/dashboard/AchievementCard';
 
 // Lucide Icons
-import { PlayCircle, ShieldAlert, Sparkles } from 'lucide-react';
+import { PlayCircle, ShieldAlert } from 'lucide-react';
 
 export default function Dashboard() {
   const { user } = useAuthStore();
@@ -31,7 +31,6 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  // Load dynamically synchronized metrics from localStorage
   const completedLessonsCount = React.useMemo(() => {
     try {
       const list = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
@@ -88,15 +87,15 @@ export default function Dashboard() {
     return (
       <PageTransition>
         <div className="min-h-screen bg-background pt-32 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-rose-500 mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Command Center Unavailable</h2>
+          <div className="max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/80 bg-white text-center flex flex-col items-center shadow-xs">
+            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4" />
+            <h2 className="text-xl font-bold text-black mb-2">Command Center Unavailable</h2>
             <p className="text-xs text-slate-500 mb-6 leading-relaxed">
               We encountered an issue initializing your real-time telemetry.
             </p>
             <button
               onClick={() => setHasError(false)}
-              className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-indigo-600 transition-all"
+              className="w-full py-4 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all"
             >
               Retry Connection
             </button>
@@ -110,12 +109,12 @@ export default function Dashboard() {
     <PageTransition>
       <div className="min-h-screen bg-background pt-0 pb-12 px-4 md:px-6 relative overflow-hidden">
         {/* Subtle background ambient lighting */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-10 left-0 w-96 h-96 bg-cyan-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-slate-100/50 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-10 left-0 w-96 h-96 bg-slate-100/50 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           
-          {/* Top: AI Command Header (Greeting, Time, AI Insight, Quick Actions) */}
+          {/* Top: AI Command Header */}
           <AICommandHeader
             greeting={greeting}
             name={user?.name?.split(' ')[0] || 'Scholar'}
@@ -158,7 +157,7 @@ export default function Dashboard() {
                 />
 
                 {/* Upcoming Schedule */}
-                <div className="glass p-6 rounded-3xl border border-slate-200/50">
+                <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 shadow-xs">
                   <h3 className="text-md font-bold font-display text-slate-900 mb-4">Upcoming Schedule</h3>
                   <div className="flex flex-col gap-4">
                     {data.upcomingTasks.map(task => (
@@ -169,13 +168,13 @@ export default function Dashboard() {
                           type={task.type}
                           status={task.status}
                         />
-                        <div className="p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-[10px] text-slate-500 leading-relaxed">
+                        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/60 text-[10px] text-slate-500 leading-relaxed">
                           <span className="font-extrabold text-[8px] uppercase tracking-wider block text-slate-500 mb-0.5">AI Tip:</span>
                           {task.aiInsight}
                         </div>
                         <button
                           onClick={() => navigate(task.actionUrl)}
-                          className="text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-800 transition-colors text-left flex items-center gap-0.5"
+                          className="text-[10px] font-black uppercase tracking-widest text-black hover:text-slate-600 transition-colors text-left flex items-center gap-0.5"
                         >
                           {task.actionText}
                         </button>
@@ -186,7 +185,7 @@ export default function Dashboard() {
               </>
             }
           >
-            {/* AI Recommendation Grid (Next lesson, Weak topics, Recommended coding, Suggested interview) */}
+            {/* AI Recommendation Grid */}
             <AIRecommendationGrid />
 
             {/* Learning Analytics Section */}
@@ -198,30 +197,30 @@ export default function Dashboard() {
             {/* Continue Learning */}
             <div className="mb-8">
               <SectionHeader title="Continue Learning Path" subtitle="Resume your active curriculum" />
-              <div className="glass p-6 md:p-8 rounded-[2.5rem] border border-slate-200/50 flex flex-col justify-between group hover:border-indigo-500/20 transition-all duration-300">
+              <div className="p-6 md:p-8 bg-white rounded-[2.5rem] border border-slate-200/80 flex flex-col justify-between group hover:border-slate-300 shadow-xs transition-all duration-300">
                 <div>
-                  <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-3 inline-block">
+                  <span className="text-[10px] font-black text-black bg-slate-100 border border-slate-200 px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
                     {data.continueLearning.subject}
                   </span>
-                  <h3 className="text-xl font-bold font-display text-slate-900 mb-1">{data.continueLearning.chapter}</h3>
+                  <h3 className="text-xl font-bold font-display text-black mb-1">{data.continueLearning.chapter}</h3>
                   <p className="text-xs text-slate-500 font-medium mb-4">Lesson {data.continueLearning.completedLessons + 1} of {data.continueLearning.totalLessons}</p>
                   
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100/80 text-xs text-slate-600 leading-relaxed mb-6 font-medium">
-                    <span className="font-extrabold block mb-0.5 text-slate-700 uppercase tracking-widest text-[9px]">Roadmap Insight:</span>
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs text-slate-600 leading-relaxed mb-6 font-medium">
+                    <span className="font-extrabold block mb-0.5 text-black uppercase tracking-widest text-[9px]">Roadmap Insight:</span>
                     {data.continueLearning.aiInsight}
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 border-t border-slate-100/80">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 border-t border-slate-100">
                   <div className="flex flex-col gap-1 w-full md:w-auto">
-                    <span className="text-xs font-black text-slate-900">{data.continueLearning.progress}% Complete</span>
-                    <div className="w-full md:w-32 h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
-                      <div className="h-full bg-indigo-600 animate-pulse" style={{ width: `${data.continueLearning.progress}%` }} />
+                    <span className="text-xs font-black text-black">{data.continueLearning.progress}% Complete</span>
+                    <div className="w-full md:w-32 h-2 bg-slate-100 rounded-full border border-slate-200/40 overflow-hidden">
+                      <div className="h-full bg-black rounded-full" style={{ width: `${data.continueLearning.progress}%` }} />
                     </div>
                   </div>
                   <button
                     onClick={() => navigate('/learn/adv-algorithms/dynamic-programming/dp-introduction')}
-                    className="w-full md:w-auto px-6 py-3.5 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-indigo-600 transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-md group-hover:scale-[1.01]"
+                    className="w-full md:w-auto px-6 py-3.5 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all flex items-center justify-center gap-1.5 shrink-0 group-hover:scale-[1.01]"
                   >
                     <PlayCircle className="w-4 h-4" /> {data.continueLearning.actionText}
                   </button>
@@ -260,7 +259,7 @@ export default function Dashboard() {
             {/* Achievements */}
             <div>
               <SectionHeader title="Badges & Milestones" subtitle="Achievements earned across your learning journey" />
-              <div className="glass p-6 rounded-[2.5rem] border border-slate-200/50 flex flex-col gap-6">
+              <div className="p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 bg-white flex flex-col gap-6 shadow-xs">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {data.achievements.items.map(ach => (
                     <AchievementCard
@@ -282,7 +281,6 @@ export default function Dashboard() {
   );
 }
 
-// Hook helper to calculate greeting
 function useMemoGreeting() {
   const hour = new Date().getHours();
   return React.useMemo(() => {

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, User, Sparkles, Trash2, HelpCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Send, Bot, User, Trash2, HelpCircle } from 'lucide-react';
 import { useToastStore } from '../common/Toast';
 
 export default function ConversationPanel() {
@@ -27,7 +27,6 @@ export default function ConversationPanel() {
     "Track my progress."
   ];
 
-  // Auto-scroll to bottom of conversation
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
@@ -59,7 +58,6 @@ export default function ConversationPanel() {
     setInput('');
     setIsTyping(true);
 
-    // Simulate realistic AI response timing
     setTimeout(() => {
       const aiReply = {
         id: Date.now() + 1,
@@ -77,17 +75,17 @@ export default function ConversationPanel() {
   };
 
   return (
-    <div className="glass rounded-[2.5rem] border border-slate-200/50 flex flex-col overflow-hidden shadow-sm mb-8 bg-white/70">
+    <div className="rounded-[2.5rem] border border-slate-200/80 flex flex-col overflow-hidden mb-8 bg-white shadow-xs">
       
       {/* Panel Header */}
-      <div className="p-5 border-b border-slate-200/60 bg-white/80 backdrop-blur-md flex items-center justify-between">
+      <div className="p-5 border-b border-slate-200/60 bg-slate-50 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/20">
+          <div className="w-10 h-10 rounded-2xl bg-black flex items-center justify-center text-white">
             <Bot className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-display font-extrabold text-slate-900 flex items-center gap-2 text-sm">
-              ASCENDRA AI Coach <span className="text-[9px] bg-indigo-50 border border-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full font-black uppercase">Live</span>
+            <h3 className="font-display font-extrabold text-black flex items-center gap-2 text-sm">
+              ASCENDRA AI Coach <span className="text-[9px] bg-black text-white px-2 py-0.5 rounded-full font-black uppercase">Live</span>
             </h3>
             <p className="text-[11px] text-slate-500 font-medium">Real-time learning guidance & career advice</p>
           </div>
@@ -95,95 +93,84 @@ export default function ConversationPanel() {
 
         <button
           onClick={handleClearHistory}
-          className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-colors text-xs flex items-center gap-1 font-semibold"
+          className="p-2 rounded-full text-slate-400 hover:text-black hover:bg-slate-100 transition-colors text-xs flex items-center gap-1 font-semibold"
           title="Reset Conversation"
         >
-          <Trash2 className="w-4 h-4" /> Reset
+          <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline">Clear Chat</span>
         </button>
       </div>
 
+      {/* Messages Scroll Area */}
+      <div className="p-6 overflow-y-auto max-h-[420px] min-h-[320px] flex flex-col gap-4 bg-white">
+        {messages.map((msg) => (
+          <motion.div
+            key={msg.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`flex gap-3 max-w-3xl ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
+          >
+            <div className={`w-8 h-8 rounded-2xl flex items-center justify-center shrink-0 text-xs font-bold ${
+              msg.role === 'user' ? 'bg-black text-white' : 'bg-slate-100 border border-slate-200 text-black'
+            }`}>
+              {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4 text-black" />}
+            </div>
+
+            <div className={`p-4 rounded-2xl text-xs leading-relaxed ${
+              msg.role === 'user'
+                ? 'bg-black text-white'
+                : 'bg-slate-50 border border-slate-200/60 text-black'
+            }`}>
+              <div dangerouslySetInnerHTML={{ __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+            </div>
+          </motion.div>
+        ))}
+
+        {isTyping && (
+          <div className="flex gap-3 max-w-xs">
+            <div className="w-8 h-8 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-black">
+              <Bot className="w-4 h-4" />
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs flex items-center gap-1 text-slate-500 font-medium">
+              <span className="w-1.5 h-1.5 bg-black rounded-full animate-ping" /> AI Coach analyzing telemetry...
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
       {/* Quick Prompts Bar */}
-      <div className="p-4 bg-slate-50/70 border-b border-slate-100 flex items-center gap-2 overflow-x-auto custom-scrollbar">
-        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0 flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-indigo-600" /> Prompts:
-        </span>
-        {quickPrompts.map((prompt) => (
+      <div className="px-6 py-3 border-t border-slate-100 bg-slate-50 flex items-center gap-2 overflow-x-auto scrollbar-hide">
+        <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+        <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 shrink-0">Quick Prompts:</span>
+        {quickPrompts.map((prompt, idx) => (
           <button
-            key={prompt}
+            key={idx}
             onClick={() => handleSend(prompt)}
-            className="text-xs font-bold text-slate-700 bg-white hover:bg-indigo-600 hover:text-white px-3 py-1.5 rounded-xl border border-slate-200/60 hover:border-indigo-600 transition-all shrink-0 shadow-2xs"
+            className="text-[11px] font-medium text-black bg-white hover:bg-slate-100 border border-slate-200/80 px-3 py-1 rounded-full whitespace-nowrap transition-colors shadow-xs"
           >
             {prompt}
           </button>
         ))}
       </div>
 
-      {/* Message Stream Area */}
-      <div className="p-6 h-[340px] overflow-y-auto space-y-4 custom-scrollbar bg-slate-50/30">
-        <AnimatePresence initial={false}>
-          {messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`flex gap-3 max-w-[85%] sm:max-w-[75%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold shadow-2xs ${
-                  msg.role === 'user' ? 'bg-slate-900 text-white' : 'bg-white border border-slate-200 text-indigo-600'
-                }`}>
-                  {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                </div>
-
-                <div className={`p-4 rounded-2xl text-xs leading-relaxed ${
-                  msg.role === 'user'
-                    ? 'bg-slate-900 text-white rounded-tr-none shadow-sm font-medium'
-                    : 'bg-white border border-slate-200/70 text-slate-800 rounded-tl-none shadow-2xs font-medium'
-                }`}>
-                  <p>{msg.content}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-
-          {isTyping && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-indigo-600 flex items-center justify-center shrink-0">
-                  <Bot className="w-4 h-4" />
-                </div>
-                <div className="px-4 py-3 rounded-2xl bg-white border border-slate-200/70 flex gap-1.5 items-center shadow-2xs">
-                  <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce"></span>
-                  <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
-                  <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Box */}
-      <div className="p-4 bg-white border-t border-slate-200/60">
-        <div className="relative flex items-center">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask your AI Coach about weak topics, roadmap items, or interview tips..."
-            className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3.5 pl-4 pr-12 text-xs font-medium text-slate-900 focus:outline-none focus:border-indigo-600 focus:bg-white transition-all shadow-2xs"
-          />
-          <button
-            onClick={() => handleSend()}
-            disabled={!input.trim()}
-            className="absolute right-2 w-9 h-9 bg-slate-900 text-white hover:bg-indigo-600 rounded-xl flex items-center justify-center disabled:opacity-30 transition-all shadow-sm"
-          >
-            <Send className="w-4 h-4 ml-0.5" />
-          </button>
-        </div>
-      </div>
+      {/* Input Form Bar */}
+      <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="p-4 border-t border-slate-200/60 bg-white flex gap-3">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask AI Coach anything about your syllabus, weak topics, or career strategy..."
+          className="flex-1 px-5 py-3 rounded-full bg-slate-50 border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-black text-xs font-semibold text-black placeholder-slate-400"
+        />
+        <button
+          type="submit"
+          disabled={!input.trim()}
+          className="px-6 py-3 rounded-full bg-black hover:bg-slate-800 disabled:opacity-50 text-white font-bold text-xs transition-all flex items-center gap-2"
+        >
+          <span>Send</span>
+          <Send className="w-3.5 h-3.5" />
+        </button>
+      </form>
 
     </div>
   );

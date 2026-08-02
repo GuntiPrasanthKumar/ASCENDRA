@@ -49,7 +49,7 @@ export default function AIRecommendationGrid() {
   ];
 
   return (
-    <div className="bg-white p-6 md:p-8 border border-slate-200 mb-8">
+    <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 mb-8 shadow-xs">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-lg font-bold font-display text-black flex items-center gap-2">
@@ -63,11 +63,11 @@ export default function AIRecommendationGrid() {
         {recommendations.map((rec) => (
           <div
             key={rec.id}
-            className="p-5 bg-white border border-slate-200 hover:border-black transition-all duration-300 flex flex-col justify-between group"
+            className="p-6 bg-white rounded-[1.75rem] border border-slate-200/80 hover:border-slate-300 transition-all duration-300 flex flex-col justify-between group shadow-xs"
           >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 border border-slate-300 bg-slate-50 text-black flex items-center gap-1.5">
+                <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-slate-200 bg-slate-100 text-black flex items-center gap-1.5">
                   {rec.icon}
                   {rec.type}
                 </span>
@@ -79,7 +79,7 @@ export default function AIRecommendationGrid() {
               <p className="text-xs font-medium text-slate-500 mb-2">
                 {rec.subtitle}
               </p>
-              <p className="text-[11px] text-slate-600 bg-slate-50 p-2.5 border border-slate-100 leading-relaxed mb-4">
+              <p className="text-[11px] text-slate-600 bg-slate-50 p-3 rounded-2xl border border-slate-200/60 leading-relaxed mb-4">
                 <span className="font-extrabold text-[9px] uppercase tracking-widest text-slate-500 block mb-0.5">Why Recommended:</span>
                 {rec.reason}
               </p>
@@ -87,7 +87,7 @@ export default function AIRecommendationGrid() {
 
             <button
               onClick={() => navigate(rec.path)}
-              className="w-full py-2.5 bg-black text-white hover:bg-slate-800 font-bold text-xs transition-all flex items-center justify-center gap-1.5 group/btn"
+              className="w-full py-3 rounded-full bg-black text-white hover:bg-slate-800 font-bold text-xs transition-all flex items-center justify-center gap-1.5 group/btn"
             >
               <span>{rec.actionText}</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />

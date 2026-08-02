@@ -7,12 +7,11 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 const DAYS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
 function getColorClass(count) {
-  if (count === 0) return 'bg-muted/40 hover:bg-muted';
-  if (count <= 1) return 'bg-accent/25 hover:bg-accent/40';
-  if (count <= 2) return 'bg-accent/50 hover:bg-accent/65';
-  if (count <= 3) return 'bg-accent/75 hover:bg-accent/90';
-  if (count <= 4) return 'bg-accent hover:bg-accent/90';
-  return 'bg-accent shadow-[0_0_6px_rgba(108,99,255,0.6)]';
+  if (count === 0) return 'bg-slate-100 hover:bg-slate-200';
+  if (count <= 1) return 'bg-slate-300 hover:bg-slate-400';
+  if (count <= 2) return 'bg-slate-500 hover:bg-slate-600';
+  if (count <= 3) return 'bg-slate-700 hover:bg-slate-800';
+  return 'bg-black hover:bg-slate-900';
 }
 
 export default function HeatmapCard() {
@@ -25,7 +24,6 @@ export default function HeatmapCard() {
     const fetchHeatmap = async () => {
       try {
         const res = await api.get('/analytics/heatmap');
-        // Convert array [{date, count}] to object {date: count}
         const dataMap = {};
         res.data.forEach(item => {
           dataMap[item.date.split('T')[0]] = item.count;
@@ -40,7 +38,6 @@ export default function HeatmapCard() {
     fetchHeatmap();
   }, []);
 
-  // Build a 53×7 grid (weeks × days)
   const weeks = useMemo(() => {
     const firstDay = new Date(year, 0, 1);
     const startOffset = (firstDay.getDay() + 6) % 7;
@@ -97,18 +94,18 @@ export default function HeatmapCard() {
   const [tooltip, setTooltip] = useState(null);
 
   return (
-    <div className="glass p-6 rounded-3xl w-full">
+    <div className="p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 w-full bg-white shadow-xs">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <Flame className="w-5 h-5 text-accent" />
-          <h3 className="text-lg font-display font-bold text-primary">Learning Activity</h3>
+          <Flame className="w-5 h-5 text-black" />
+          <h3 className="text-lg font-display font-bold text-black">Learning Activity</h3>
         </div>
-        <div className="flex items-center gap-2 bg-white/60 border border-muted rounded-xl px-3 py-1">
-          <button onClick={() => setYear(y => y - 1)} disabled={year <= currentYear - 4} className="text-textMuted hover:text-primary transition-colors disabled:opacity-30">
+        <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/60 px-3 py-1 rounded-full">
+          <button onClick={() => setYear(y => y - 1)} disabled={year <= currentYear - 4} className="text-slate-400 hover:text-black transition-colors disabled:opacity-30">
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <span className="font-mono font-bold text-sm text-primary w-12 text-center">{year}</span>
-          <button onClick={() => setYear(y => y + 1)} disabled={year >= currentYear} className="text-textMuted hover:text-primary transition-colors disabled:opacity-30">
+          <span className="font-mono font-bold text-sm text-black w-12 text-center">{year}</span>
+          <button onClick={() => setYear(y => y + 1)} disabled={year >= currentYear} className="text-slate-400 hover:text-black transition-colors disabled:opacity-30">
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -120,9 +117,9 @@ export default function HeatmapCard() {
           { label: 'Active Days', value: isLoading ? '...' : activeDays },
           { label: 'Best Streak', value: isLoading ? '...' : `${maxStreak}d` },
         ].map((s) => (
-          <div key={s.label} className="flex-1 min-w-[80px] bg-white/50 border border-muted rounded-xl px-3 py-2 text-center">
-            <div className="font-display font-bold text-primary text-lg">{s.value}</div>
-            <div className="text-textMuted text-xs">{s.label}</div>
+          <div key={s.label} className="flex-1 min-w-[80px] bg-slate-50 border border-slate-200/60 rounded-2xl px-3 py-2 text-center">
+            <div className="font-display font-bold text-black text-lg">{s.value}</div>
+            <div className="text-slate-500 text-xs">{s.label}</div>
           </div>
         ))}
       </div>
@@ -131,7 +128,7 @@ export default function HeatmapCard() {
         <div className="min-w-max">
           <div className="flex ml-7 mb-1 relative h-4">
             {monthLabels.map(({ month, weekIndex }) => (
-              <div key={`${month}-${weekIndex}`} className="absolute text-[10px] text-textMuted font-medium" style={{ left: `${weekIndex * 13}px` }}>
+              <div key={`${month}-${weekIndex}`} className="absolute text-[10px] text-slate-500 font-medium" style={{ left: `${weekIndex * 13}px` }}>
                 {month}
               </div>
             ))}
@@ -139,14 +136,14 @@ export default function HeatmapCard() {
           <div className="flex gap-0">
             <div className="flex flex-col gap-[3px] mr-1 mt-0">
               {DAYS.map((d, i) => (
-                <div key={i} className="h-[10px] w-6 text-[9px] text-textMuted flex items-center justify-end pr-1">
+                <div key={i} className="h-[10px] w-6 text-[9px] text-slate-500 flex items-center justify-end pr-1">
                   {d}
                 </div>
               ))}
             </div>
             {weeks.map((week, wi) => (
               <div key={wi} className="flex flex-col gap-[3px] mr-[3px]">
-                {week.map((cell, di) => (
+                {week.map((cell) => (
                   <motion.div
                     key={cell.key}
                     initial={{ opacity: 0 }}
@@ -163,17 +160,17 @@ export default function HeatmapCard() {
       </div>
 
       {tooltip && tooltip.count >= 0 && (
-        <div className="mt-3 text-xs text-center text-textMuted bg-white/60 border border-muted rounded-lg py-1 px-3">
-          <span className="font-bold text-primary">{tooltip.count === 0 ? 'No activity' : `${tooltip.count} session${tooltip.count > 1 ? 's' : ''}`}</span>
+        <div className="mt-3 text-xs text-center text-slate-600 bg-slate-50 border border-slate-200/60 rounded-xl py-1 px-3">
+          <span className="font-bold text-black">{tooltip.count === 0 ? 'No activity' : `${tooltip.count} session${tooltip.count > 1 ? 's' : ''}`}</span>
           {' '}on{' '}
           <span>{tooltip.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
         </div>
       )}
 
-      <div className="flex items-center justify-end gap-2 mt-3 text-xs text-textMuted">
+      <div className="flex items-center justify-end gap-2 mt-3 text-xs text-slate-500">
         <span>Less</span>
         <div className="flex gap-[3px]">
-          {[0, 1, 2, 3, 4, 5].map(n => (
+          {[0, 1, 2, 3, 4].map(n => (
             <div key={n} className={`w-[10px] h-[10px] rounded-sm ${getColorClass(n)}`} />
           ))}
         </div>

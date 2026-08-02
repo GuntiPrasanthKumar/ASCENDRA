@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, BookOpen, Activity, Award, Code, Video, Clock } from 'lucide-react';
+import { BookOpen, Activity, Award, Code, Video, Clock } from 'lucide-react';
 
 export default function ActivityTimeline({ completedLessons = 8, completedQuizzes = 3, completedCoding = 1, completedInterviews = 1 }) {
   const activities = [
@@ -9,8 +9,8 @@ export default function ActivityTimeline({ completedLessons = 8, completedQuizze
       subtitle: 'Longest Palindromic Substring',
       time: '2 hours ago',
       type: 'code',
-      icon: <Code className="w-3.5 h-3.5 text-cyan-600" />,
-      color: 'bg-cyan-50 border-cyan-200'
+      icon: <Code className="w-3.5 h-3.5 text-black" />,
+      color: 'bg-slate-50 border-slate-200'
     },
     {
       id: 'act-2',
@@ -18,8 +18,8 @@ export default function ActivityTimeline({ completedLessons = 8, completedQuizze
       subtitle: 'Algorithms & Complexity • 92% Score',
       time: 'Yesterday',
       type: 'quiz',
-      icon: <Award className="w-3.5 h-3.5 text-indigo-600" />,
-      color: 'bg-indigo-50 border-indigo-200'
+      icon: <Award className="w-3.5 h-3.5 text-black" />,
+      color: 'bg-slate-50 border-slate-200'
     },
     {
       id: 'act-3',
@@ -27,8 +27,8 @@ export default function ActivityTimeline({ completedLessons = 8, completedQuizze
       subtitle: 'Quantitative Aptitude Prep',
       time: '2 days ago',
       type: 'practice',
-      icon: <Activity className="w-3.5 h-3.5 text-emerald-600" />,
-      color: 'bg-emerald-50 border-emerald-200'
+      icon: <Activity className="w-3.5 h-3.5 text-black" />,
+      color: 'bg-slate-50 border-slate-200'
     },
     {
       id: 'act-4',
@@ -36,8 +36,8 @@ export default function ActivityTimeline({ completedLessons = 8, completedQuizze
       subtitle: 'System Design Mock • 100% Gaze Accuracy',
       time: '3 days ago',
       type: 'interview',
-      icon: <Video className="w-3.5 h-3.5 text-amber-600" />,
-      color: 'bg-amber-50 border-amber-200'
+      icon: <Video className="w-3.5 h-3.5 text-black" />,
+      color: 'bg-slate-50 border-slate-200'
     },
     {
       id: 'act-5',
@@ -45,16 +45,16 @@ export default function ActivityTimeline({ completedLessons = 8, completedQuizze
       subtitle: 'Introduction to Dynamic Programming',
       time: '4 days ago',
       type: 'lesson',
-      icon: <BookOpen className="w-3.5 h-3.5 text-purple-600" />,
-      color: 'bg-purple-50 border-purple-200'
+      icon: <BookOpen className="w-3.5 h-3.5 text-black" />,
+      color: 'bg-slate-50 border-slate-200'
     }
   ];
 
   return (
-    <div className="glass p-6 rounded-3xl border border-slate-200/50 mb-6">
+    <div className="p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 mb-6 bg-white shadow-xs">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-md font-bold font-display text-slate-900 flex items-center gap-2">
-          <Clock className="w-4 h-4 text-indigo-600" /> Recent Activity Timeline
+        <h3 className="text-md font-bold font-display text-black flex items-center gap-2">
+          <Clock className="w-4 h-4 text-black" /> Recent Activity Timeline
         </h3>
       </div>
 
@@ -67,7 +67,7 @@ export default function ActivityTimeline({ completedLessons = 8, completedQuizze
             
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                <h4 className="text-xs font-bold text-black group-hover:text-slate-600 transition-colors">
                   {act.title}
                 </h4>
                 <span className="text-[10px] text-slate-400 font-medium">{act.time}</span>

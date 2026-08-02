@@ -5,7 +5,7 @@ import { PageSkeleton } from '../components/common/FeedbackStates';
 import { mockSubjects } from '../features/learning/mock/subjects';
 import { mockChapters } from '../features/learning/mock/chapters';
 import ChapterCard from '../components/learn/ChapterCard';
-import { ArrowLeft, BookOpen, ShieldAlert, PlayCircle } from 'lucide-react';
+import { ArrowLeft, ShieldAlert } from 'lucide-react';
 
 export default function SubjectPage() {
   const { subjectId } = useParams();
@@ -42,13 +42,13 @@ export default function SubjectPage() {
     return (
       <PageTransition>
         <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-error mb-4 animate-pulse" />
-            <h2 className="text-xl font-bold text-primary mb-2">Subject Overview Not Found</h2>
-            <p className="text-xs text-textMuted mb-6 leading-relaxed">
+          <div className="max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/80 bg-white text-center flex flex-col items-center shadow-xs">
+            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4" />
+            <h2 className="text-xl font-display font-extrabold text-black mb-2">Subject Overview Not Found</h2>
+            <p className="text-xs font-medium text-slate-500 mb-6 leading-relaxed">
               We could not find the requested syllabus subject path details.
             </p>
-            <button onClick={() => navigate('/learn')} className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-xs hover:bg-accent transition-all">
+            <button onClick={() => navigate('/learn')} className="w-full py-4 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all">
               Return to Hub
             </button>
           </div>
@@ -64,32 +64,32 @@ export default function SubjectPage() {
           
           <button
             onClick={() => navigate('/learn')}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-650 font-bold text-xs transition-all border border-slate-250 mb-8 shadow-sm"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-slate-100 text-black font-bold text-xs transition-all border border-slate-200/80 mb-8 shadow-xs"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Subject List
           </button>
 
           {/* Subject Overview Card */}
-          <div className="glass p-8 rounded-[2.5rem] border border-slate-200/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 bg-gradient-to-br from-indigo-500/[0.01] to-primary/[0.01]">
+          <div className="p-8 rounded-[2.5rem] border border-slate-200/80 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 shadow-xs">
             <div>
               <div className="flex gap-2 items-center mb-2">
-                <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="text-[10px] font-black text-black bg-slate-100 border border-slate-200 px-3 py-1 rounded-full uppercase tracking-wider">
                   {subject.difficulty}
                 </span>
                 <span className="text-[10px] font-black text-slate-500 uppercase">
                   • {subject.estimatedHours} Hours
                 </span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-display font-extrabold text-primary mb-2">
+              <h1 className="text-3xl md:text-4xl font-display font-extrabold text-black tracking-tight mb-2">
                 {subject.title}
               </h1>
-              <p className="text-textMuted text-xs font-semibold leading-relaxed max-w-2xl">{subject.description}</p>
+              <p className="text-slate-500 text-xs font-medium leading-relaxed max-w-2xl">{subject.description}</p>
             </div>
 
             <div className="flex flex-col items-start md:items-end gap-1.5 shrink-0">
-              <span className="text-[10px] font-black text-indigo-600 uppercase">Overall Progress: {subject.progress}%</span>
-              <div className="w-32 h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
-                <div className="h-full bg-primary" style={{ width: `${subject.progress}%` }} />
+              <span className="text-[10px] font-black text-black uppercase">Overall Progress: {subject.progress}%</span>
+              <div className="w-32 h-1.5 bg-slate-100 rounded-full border border-slate-200/40 overflow-hidden">
+                <div className="h-full bg-black rounded-full" style={{ width: `${subject.progress}%` }} />
               </div>
             </div>
           </div>
@@ -100,9 +100,9 @@ export default function SubjectPage() {
               <ChapterCard
                 key={ch.id}
                 title={ch.title}
-                order={ch.order}
-                lessonsCount={ch.lessonsCount}
+                lessonsCount={ch.lessonIds.length}
                 completedLessons={ch.completedLessons}
+                order={ch.order}
                 onSelect={() => navigate(`/learn/${subject.id}/${ch.id}`)}
               />
             ))}

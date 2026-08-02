@@ -43,11 +43,8 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="flex flex-col gap-8">
           {/* Logo header */}
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="bg-white p-1 rounded-xl shadow-sm flex items-center justify-center">
-                <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-8 w-auto object-contain" />
-              </div>
-              <span className="font-display font-black text-white text-lg tracking-widest uppercase">ASCENDRA</span>
+            <div className="flex items-center">
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-12 w-auto object-contain" />
             </div>
             <button onClick={onClose} className="p-1 text-slate-400 hover:text-white lg:hidden">
               <X className="w-5 h-5" />

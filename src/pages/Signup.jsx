@@ -101,11 +101,7 @@ export default function Signup() {
                   className="glass p-8 rounded-3xl"
                 >
                   <div className="text-center mb-6 flex flex-col items-center">
-                    <div className="bg-white p-2 rounded-2xl border border-slate-200/50 shadow-md mb-2 flex items-center justify-center">
-                      <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-14 w-auto object-contain" />
-                    </div>
-                    <h2 className="text-3xl font-display font-black text-primary tracking-widest uppercase">ASCENDRA</h2>
-                    <p className="text-accent text-xs font-bold uppercase tracking-wider mt-1">Where Intelligence Meets Ambition.</p>
+                    <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-24 md:h-28 w-auto object-contain mb-1" />
                     <p className="text-textMuted text-xs font-medium mt-1">Step 1 of 2: Account Registration</p>
                   </div>
 

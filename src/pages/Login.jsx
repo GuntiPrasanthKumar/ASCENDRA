@@ -108,13 +108,9 @@ export default function Login() {
               )}
             </AnimatePresence>
 
-            <div className="text-center mb-8 flex flex-col items-center">
-              <div className="bg-white p-2 rounded-2xl border border-slate-200/50 shadow-md mb-3 flex items-center justify-center">
-                <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-16 w-auto object-contain" />
-              </div>
-              <h2 className="text-3xl font-display font-black text-primary tracking-widest uppercase">ASCENDRA</h2>
-              <p className="text-accent text-xs font-bold uppercase tracking-wider mt-1">Where Intelligence Meets Ambition.</p>
-              <p className="text-textMuted text-xs font-medium mt-1">AI-powered learning and career platform</p>
+            <div className="text-center mb-6 flex flex-col items-center">
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-24 md:h-32 w-auto object-contain mb-2" />
+              <p className="text-textMuted text-xs font-medium">AI-powered learning and career platform</p>
             </div>
 
             <div className="flex flex-col items-center">

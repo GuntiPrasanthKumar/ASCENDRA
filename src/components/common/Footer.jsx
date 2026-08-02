@@ -31,9 +31,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-10 w-auto object-contain rounded-lg" />
-              <span className="font-display font-black text-2xl tracking-widest uppercase">ASCENDRA</span>
+            <Link to="/" className="flex items-center mb-4">
+              <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-16 w-auto object-contain" />
             </Link>
             <p className="text-accent text-xs font-bold uppercase tracking-wider mb-2">
               Where Intelligence Meets Ambition.

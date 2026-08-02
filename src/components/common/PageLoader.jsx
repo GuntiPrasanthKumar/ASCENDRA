@@ -15,7 +15,7 @@ const PageLoader = () => {
 
         <div className="relative flex items-center justify-center mt-2">
           <motion.div
-            className="w-10 h-10 rounded-full border-3 border-indigo-600/20 border-t-indigo-600"
+            className="w-10 h-10 rounded-full border-3 border-black/20 border-t-black"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />

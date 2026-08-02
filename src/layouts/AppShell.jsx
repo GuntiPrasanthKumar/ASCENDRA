@@ -246,7 +246,7 @@ export default function AppShell() {
         </header>
 
         {/* 3. Page Container & Content Layout */}
-        <main className="flex-1 px-6 py-8 md:px-10 md:py-12 max-w-7xl w-full mx-auto">
+        <main className="flex-1 px-6 py-2 md:px-8 md:py-3 max-w-7xl w-full mx-auto">
           {/* Breadcrumbs Navigation */}
           <Breadcrumbs />
 

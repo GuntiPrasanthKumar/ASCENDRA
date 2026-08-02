@@ -14,7 +14,7 @@ export default function Breadcrumbs() {
   };
 
   return (
-    <nav className="flex items-center gap-2 text-xs font-bold text-textMuted select-none mb-6">
+    <nav className="flex items-center gap-2 text-xs font-bold text-textMuted select-none mb-3">
       <Link to="/dashboard" className="hover:text-primary transition-colors flex items-center gap-1">
         <Home className="w-3.5 h-3.5" />
       </Link>

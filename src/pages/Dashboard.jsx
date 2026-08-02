@@ -1,34 +1,26 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../components/common/PageTransition';
+import { PageSkeleton } from '../components/common/FeedbackStates';
 import { useAuthStore } from '../hooks/useAuthStore';
 import { dashboardMockData } from '../components/dashboard/mockData';
 
-// Reusable Dashboard components
+// Modular Dashboard Components
 import DashboardLayout from '../components/dashboard/DashboardLayout';
-import DashboardHeader from '../components/dashboard/DashboardHeader';
-import WelcomeBanner from '../components/dashboard/WelcomeBanner';
-import SectionHeader from '../components/dashboard/SectionHeader';
-import StatCard from '../components/dashboard/StatCard';
+import AICommandHeader from '../components/dashboard/AICommandHeader';
+import AIRecommendationGrid from '../components/dashboard/AIRecommendationGrid';
+import LearningAnalytics from '../components/dashboard/LearningAnalytics';
+import ActivityTimeline from '../components/dashboard/ActivityTimeline';
 import GoalChecklist from '../components/dashboard/GoalChecklist';
-import ChallengeCard from '../components/dashboard/ChallengeCard';
-import QuickActionCard from '../components/dashboard/QuickActionCard';
-import AchievementCard from '../components/dashboard/AchievementCard';
-import UpcomingTaskCard from '../components/dashboard/UpcomingTaskCard';
-
-// Sprint 1B new components
 import AICoachCard from '../components/dashboard/AICoachCard';
 import GrowthTracker from '../components/dashboard/GrowthTracker';
+import UpcomingTaskCard from '../components/dashboard/UpcomingTaskCard';
+import SectionHeader from '../components/dashboard/SectionHeader';
+import ChallengeCard from '../components/dashboard/ChallengeCard';
+import AchievementCard from '../components/dashboard/AchievementCard';
 
-// Lucide icons
-import { Target, Award, Activity, Flame, ShieldCheck, Sparkles, PlayCircle, BookOpen } from 'lucide-react';
-
-const STAT_ICONS = {
-  rank: <Target className="w-5 h-5" />,
-  accuracy: <Award className="w-5 h-5" />,
-  quizzes: <Activity className="w-5 h-5" />,
-  streak: <Flame className="w-5 h-5" />
-};
+// Lucide Icons
+import { PlayCircle, ShieldAlert, Sparkles } from 'lucide-react';
 
 export default function Dashboard() {
   const { user } = useAuthStore();
@@ -36,90 +28,107 @@ export default function Dashboard() {
   const greeting = useMemoGreeting();
   const navigate = useNavigate();
 
-  // Load dynamically synchronized state
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  // Load dynamically synchronized metrics from localStorage
   const completedLessonsCount = React.useMemo(() => {
-    const list = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
-    return list.length;
+    try {
+      const list = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+      return list.length;
+    } catch {
+      return 0;
+    }
   }, []);
 
   const completedQuizzesCount = React.useMemo(() => {
-    const list = JSON.parse(localStorage.getItem('completed_quizzes') || '[]');
-    return list.length;
+    try {
+      const list = JSON.parse(localStorage.getItem('completed_quizzes') || '[]');
+      return list.length;
+    } catch {
+      return 0;
+    }
   }, []);
 
   const completedCodingCount = React.useMemo(() => {
-    const list = JSON.parse(localStorage.getItem('completed_coding') || '[]');
-    return list.length || 1; // mock baseline
+    try {
+      const list = JSON.parse(localStorage.getItem('completed_coding') || '[]');
+      return list.length || 1;
+    } catch {
+      return 1;
+    }
   }, []);
 
   const completedInterviewsCount = React.useMemo(() => {
-    const list = JSON.parse(localStorage.getItem('completed_interviews') || '[]');
-    return list.length || 1; // mock baseline
+    try {
+      const list = JSON.parse(localStorage.getItem('completed_interviews') || '[]');
+      return list.length || 1;
+    } catch {
+      return 1;
+    }
   }, []);
 
   const currentStreak = React.useMemo(() => {
     return localStorage.getItem('skilltrove_streak') || '7';
   }, []);
 
-  // Update summary stats cards dynamically
-  const dynamicSummary = React.useMemo(() => {
-    return [
-      { id: 'rank', label: 'Global Rank', value: '#142', change: 'Active', color: 'text-accent' },
-      { id: 'accuracy', label: 'Solved Problems', value: `${completedCodingCount} Tasks`, change: 'CodeLab', color: 'text-success' },
-      { id: 'quizzes', label: 'Completed Quizzes', value: `${completedQuizzesCount}`, change: 'Diagnostics', color: 'text-accent2' },
-      { id: 'streak', label: 'Rehearsals Passed', value: `${completedInterviewsCount}`, change: 'Interview Studio', color: 'text-warning' }
-    ];
-  }, [completedCodingCount, completedQuizzesCount, completedInterviewsCount]);
+  if (isLoading) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-background pt-28 pb-20 px-4 md:px-6">
+          <div className="max-w-7xl mx-auto">
+            <PageSkeleton />
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <PageTransition>
+        <div className="min-h-screen bg-background pt-32 pb-20 px-4 md:px-6 flex items-center justify-center">
+          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
+            <ShieldAlert className="w-12 h-12 text-rose-500 mb-4" />
+            <h2 className="text-xl font-bold text-slate-900 mb-2">Command Center Unavailable</h2>
+            <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+              We encountered an issue initializing your real-time telemetry.
+            </p>
+            <button
+              onClick={() => setHasError(false)}
+              className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-indigo-600 transition-all"
+            >
+              Retry Connection
+            </button>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-32 pb-20 px-4 md:px-6 relative overflow-hidden">
-        {/* Sleek, minimal theme backdrops */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/[0.01] rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-10 left-0 w-96 h-96 bg-primary/[0.01] rounded-full blur-[100px] pointer-events-none" />
+      <div className="min-h-screen bg-background pt-0 pb-12 px-4 md:px-6 relative overflow-hidden">
+        {/* Subtle background ambient lighting */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-10 left-0 w-96 h-96 bg-cyan-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           
-          {/* Dashboard Header */}
-          <DashboardHeader 
-            title="ASCENDRA Command Center" 
-            description="Where Intelligence Meets Ambition. Track learning metrics, practice sets, and interview rehearsals." 
+          {/* Top: AI Command Header (Greeting, Time, AI Insight, Quick Actions) */}
+          <AICommandHeader
+            greeting={greeting}
+            name={user?.name?.split(' ')[0] || 'Scholar'}
+            streak={`${currentStreak} Days`}
+            aiInsight={data.welcomeHero.aiInsight}
           />
 
-          {/* 1. Welcome Hero */}
-          <div className="mb-12">
-            <WelcomeBanner 
-              greeting={greeting}
-              name={user?.name?.split(' ')[0] || 'Scholar'}
-              streak={`${currentStreak} Days`}
-              aiInsight={data.welcomeHero.aiInsight}
-              actionText={data.welcomeHero.actionText}
-              onAction={() => navigate('/learn')}
-            />
-          </div>
-
-          {/* Stat Cards Grid (Dynamic summary details) */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-            {dynamicSummary.map((stat, i) => (
-              <StatCard
-                key={stat.id}
-                label={stat.label}
-                value={stat.value}
-                change={stat.change}
-                color={stat.color}
-                icon={STAT_ICONS[stat.id] || <Award className="w-5 h-5" />}
-                index={i}
-              />
-            ))}
-          </div>
-
-
-          {/* Dashboard Main Grid Split */}
+          {/* Main Layout Grid */}
           <DashboardLayout
             sidebar={
               <>
-                {/* 2. AI Coach panel */}
-                <AICoachCard 
+                {/* AI Mentor Coach Card */}
+                <AICoachCard
                   title={data.aiCoach.title}
                   type={data.aiCoach.type}
                   description={data.aiCoach.description}
@@ -129,20 +138,28 @@ export default function Dashboard() {
                   onAction={() => navigate('/practice')}
                 />
 
-                {/* Today's Goals Checklist */}
+                {/* Today's Goals & Daily Target */}
                 <GoalChecklist initialGoals={data.goals} />
 
-                {/* 6. Growth Tracker (Includes linear tracks + AI insight) */}
-                <GrowthTracker 
+                {/* Growth Tracker */}
+                <GrowthTracker
                   tracks={data.progressTracks.tracks}
                   aiInsight={data.progressTracks.aiInsight}
                   actionText={data.progressTracks.actionText}
                   onAction={() => navigate('/my-learning')}
                 />
 
-                {/* 8. Upcoming Schedule Calendar */}
+                {/* Recent Activity Timeline */}
+                <ActivityTimeline
+                  completedLessons={completedLessonsCount}
+                  completedQuizzes={completedQuizzesCount}
+                  completedCoding={completedCodingCount}
+                  completedInterviews={completedInterviewsCount}
+                />
+
+                {/* Upcoming Schedule */}
                 <div className="glass p-6 rounded-3xl border border-slate-200/50">
-                  <h3 className="text-md font-bold font-display text-primary mb-4">Upcoming Schedule</h3>
+                  <h3 className="text-md font-bold font-display text-slate-900 mb-4">Upcoming Schedule</h3>
                   <div className="flex flex-col gap-4">
                     {data.upcomingTasks.map(task => (
                       <div key={task.id} className="flex flex-col gap-2 border-b border-slate-100 last:border-0 pb-4 last:pb-0">
@@ -152,13 +169,13 @@ export default function Dashboard() {
                           type={task.type}
                           status={task.status}
                         />
-                        <div className="p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-[10px] text-textMuted leading-relaxed">
+                        <div className="p-3 rounded-xl bg-slate-50 border border-slate-100/50 text-[10px] text-slate-500 leading-relaxed">
                           <span className="font-extrabold text-[8px] uppercase tracking-wider block text-slate-500 mb-0.5">AI Tip:</span>
                           {task.aiInsight}
                         </div>
                         <button
                           onClick={() => navigate(task.actionUrl)}
-                          className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-accent transition-colors text-left flex items-center gap-0.5"
+                          className="text-[10px] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-800 transition-colors text-left flex items-center gap-0.5"
                         >
                           {task.actionText}
                         </button>
@@ -169,19 +186,27 @@ export default function Dashboard() {
               </>
             }
           >
-            {/* 4. Continue Learning (Refactored to match structural formats) */}
-            <div>
-              <SectionHeader title="Continue Learning" subtitle="Resume your learning roadmap" />
-              <div className="glass p-8 rounded-[2.5rem] border border-slate-200/50 flex flex-col justify-between h-full group hover:border-primary/20 transition-all duration-300">
+            {/* AI Recommendation Grid (Next lesson, Weak topics, Recommended coding, Suggested interview) */}
+            <AIRecommendationGrid />
+
+            {/* Learning Analytics Section */}
+            <LearningAnalytics
+              codingCount={completedCodingCount}
+              quizCount={completedQuizzesCount}
+            />
+
+            {/* Continue Learning */}
+            <div className="mb-8">
+              <SectionHeader title="Continue Learning Path" subtitle="Resume your active curriculum" />
+              <div className="glass p-6 md:p-8 rounded-[2.5rem] border border-slate-200/50 flex flex-col justify-between group hover:border-indigo-500/20 transition-all duration-300">
                 <div>
-                  <span className="text-[10px] font-black text-primary bg-primary/5 border border-primary/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-3 inline-block">
+                  <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-3 inline-block">
                     {data.continueLearning.subject}
                   </span>
-                  <h3 className="text-xl font-bold font-display text-primary mb-1">{data.continueLearning.chapter}</h3>
-                  <p className="text-xs text-textMuted font-medium mb-4">Lesson {data.continueLearning.completedLessons + 1} of {data.continueLearning.totalLessons}</p>
+                  <h3 className="text-xl font-bold font-display text-slate-900 mb-1">{data.continueLearning.chapter}</h3>
+                  <p className="text-xs text-slate-500 font-medium mb-4">Lesson {data.continueLearning.completedLessons + 1} of {data.continueLearning.totalLessons}</p>
                   
-                  {/* AI Insight */}
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100/50 text-[11px] text-slate-600 leading-relaxed mb-6 font-medium">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100/80 text-xs text-slate-600 leading-relaxed mb-6 font-medium">
                     <span className="font-extrabold block mb-0.5 text-slate-700 uppercase tracking-widest text-[9px]">Roadmap Insight:</span>
                     {data.continueLearning.aiInsight}
                   </div>
@@ -189,26 +214,25 @@ export default function Dashboard() {
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 border-t border-slate-100/80">
                   <div className="flex flex-col gap-1 w-full md:w-auto">
-                    <span className="text-xs font-black text-primary">{data.continueLearning.progress}% Complete</span>
+                    <span className="text-xs font-black text-slate-900">{data.continueLearning.progress}% Complete</span>
                     <div className="w-full md:w-32 h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
-                      <div className="h-full bg-primary animate-pulse" style={{ width: `${data.continueLearning.progress}%` }} />
+                      <div className="h-full bg-indigo-600 animate-pulse" style={{ width: `${data.continueLearning.progress}%` }} />
                     </div>
                   </div>
                   <button
                     onClick={() => navigate('/learn/adv-algorithms/dynamic-programming/dp-introduction')}
-                    className="w-full md:w-auto px-6 py-3.5 rounded-2xl bg-primary text-white font-bold text-xs hover:bg-accent transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-lg shadow-primary/15 group-hover:scale-[1.01]"
+                    className="w-full md:w-auto px-6 py-3.5 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-indigo-600 transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-md group-hover:scale-[1.01]"
                   >
-                    <PlayCircle className="w-4.5 h-4.5" /> {data.continueLearning.actionText}
+                    <PlayCircle className="w-4 h-4" /> {data.continueLearning.actionText}
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* 3. Mission Control */}
-            <div>
-              <SectionHeader title="Mission Control" subtitle="Dynamic challenges to verify your target concepts" />
+            {/* Challenges & Coding Targets */}
+            <div className="mb-8">
+              <SectionHeader title="Mission Control Challenges" subtitle="Dynamic problems to verify your target concepts" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Daily Coding Challenge */}
                 <div className="flex flex-col justify-between h-full">
                   <ChallengeCard
                     title={data.codingChallenge.title}
@@ -218,13 +242,8 @@ export default function Dashboard() {
                     description={data.codingChallenge.description}
                     onAction={() => navigate('/codelab')}
                   />
-                  <div className="p-4 rounded-b-[2rem] bg-indigo-50/20 border border-t-0 border-slate-200/50 text-[10px] text-indigo-700 leading-relaxed font-medium">
-                    <span className="font-extrabold text-[8px] uppercase tracking-wider block text-indigo-800 mb-0.5">AI Target Insight:</span>
-                    {data.codingChallenge.aiInsight}
-                  </div>
                 </div>
 
-                {/* Practice Challenge */}
                 <div className="flex flex-col justify-between h-full">
                   <ChallengeCard
                     title={data.practiceChallenge.title}
@@ -234,17 +253,13 @@ export default function Dashboard() {
                     description={data.practiceChallenge.description}
                     onAction={() => navigate('/practice')}
                   />
-                  <div className="p-4 rounded-b-[2rem] bg-slate-50/55 border border-t-0 border-slate-200/50 text-[10px] text-slate-600 leading-relaxed font-medium">
-                    <span className="font-extrabold text-[8px] uppercase tracking-wider block text-slate-700 mb-0.5">AI Target Insight:</span>
-                    {data.practiceChallenge.aiInsight}
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* 7. Achievements */}
+            {/* Achievements */}
             <div>
-              <SectionHeader title="Recent Achievements" subtitle="Badges unlocked across your practice cycles" />
+              <SectionHeader title="Badges & Milestones" subtitle="Achievements earned across your learning journey" />
               <div className="glass p-6 rounded-[2.5rem] border border-slate-200/50 flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {data.achievements.items.map(ach => (
@@ -257,39 +272,6 @@ export default function Dashboard() {
                     />
                   ))}
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100/50 text-[11px] text-slate-600 leading-relaxed flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                  <div className="font-medium">
-                    <span className="font-extrabold block text-slate-700 uppercase tracking-widest text-[9px] mb-0.5">Badges Insight:</span>
-                    {data.achievements.aiInsight}
-                  </div>
-                  <button
-                    onClick={() => navigate('/profile')}
-                    className="text-xs font-black uppercase tracking-widest text-primary hover:text-accent transition-colors shrink-0"
-                  >
-                    {data.achievements.actionText}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Quick Actions */}
-            <div>
-              <SectionHeader title="Quick Actions" subtitle="Fast triggers to adjust settings or check biometric registration" />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <QuickActionCard 
-                  title="Biometric Face Registry" 
-                  desc="Register or update your face authentication descriptor." 
-                  icon={ShieldCheck} 
-                  onAction={() => navigate('/settings')}
-                  bgClass="bg-success/5 text-success"
-                />
-                <QuickActionCard 
-                  title="Interactive AI Mentor" 
-                  desc="Ask code snippets or topic analysis directly." 
-                  icon={Sparkles} 
-                  onAction={() => navigate('/ai-mentor')}
-                  bgClass="bg-accent/5 text-accent"
-                />
               </div>
             </div>
 

@@ -2,7 +2,9 @@ import React, { lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/common/PageTransition';
-import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, ChevronRight, Zap, Users, Star, Lock } from 'lucide-react';
+import EcosystemSection from '../components/home/EcosystemSection';
+import ShowcaseSection from '../components/home/ShowcaseSection';
+import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, Zap, Users, Star, Lock } from 'lucide-react';
 
 const HeroScene = lazy(() => import('../components/3d/HeroScene'));
 
@@ -10,46 +12,33 @@ const features = [
   {
     title: 'AI Proctoring',
     description: 'Real-time face detection, blink analysis, gaze tracking, and posture monitoring to ensure complete academic integrity.',
-    icon: <ShieldCheck className="w-8 h-8 text-accent" />,
-    color: 'accent',
+    icon: <ShieldCheck className="w-8 h-8 text-black" />,
   },
   {
     title: 'Adaptive Learning',
     description: 'Smart question difficulty scaling based on real-time student performance and learning patterns.',
-    icon: <BrainCircuit className="w-8 h-8 text-accent2" />,
-    color: 'accent2',
+    icon: <BrainCircuit className="w-8 h-8 text-black" />,
   },
   {
     title: 'Deep Analytics',
     description: 'Comprehensive skill heatmaps, performance trends, leaderboards and actionable AI-powered insights.',
-    icon: <BarChart3 className="w-8 h-8 text-success" />,
-    color: 'success',
+    icon: <BarChart3 className="w-8 h-8 text-black" />,
   },
   {
     title: 'Secure by Design',
     description: 'End-to-end security with clipboard monitoring, fullscreen enforcement and keyboard shortcut blocking.',
-    icon: <Lock className="w-8 h-8 text-warning" />,
-    color: 'warning',
+    icon: <Lock className="w-8 h-8 text-black" />,
   },
   {
     title: 'Self-Paced Practice',
     description: 'Bite-sized quizzes and guided practice sessions tailored directly to elementary and middle school learning standards.',
-    icon: <Users className="w-8 h-8 text-accent" />,
-    color: 'accent',
+    icon: <Users className="w-8 h-8 text-black" />,
   },
   {
     title: 'AI Tutor',
     description: 'Your personal 24/7 AI learning companion that explains concepts, generates practice problems and tracks gaps.',
-    icon: <Zap className="w-8 h-8 text-accent2" />,
-    color: 'accent2',
+    icon: <Zap className="w-8 h-8 text-black" />,
   },
-];
-
-const departments = [
-  { name: 'Mathematics', img: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=500&q=80', courses: 12 },
-  { name: 'Science & Nature', img: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=500&q=80', courses: 10 },
-  { name: 'English & Grammar', img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=500&q=80', courses: 8 },
-  { name: 'History & Geography', img: 'https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=500&q=80', courses: 6 },
 ];
 
 const testimonials = [
@@ -90,14 +79,14 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-accent/20 mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-slate-200 mb-8"
         >
-          <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          <span className="text-sm font-medium">Platform Live v2.0 — Now with AI Proctoring</span>
+          <span className="w-2 h-2 rounded-full bg-black animate-pulse"></span>
+          <span className="text-sm font-medium text-black">Platform Live v2.0 — Now with AI Proctoring</span>
         </motion.div>
 
         <motion.h1
-          className="text-6xl md:text-8xl font-display font-extrabold text-primary mb-6 tracking-tight leading-tight"
+          className="text-6xl md:text-8xl font-display font-extrabold text-black mb-6 tracking-tight leading-tight"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -116,7 +105,7 @@ export default function Home() {
         </motion.h1>
 
         <motion.p
-          className="text-lg md:text-xl text-textMuted font-body max-w-2xl mb-12"
+          className="text-lg md:text-xl text-slate-500 font-body max-w-2xl mb-12"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -132,7 +121,7 @@ export default function Home() {
         >
           <Link
             to="/signup"
-            className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 bg-primary rounded-full hover:bg-accent overflow-hidden shadow-lg hover:shadow-accent/30 hover:shadow-xl"
+            className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 bg-black rounded-full hover:bg-slate-800 overflow-hidden shadow-lg hover:shadow-xl"
           >
             <span className="relative flex items-center gap-2">
               Get Started Free
@@ -141,7 +130,7 @@ export default function Home() {
           </Link>
           <Link
             to="/practice"
-            className="group inline-flex items-center justify-center px-8 py-4 font-bold transition-all duration-300 glass rounded-full border border-muted hover:border-accent"
+            className="group inline-flex items-center justify-center px-8 py-4 font-bold transition-all duration-300 bg-white rounded-full border border-slate-300 hover:border-black text-black"
           >
             See Live Demo
           </Link>
@@ -149,7 +138,7 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <section className="py-24 px-6 bg-surface relative z-10">
+      <section className="py-24 px-6 bg-white relative z-10">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -157,8 +146,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-display font-bold text-primary mb-4">Powered by Intelligence</h2>
-            <p className="text-textMuted max-w-2xl mx-auto">
+            <h2 className="text-4xl font-display font-bold text-black mb-4">Powered by Intelligence</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">
               Our platform combines cutting-edge AI with intuitive design to deliver an unparalleled assessment experience.
             </p>
           </motion.div>
@@ -174,68 +163,27 @@ export default function Home() {
               <motion.div
                 key={idx}
                 variants={itemVariants}
-                className="glass p-8 rounded-3xl border border-muted hover:-translate-y-2 transition-transform duration-300 cursor-default"
+                className="bg-white p-8 border border-slate-200 hover:-translate-y-2 transition-transform duration-300 cursor-default"
               >
-                <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-slate-100 flex items-center justify-center mb-6">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold font-display text-primary mb-3">{feature.title}</h3>
-                <p className="text-textMuted">{feature.description}</p>
+                <h3 className="text-xl font-bold font-display text-black mb-3">{feature.title}</h3>
+                <p className="text-slate-500">{feature.description}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* Departments Carousel */}
-      <section className="py-24 px-6 bg-background relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <h2 className="text-4xl font-display font-bold text-primary mb-4">Explore Departments</h2>
-              <p className="text-textMuted max-w-xl">Tailored assessments and learning paths for every major.</p>
-            </div>
-            <button className="hidden md:flex items-center gap-2 text-accent font-medium hover:text-primary transition-colors">
-              View All <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+      {/* ASCENDRA Ecosystem Section */}
+      <EcosystemSection />
 
-          <div className="flex gap-6 overflow-x-auto pb-10 snap-x" style={{ scrollbarWidth: 'none' }}>
-            {departments.map((dept, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="min-w-[280px] h-[380px] rounded-3xl overflow-hidden relative snap-center group cursor-pointer flex-shrink-0"
-              >
-                <img
-                  src={dept.img}
-                  alt={dept.name}
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <h3 className="text-white text-2xl font-bold font-display mb-1">{dept.name}</h3>
-                  <p className="text-white/60 text-sm mb-3">{dept.courses} Courses</p>
-                  <div className="flex items-center gap-2 text-white/80 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                    <span className="text-sm font-medium">Start Learning</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ASCENDRA Infinite Showcase Marquee */}
+      <ShowcaseSection />
 
       {/* Stats Section */}
-      <section className="py-20 px-6 bg-primary text-white relative z-10 overflow-hidden">
-        <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent2/20 rounded-full blur-3xl" />
+      <section className="py-20 px-6 bg-black text-white relative z-10 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
           {[
             { value: '50k+', label: 'Active Students' },
@@ -250,15 +198,15 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, type: "spring", stiffness: 100 }}
             >
-              <div className="text-4xl md:text-5xl font-display font-bold text-accent2 mb-2">{stat.value}</div>
-              <div className="text-white/70 font-body text-sm uppercase tracking-widest">{stat.label}</div>
+              <div className="text-4xl md:text-5xl font-display font-bold text-white mb-2">{stat.value}</div>
+              <div className="text-white/50 font-body text-sm uppercase tracking-widest">{stat.label}</div>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 px-6 bg-surface relative z-10">
+      <section className="py-24 px-6 bg-white relative z-10">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -266,8 +214,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-display font-bold text-primary mb-4">Loved by Learners</h2>
-            <p className="text-textMuted">Don't just take our word for it.</p>
+            <h2 className="text-4xl font-display font-bold text-black mb-4">Loved by Learners</h2>
+            <p className="text-slate-500">Don't just take our word for it.</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -278,21 +226,21 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="glass p-8 rounded-3xl border border-muted"
+                className="bg-white p-8 border border-slate-200"
               >
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-warning fill-warning" />
+                    <Star key={i} className="w-5 h-5 text-black fill-black" />
                   ))}
                 </div>
-                <p className="text-textMuted italic mb-6">"{t.text}"</p>
+                <p className="text-slate-500 italic mb-6">"{t.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center font-bold text-accent font-display">
+                  <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center font-bold text-white font-display">
                     {t.name.charAt(0)}
                   </div>
                   <div>
-                    <h4 className="font-bold text-primary text-sm">{t.name}</h4>
-                    <p className="text-textMuted text-xs">{t.dept}</p>
+                    <h4 className="font-bold text-black text-sm">{t.name}</h4>
+                    <p className="text-slate-500 text-xs">{t.dept}</p>
                   </div>
                 </div>
               </motion.div>
@@ -302,32 +250,31 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 bg-background relative z-10">
+      <section className="py-24 px-6 bg-white relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="glass rounded-[2.5rem] p-16 border border-accent/20 relative overflow-hidden"
+            className="bg-black rounded-none p-16 relative overflow-hidden"
           >
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-accent/5 to-accent2/5 pointer-events-none" />
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-primary mb-6 relative z-10">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 relative z-10">
               Ready to transform your learning?
             </h2>
-            <p className="text-textMuted text-lg mb-8 relative z-10">
+            <p className="text-white/60 text-lg mb-8 relative z-10">
               Join 50,000+ students already using ASCENDRA. No credit card required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
               <Link
                 to="/signup"
-                className="group inline-flex items-center justify-center px-8 py-4 font-bold text-white bg-primary rounded-full hover:bg-accent transition-all shadow-lg hover:shadow-accent/30 hover:shadow-xl gap-2"
+                className="group inline-flex items-center justify-center px-8 py-4 font-bold text-black bg-white rounded-full hover:bg-slate-100 transition-all shadow-lg gap-2"
               >
                 Create Free Account
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/about"
-                className="inline-flex items-center justify-center px-8 py-4 font-bold glass rounded-full border border-muted hover:border-accent transition-all"
+                className="inline-flex items-center justify-center px-8 py-4 font-bold text-white rounded-full border border-white/30 hover:border-white transition-all"
               >
                 Learn More
               </Link>

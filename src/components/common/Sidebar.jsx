@@ -34,11 +34,11 @@ export default function Sidebar({ isOpen, onClose }) {
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden transition-all duration-300"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden transition-all duration-300"
         />
       )}
 
-      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-slate-900 text-slate-400 border-r border-white/5 flex flex-col justify-between p-6 transition-transform duration-300 transform lg:translate-x-0 ${
+      <aside aria-label="Sidebar Navigation" className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-slate-950 text-slate-400 border-r border-slate-800 flex flex-col justify-between p-6 transition-transform duration-300 transform lg:translate-x-0 ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex flex-col gap-8">
@@ -59,10 +59,10 @@ export default function Sidebar({ isOpen, onClose }) {
                 key={item.path}
                 to={item.path}
                 onClick={onClose}
-                className={({ isActive }) => `flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold transition-all border border-transparent ${
+                className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-full text-xs font-medium transition-all ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10 border-indigo-500/20'
-                    : 'hover:bg-white/5 hover:text-white'
+                    ? 'bg-white text-slate-950 font-bold shadow-xs'
+                    : 'hover:bg-white/10 hover:text-white'
                 }`}
               >
                 {item.icon}
@@ -72,8 +72,8 @@ export default function Sidebar({ isOpen, onClose }) {
 
             {/* Role-Based Teacher / Admin console links */}
             {(userRole === 'teacher' || userRole === 'faculty' || userRole === 'admin') && (
-              <div className="pt-4 mt-4 border-t border-white/5 flex flex-col gap-1.5">
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 pl-4 mb-2 block">
+              <div className="pt-4 mt-4 border-t border-slate-800 flex flex-col gap-1.5">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 pl-4 mb-2 block">
                   Admin Gates
                 </span>
                 
@@ -81,10 +81,10 @@ export default function Sidebar({ isOpen, onClose }) {
                   <NavLink
                     to="/teacher"
                     onClick={onClose}
-                    className={({ isActive }) => `flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold transition-all border border-transparent ${
+                    className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-full text-xs font-medium transition-all ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10 border-indigo-500/20'
-                        : 'hover:bg-white/5 hover:text-white'
+                        ? 'bg-white text-slate-950 font-bold shadow-xs'
+                        : 'hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     <Users className="w-4 h-4" />
@@ -96,10 +96,10 @@ export default function Sidebar({ isOpen, onClose }) {
                   <NavLink
                     to="/admin"
                     onClick={onClose}
-                    className={({ isActive }) => `flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold transition-all border border-transparent ${
+                    className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-full text-xs font-medium transition-all ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10 border-indigo-500/20'
-                        : 'hover:bg-white/5 hover:text-white'
+                        ? 'bg-white text-slate-950 font-bold shadow-xs'
+                        : 'hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     <ShieldCheck className="w-4 h-4" />
@@ -112,21 +112,21 @@ export default function Sidebar({ isOpen, onClose }) {
         </div>
 
         {/* Footer profile & logout */}
-        <div className="pt-4 border-t border-white/5 flex flex-col gap-4">
+        <div className="pt-4 border-t border-slate-800 flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-extrabold text-xs">
+            <div className="w-9 h-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white font-bold text-xs">
               {user?.name?.charAt(0) || 'S'}
             </div>
             <div className="min-w-0">
-              <h4 className="font-bold text-white text-xs truncate">{user?.name || 'Scholar'}</h4>
-              <span className="text-[10px] text-slate-500 capitalize">{userRole}</span>
+              <h4 className="font-medium text-white text-xs truncate">{user?.name || 'Scholar'}</h4>
+              <span className="text-[10px] text-slate-400 capitalize">{userRole}</span>
             </div>
           </div>
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl text-xs font-bold hover:bg-red-500/10 hover:text-red-400 border border-transparent transition-colors"
+            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-full text-xs font-medium hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
           >
-            <LogOut className="w-4 h-4 text-red-400" />
+            <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
           </button>
         </div>

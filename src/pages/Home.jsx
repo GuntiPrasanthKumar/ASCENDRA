@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/common/PageTransition';
 import EcosystemSection from '../components/home/EcosystemSection';
+import ShowcaseSection from '../components/home/ShowcaseSection';
 import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, Zap, Users, Star, Lock } from 'lucide-react';
 
 const HeroScene = lazy(() => import('../components/3d/HeroScene'));
@@ -182,6 +183,9 @@ export default function Home() {
 
       {/* ASCENDRA Ecosystem Section */}
       <EcosystemSection />
+
+      {/* ASCENDRA Infinite Showcase Marquee */}
+      <ShowcaseSection />
 
       {/* Stats Section */}
       <section className="py-20 px-6 bg-primary text-white relative z-10 overflow-hidden">

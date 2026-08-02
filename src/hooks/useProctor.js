@@ -11,12 +11,14 @@ export const useProctor = (isActive, faceData, onStrike) => {
   
   const lastStrikeTime = useRef(0);
   const violationBuffer = useRef({ face: 0, gaze: 0, noise: 0, mismatch: 0 });
-  const audioContext = useRef(null);
-  const analyser = useRef(null);
+  const audioContextRef = useRef(null);
+  const analyserRef = useRef(null);
+  const audioStreamRef = useRef(null);
+  const animFrameRef = useRef(null);
+  const lastAudioUpdateRef = useRef(0);
   const storedDescriptor = useRef(null);
 
   const COOLDOWN = 5000;
-  const PERSISTENCE_THRESHOLD = 5;
 
   // Load user face profile once
   useEffect(() => {
@@ -25,7 +27,6 @@ export const useProctor = (isActive, faceData, onStrike) => {
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          // Convert object back to Float32Array if needed
           storedDescriptor.current = new Float32Array(Object.values(parsed));
         } catch (e) {
           console.warn("Face descriptor parse error", e);
@@ -41,32 +42,55 @@ export const useProctor = (isActive, faceData, onStrike) => {
     lastStrikeTime.current = now;
     setStrikes(prev => {
       const next = prev + 1;
-      onStrike(next, reason);
+      if (typeof onStrike === 'function') {
+        onStrike(next, reason);
+      }
       return next;
     });
     addToast(`Violation: ${reason}`, 'error');
   }, [onStrike, addToast]);
 
-  // Audio Detection
+  // Audio Detection & Throttled Processing
   useEffect(() => {
     if (!isActive) return;
+
+    let isSubscribed = true;
 
     const startAudio = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
-        analyser.current = audioContext.current.createAnalyser();
-        const source = audioContext.current.createMediaStreamSource(stream);
-        source.connect(analyser.current);
-        analyser.current.fftSize = 256;
+        if (!isSubscribed) {
+          stream.getTracks().forEach(track => track.stop());
+          return;
+        }
+
+        audioStreamRef.current = stream;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        audioContextRef.current = new AudioCtx();
+        analyserRef.current = audioContextRef.current.createAnalyser();
         
-        const dataArray = new Uint8Array(analyser.current.frequencyBinCount);
+        const source = audioContextRef.current.createMediaStreamSource(stream);
+        source.connect(analyserRef.current);
+        analyserRef.current.fftSize = 256;
+        
+        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
 
         const checkAudio = () => {
-          if (!isActive) return;
-          analyser.current.getByteFrequencyData(dataArray);
-          let average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-          setAudioLevel(average);
+          if (!isSubscribed || !analyserRef.current) return;
+
+          analyserRef.current.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
+          }
+          const average = sum / dataArray.length;
+
+          // Throttle state updates to ~10fps (every 100ms) to prevent 60fps React re-renders
+          const now = Date.now();
+          if (now - lastAudioUpdateRef.current > 100) {
+            lastAudioUpdateRef.current = now;
+            setAudioLevel(Math.round(average));
+          }
 
           if (average > 45) { 
             violationBuffer.current.noise++;
@@ -77,23 +101,43 @@ export const useProctor = (isActive, faceData, onStrike) => {
           } else {
             violationBuffer.current.noise = Math.max(0, violationBuffer.current.noise - 1);
           }
-          requestAnimationFrame(checkAudio);
+
+          animFrameRef.current = requestAnimationFrame(checkAudio);
         };
+
         checkAudio();
-      } catch (err) { console.warn("Audio failed", err); }
+      } catch (err) {
+        console.warn("Audio monitoring initialization failed", err);
+      }
     };
+
     startAudio();
-    return () => audioContext.current?.close();
+
+    return () => {
+      isSubscribed = false;
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = null;
+      }
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach(track => track.stop());
+        audioStreamRef.current = null;
+      }
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close().catch(() => {});
+        audioContextRef.current = null;
+      }
+    };
   }, [isActive, addStrike]);
 
   // Vision Proctoring & Identity Match
   useEffect(() => {
     if (!isActive || !faceData) return;
 
-    // 1. Check Identity Match (Is this the same person who logged in?)
+    // 1. Check Identity Match
     if (faceData.detected && faceData.descriptor && storedDescriptor.current) {
       const distance = faceapi.euclideanDistance(storedDescriptor.current, faceData.descriptor);
-      if (distance > 0.6) { // Threshold for mismatch
+      if (distance > 0.6) {
         violationBuffer.current.mismatch++;
         if (violationBuffer.current.mismatch > 5) {
           addStrike('Identity Mismatch: Different person detected');
@@ -131,13 +175,15 @@ export const useProctor = (isActive, faceData, onStrike) => {
 
   }, [faceData, isActive, addStrike]);
 
-  // Browser Events
+  // Browser Visibility & Focus Events
   useEffect(() => {
     if (!isActive) return;
     const handleVisibilityChange = () => document.visibilityState === 'hidden' && addStrike('Tab switched');
     const handleBlur = () => addStrike('Window lost focus');
+    
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('blur', handleBlur);
+    
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('blur', handleBlur);

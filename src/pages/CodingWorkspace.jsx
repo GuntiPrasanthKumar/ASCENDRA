@@ -43,29 +43,27 @@ export default function CodingWorkspace() {
   const navigate = useNavigate();
   const { addToast } = useToastStore();
 
+  // Load Problem Info
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const activeProblem = mockProblems.find(p => p.id === problemId);
-      if (activeProblem) {
-        setData({ activeProblem });
-        // Set default code from template
-        setCode(activeProblem.starterTemplates[selectedLangId] || '');
-      }
-      setIsLoading(false);
-    }, 600);
-    return () => clearTimeout(timer);
+    const activeProblem = mockProblems.find(p => p.id === problemId);
+    if (activeProblem) {
+      setData({ activeProblem });
+      setCode(activeProblem.starterTemplates[selectedLangId] || '');
+    }
+    setIsLoading(false);
   }, [problemId, selectedLangId]);
 
-  // Update code when language changes
-  useEffect(() => {
+  // Update code template when language changes
+  const handleSelectLanguage = (langId) => {
+    setSelectedLangId(langId);
     if (data?.activeProblem) {
-      setCode(data.activeProblem.starterTemplates[selectedLangId] || '');
+      setCode(data.activeProblem.starterTemplates[langId] || '');
       setOutputResult(null);
       setSubmitResult(null);
       setAiReview(null);
       setTestStatus(null);
     }
-  }, [selectedLangId, data]);
+  };
 
   if (isLoading) {
     return (
@@ -191,7 +189,7 @@ export default function CodingWorkspace() {
               <Toolbar
                 languages={mockLanguages}
                 selectedLangId={selectedLangId}
-                onSelectLang={setSelectedLangId}
+                onSelectLang={handleSelectLanguage}
                 onRun={handleRunCode}
                 onSubmit={handleSubmitCode}
                 onReset={handleResetCode}

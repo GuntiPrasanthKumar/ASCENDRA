@@ -49,7 +49,10 @@ export default function InterviewSetup() {
       // 1. Mic check simulation
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        if (stream) setMicStatus('Active');
+        if (stream) {
+          setMicStatus('Active');
+          stream.getTracks().forEach(track => track.stop());
+        }
       } catch (e) {
         setMicStatus('Permission Denied');
       }

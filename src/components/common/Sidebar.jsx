@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../hooks/useAuthStore';
 import { 
   LayoutDashboard, BookOpen, Activity, Sparkles, Award, 
@@ -8,6 +8,7 @@ import {
 
 export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
   const userRole = user?.role?.toLowerCase() || 'student';
 
   const menuItems = [
@@ -24,7 +25,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const handleSignOut = () => {
     logout();
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   return (

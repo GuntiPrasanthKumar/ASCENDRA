@@ -1,19 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock } from 'lucide-react';
 
 export default function Timer({ durationMinutes = 15, onTimeUp }) {
   const [secondsLeft, setSecondsLeft] = useState(durationMinutes * 60);
+  const onTimeUpRef = useRef(onTimeUp);
 
   useEffect(() => {
-    if (secondsLeft <= 0) {
-      if (onTimeUp) onTimeUp();
-      return;
-    }
+    onTimeUpRef.current = onTimeUp;
+  }, [onTimeUp]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
-      setSecondsLeft(prev => prev - 1);
+      setSecondsLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          if (onTimeUpRef.current) onTimeUpRef.current();
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
+
     return () => clearInterval(timer);
-  }, [secondsLeft, onTimeUp]);
+  }, []);
 
   const formatTime = () => {
     const mins = Math.floor(secondsLeft / 60);

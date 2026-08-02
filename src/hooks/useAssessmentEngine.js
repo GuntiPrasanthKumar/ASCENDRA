@@ -132,13 +132,21 @@ export const useAssessmentEngine = (config) => {
   }, [currentQ, questions, finishAssessment]);
 
   useEffect(() => {
-    if (!isFinished && questions.length > 0 && timeLeft > 0) {
-      const timer = setInterval(() => setTimeLeft(t => t - 1), 1000);
-      return () => clearInterval(timer);
-    } else if (timeLeft === 0 && !isFinished && questions.length > 0) {
-      finishAssessment();
-    }
-  }, [isFinished, questions.length, timeLeft, finishAssessment]);
+    if (isFinished || questions.length === 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) {
+          clearInterval(timer);
+          finishAssessment();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isFinished, questions.length, finishAssessment]);
 
   return {
     questions,

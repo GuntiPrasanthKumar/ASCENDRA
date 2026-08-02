@@ -45,7 +45,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full z-[100] glass px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center group">
-          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-10 md:h-12 w-auto object-contain transition-transform hover:scale-105" />
+          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-13 md:h-15 w-auto object-contain transition-transform hover:scale-105" />
         </Link>
 
         {/* Desktop Links */}

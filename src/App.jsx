@@ -6,6 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import PageLoader from './components/common/PageLoader';
+import SplashScreen from './components/common/SplashScreen';
 import ToastContainer from './components/common/Toast';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -231,6 +232,7 @@ function AnimatedRoutes() {
 function App() {
   return (
     <ThemeProvider>
+      <SplashScreen />
       <Router>
         <ToastContainer />
         <Suspense fallback={<PageLoader />}>

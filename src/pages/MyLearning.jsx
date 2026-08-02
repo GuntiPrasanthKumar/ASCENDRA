@@ -41,7 +41,7 @@ export default function MyLearning() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-32 pb-20 px-4 md:px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_10%_20%,rgba(108,99,255,0.03),transparent)] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto">

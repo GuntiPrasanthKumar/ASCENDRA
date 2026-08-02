@@ -47,7 +47,7 @@ export default function Practice() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-accent/[0.01] rounded-full blur-[100px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10">

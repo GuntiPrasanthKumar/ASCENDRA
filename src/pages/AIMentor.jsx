@@ -54,7 +54,7 @@ export default function AIMentor() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-28 pb-20 px-4 md:px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
         {/* Ambient Lighting */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-10 left-0 w-96 h-96 bg-cyan-500/[0.02] rounded-full blur-[100px] pointer-events-none" />

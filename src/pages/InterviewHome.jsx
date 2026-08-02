@@ -52,7 +52,7 @@ export default function InterviewHome() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           
           {/* Header */}

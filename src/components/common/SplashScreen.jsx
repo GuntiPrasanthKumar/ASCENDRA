@@ -35,8 +35,8 @@ export default function SplashScreen({ onComplete }) {
           className="fixed inset-0 z-[99999] bg-white flex flex-col items-center justify-center select-none overflow-hidden"
         >
           {/* Subtle Background Blue Soft Glow */}
-          <div className="absolute w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse" />
-          <div className="absolute w-[300px] h-[300px] bg-cyan-400/10 rounded-full blur-[90px] pointer-events-none" />
+          <div className="absolute w-[500px] h-[500px] bg-slate-300/20 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+          <div className="absolute w-[300px] h-[300px] bg-slate-400/15 rounded-full blur-[90px] pointer-events-none" />
 
           {/* Center Logo & Tagline Container */}
           <motion.div
@@ -48,7 +48,7 @@ export default function SplashScreen({ onComplete }) {
             {/* Neural Pulse Aura around Logo */}
             <div className="relative flex items-center justify-center mb-6">
               <motion.div
-                className="absolute inset-0 rounded-full bg-blue-400/15 blur-2xl"
+                className="absolute inset-0 rounded-full bg-slate-400/15 blur-2xl"
                 animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.6, 0.2] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />

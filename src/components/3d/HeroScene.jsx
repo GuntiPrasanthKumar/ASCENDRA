@@ -16,7 +16,7 @@ const Blob = () => {
     <Float speed={1.5} rotationIntensity={0.8} floatIntensity={1.5}>
       <Sphere ref={meshRef} args={[1.5, 32, 32]} position={[2, 0, -2]}>
         <MeshDistortMaterial
-          color="#6C63FF"
+          color="#2A2A2A"
           envMapIntensity={0.8}
           clearcoat={0.6}
           clearcoatRoughness={0.1}
@@ -45,7 +45,7 @@ const Dodecahedron = () => {
       <mesh ref={meshRef} position={[-2.5, 1, -1]}>
         <dodecahedronGeometry args={[1, 0]} />
         <meshPhysicalMaterial 
-          color="#FF6584" 
+          color="#888888" 
           roughness={0.2} 
           metalness={0.1} 
           transmission={0.8} 
@@ -74,7 +74,7 @@ export default function HeroScene() {
         <ContactShadows position={[0, -2.5, 0]} opacity={0.5} scale={10} blur={2} far={4} frames={1} />
         <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
       </Canvas>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none" />
     </div>
   );
 }

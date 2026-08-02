@@ -41,11 +41,11 @@
 /* Infinite Marquee Animations */
 @keyframes marquee-left {
   0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-100%); }
 }
 
 @keyframes marquee-right {
-  0% { transform: translateX(-50%); }
+  0% { transform: translateX(-100%); }
   100% { transform: translateX(0%); }
 }
 
@@ -57,6 +57,11 @@
 .animate-marquee-right {
   animation: marquee-right linear infinite;
   will-change: transform;
+}
+
+.group:hover .animate-marquee-left,
+.group:hover .animate-marquee-right {
+  animation-play-state: paused;
 }
 
 /* Custom Scrollbar */

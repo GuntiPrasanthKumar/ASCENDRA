@@ -115,7 +115,7 @@ export default function AppShell() {
                       }}
                       className="w-full text-left p-3 rounded-xl hover:bg-slate-50 flex flex-col gap-0.5 border border-transparent hover:border-slate-100 transition-all select-none"
                     >
-                      <span className="text-[10px] font-black text-indigo-650 uppercase tracking-wider">{item.category}</span>
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">{item.category}</span>
                       <span className="text-xs font-bold text-slate-800">{item.title}</span>
                     </button>
                   ))}
@@ -139,7 +139,7 @@ export default function AppShell() {
               className="p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors"
               aria-label="Toggle theme"
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4 text-warning" /> : <Moon className="w-4 h-4" />}
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
             {/* Notification Center Dropdown */}
@@ -155,7 +155,7 @@ export default function AppShell() {
               >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent ring-2 ring-background" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-black ring-2 ring-background" />
                 )}
               </button>
 
@@ -172,7 +172,7 @@ export default function AppShell() {
                       <div className="flex justify-between items-center mb-4">
                         <h4 className="text-xs font-black uppercase tracking-widest text-slate-650">Notifications</h4>
                         {unreadCount > 0 && (
-                          <button onClick={markAllRead} className="text-[10px] font-black text-indigo-600 hover:text-indigo-800 uppercase tracking-widest">
+                          <button onClick={markAllRead} className="text-[10px] font-black text-black hover:text-slate-600 uppercase tracking-widest">
                             Mark Read
                           </button>
                         )}
@@ -183,13 +183,13 @@ export default function AppShell() {
                           <div key={n.id} className={`p-3 rounded-2xl text-[11px] leading-relaxed font-semibold border ${
                             n.read 
                               ? 'bg-slate-50 border-slate-100 text-slate-500' 
-                              : 'bg-indigo-50/20 border-indigo-100/50 text-indigo-700'
+                              : 'bg-slate-50 border-slate-200 text-black'
                           }`}>
                             <div className="flex gap-2 items-start">
                               {n.type === 'proctor' ? (
-                                <ShieldAlert className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                                <ShieldAlert className="w-4 h-4 text-slate-600 shrink-0 mt-0.5" />
                               ) : (
-                                <Sparkles className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5 animate-pulse" />
+                                <Sparkles className="w-4 h-4 text-black shrink-0 mt-0.5" />
                               )}
                               <span>{n.text}</span>
                             </div>
@@ -208,7 +208,7 @@ export default function AppShell() {
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="flex items-center gap-2 p-1.5 pr-3 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-all shrink-0"
               >
-                <div className="w-8 h-8 rounded-xl bg-indigo-600/10 border border-indigo-500/20 flex items-center justify-center text-indigo-500 font-extrabold text-xs">
+                <div className="w-8 h-8 rounded-xl bg-black border border-black flex items-center justify-center text-white font-extrabold text-xs">
                   {user?.name?.charAt(0) || 'S'}
                 </div>
                 <span className="text-xs font-bold text-slate-700 hidden sm:inline">{user?.name?.split(' ')[0] || 'Scholar'}</span>

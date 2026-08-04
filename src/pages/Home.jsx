@@ -10,41 +10,41 @@ const HeroScene = lazy(() => import('../components/3d/HeroScene'));
 
 const features = [
   {
-    title: 'AI Proctoring',
-    description: 'Real-time face detection, blink analysis, gaze tracking, and posture monitoring to ensure complete academic integrity.',
+    title: 'AI Proctoring & Gaze Tracking',
+    description: 'Real-time face detection, gaze stability monitoring, and posture metrics ensuring complete integrity for technical mock assessments.',
     icon: <ShieldCheck className="w-8 h-8 text-black" />,
   },
   {
-    title: 'Adaptive Learning',
-    description: 'Smart question difficulty scaling based on real-time student performance and learning patterns.',
+    title: 'Adaptive Learning Pathways',
+    description: 'Dynamic problem difficulty scaling and adaptive syllabus checkpoints tailored to individual student speed and concept mastery.',
     icon: <BrainCircuit className="w-8 h-8 text-black" />,
   },
   {
-    title: 'Deep Analytics',
-    description: 'Comprehensive skill heatmaps, performance trends, leaderboards and actionable AI-powered insights.',
+    title: 'Deep Telemetry & Analytics',
+    description: 'Comprehensive skill heatmaps, performance trend charts, and actionable AI coach recommendations.',
     icon: <BarChart3 className="w-8 h-8 text-black" />,
   },
   {
-    title: 'Secure by Design',
-    description: 'End-to-end security with clipboard monitoring, fullscreen enforcement and keyboard shortcut blocking.',
+    title: 'Secure Assessment Environment',
+    description: 'Integrity compliance with real-time biometric descriptor matching and proctoring incident tracking.',
     icon: <Lock className="w-8 h-8 text-black" />,
   },
   {
-    title: 'Self-Paced Practice',
-    description: 'Bite-sized quizzes and guided practice sessions tailored directly to elementary and middle school learning standards.',
+    title: 'CodeLab & Placement Practice',
+    description: 'Multi-language code compilation workspace, test case verification, and quantitative aptitude modules aligned with industry placement standards.',
     icon: <Users className="w-8 h-8 text-black" />,
   },
   {
-    title: 'AI Tutor',
-    description: 'Your personal 24/7 AI learning companion that explains concepts, generates practice problems and tracks gaps.',
+    title: '24/7 AI Coach & Mentor',
+    description: 'Interactive AI tutor that diagnoses weak topics, recommends targeted coding problems, and guides career placement strategy.',
     icon: <Zap className="w-8 h-8 text-black" />,
   },
 ];
 
 const testimonials = [
-  { name: 'Liam S.', dept: 'Grade 5 Student', text: 'ASCENDRA is so fun! The AI tutor helps me understand math fractions easily like a game.', rating: 5 },
-  { name: 'Mrs. Davis', dept: 'Parent of Grade 3 & 7', text: "The detailed accuracy analytics and proctoring let me track my children's actual progress. Game changer.", rating: 5 },
-  { name: 'Sophia K.', dept: 'Grade 8 Student', text: 'The AI Tutor explained science concepts better than my textbook. Absolutely love the design!', rating: 5 },
+  { name: 'Alex Chen', dept: 'CS Graduate & Placement Candidate', text: 'ASCENDRA’s mock AI interview and gaze proctoring gave me the exact confidence needed to excel in technical placement rounds.', rating: 5 },
+  { name: 'Prof. Marcus Vance', dept: 'Department Chair & Faculty Lead', text: 'The real-time telemetry, accuracy heatmaps, and diagnostic syllabus checkpoints elevate our entire student batch’s placement readiness.', rating: 5 },
+  { name: 'Priya Sharma', dept: 'Software Engineering Aspirant', text: 'CodeLab and the AI Coach explained dynamic programming and graph algorithms clearer than any conventional textbook.', rating: 5 },
 ];
 
 const containerVariants = {
@@ -82,7 +82,7 @@ export default function Home() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-accent/20 mb-8"
         >
           <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-          <span className="text-sm font-medium">Platform Live v2.0 — Now with AI Proctoring</span>
+          <span className="text-sm font-medium">ASCENDRA v1.0 — Intelligent Learning & AI Proctoring Platform</span>
         </motion.div>
 
         <motion.h1
@@ -105,181 +105,113 @@ export default function Home() {
         </motion.h1>
 
         <motion.p
-          className="text-lg md:text-xl text-slate-500 font-body max-w-2xl mb-12"
+          className="text-lg md:text-xl text-textMuted max-w-3xl mb-10 leading-relaxed font-body"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          An AI-powered secure assessment and adaptive learning platform tailored for Grades 1–10 students. Experience integrity and intelligence — combined.
+          An all-in-one AI learning ecosystem featuring real-time proctoring, Monaco-powered CodeLab workspace, adaptive diagnostic quizzes, and placement interview simulations.
         </motion.p>
 
         <motion.div
-          className="flex flex-col sm:flex-row gap-4"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full sm:w-auto"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
         >
           <Link
             to="/signup"
-            className="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-300 bg-primary rounded-full hover:bg-accent overflow-hidden shadow-lg hover:shadow-accent/30 hover:shadow-xl"
+            className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-accent to-accent2 text-white font-display font-bold text-lg hover:shadow-xl hover:shadow-accent/20 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group"
           >
-            <span className="relative flex items-center gap-2">
-              Get Started Free
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
+            Get Started Free
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
-            to="/practice"
-            className="group inline-flex items-center justify-center px-8 py-4 font-bold transition-all duration-300 glass rounded-full border border-muted hover:border-accent"
+            to="/login"
+            className="w-full sm:w-auto px-8 py-4 rounded-full glass border-slate-200/50 font-display font-bold text-lg hover:bg-surface/50 hover:scale-105 transition-all duration-300 text-primary flex items-center justify-center"
           >
-            See Live Demo
+            Sign In to Dashboard
           </Link>
         </motion.div>
       </div>
 
-      {/* Features Section */}
-      <section className="py-24 px-6 bg-white relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-display font-bold text-black mb-4">Powered by Intelligence</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">
-              Our platform combines cutting-edge AI with intuitive design to deliver an unparalleled assessment experience.
-            </p>
-          </motion.div>
-
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {features.map((feature, idx) => (
-              <motion.div
-                key={idx}
-                variants={itemVariants}
-                className="bg-white p-8 border border-slate-200 hover:-translate-y-2 transition-transform duration-300 cursor-default"
-              >
-                <div className="w-16 h-16 bg-slate-100 flex items-center justify-center mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold font-display text-black mb-3">{feature.title}</h3>
-                <p className="text-slate-500">{feature.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ASCENDRA Ecosystem Section */}
-      <EcosystemSection />
-
-      {/* ASCENDRA Infinite Showcase Marquee */}
+      {/* Interactive Showcase Section */}
       <ShowcaseSection />
 
-      {/* Stats Section */}
-      <section className="py-20 px-6 bg-black text-white relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
-          {[
-            { value: '50k+', label: 'Active Students' },
-            { value: '1M+', label: 'Assessments Taken' },
-            { value: '99.9%', label: 'Uptime SLA' },
-            { value: '100%', label: 'Client-side AI' },
-          ].map((stat, idx) => (
-            <motion.div 
+      {/* Ecosystem Architecture */}
+      <EcosystemSection />
+
+      {/* Key Product Features */}
+      <section className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-200/20">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold text-accent tracking-widest uppercase mb-2 block">Platform Capabilities</span>
+          <h2 className="text-3xl md:text-5xl font-display font-extrabold text-primary">Everything You Need to Excel</h2>
+          <p className="text-textMuted mt-4 max-w-2xl mx-auto">Built from the ground up for technical mastery, real-time proctoring, and placement success.</p>
+        </div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {features.map((feature, idx) => (
+            <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, type: "spring", stiffness: 100 }}
+              variants={itemVariants}
+              className="p-8 rounded-[2rem] bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 group hover:-translate-y-1"
             >
-              <div className="text-4xl md:text-5xl font-display font-bold text-white mb-2">{stat.value}</div>
-              <div className="text-white/50 font-body text-sm uppercase tracking-widest">{stat.label}</div>
+              <div className="mb-6 p-4 rounded-2xl bg-slate-100/80 border border-slate-200/80 w-fit group-hover:scale-110 transition-transform">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-display font-bold text-primary mb-3">{feature.title}</h3>
+              <p className="text-textMuted text-sm leading-relaxed">{feature.description}</p>
             </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* Social Proof & Testimonials */}
+      <section className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-200/20">
+        <div className="text-center mb-16">
+          <span className="text-xs font-bold text-accent tracking-widest uppercase mb-2 block">Testimonials</span>
+          <h2 className="text-3xl md:text-5xl font-display font-extrabold text-primary">Trusted by Scholars & Faculty</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((t, idx) => (
+            <div key={idx} className="p-8 rounded-[2rem] bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(t.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  ))}
+                </div>
+                <p className="text-textMuted text-sm leading-relaxed italic mb-6">"{t.text}"</p>
+              </div>
+              <div className="border-t border-slate-100 pt-4">
+                <h4 className="font-bold text-primary text-sm">{t.name}</h4>
+                <span className="text-xs text-textMuted">{t.dept}</span>
+              </div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 px-6 bg-white relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+      {/* Call to Action */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <div className="rounded-[3rem] bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 text-white p-12 md:p-16 text-center relative overflow-hidden shadow-2xl">
+          <h2 className="text-3xl md:text-5xl font-display font-extrabold mb-6 tracking-tight">Ready to Master Your Learning Journey?</h2>
+          <p className="text-slate-300 text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed font-body">
+            Join thousands of engineering candidates preparing for placement benchmark success with ASCENDRA.
+          </p>
+          <Link
+            to="/signup"
+            className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-white text-black font-display font-bold text-lg hover:bg-slate-100 hover:scale-105 transition-all shadow-lg"
           >
-            <h2 className="text-4xl font-display font-bold text-black mb-4">Loved by Learners</h2>
-            <p className="text-slate-500">Don't just take our word for it.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((t, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white p-8 border border-slate-200"
-              >
-                <div className="flex gap-1 mb-4">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-black fill-black" />
-                  ))}
-                </div>
-                <p className="text-slate-500 italic mb-6">"{t.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center font-bold text-white font-display">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-black text-sm">{t.name}</h4>
-                    <p className="text-slate-500 text-xs">{t.dept}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-24 px-6 bg-white relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-black rounded-none p-16 relative overflow-hidden"
-          >
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-6 relative z-10">
-              Ready to transform your learning?
-            </h2>
-            <p className="text-white/60 text-lg mb-8 relative z-10">
-              Join 50,000+ students already using ASCENDRA. No credit card required.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
-              <Link
-                to="/signup"
-                className="group inline-flex items-center justify-center px-8 py-4 font-bold text-black bg-white rounded-full hover:bg-slate-100 transition-all shadow-lg gap-2"
-              >
-                Create Free Account
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center justify-center px-8 py-4 font-bold text-white rounded-full border border-white/30 hover:border-white transition-all"
-              >
-                Learn More
-              </Link>
-            </div>
-          </motion.div>
+            Launch ASCENDRA Now <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
     </PageTransition>

@@ -1,39 +1,25 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import * as faceapi from 'face-api.js';
 import { useToastStore } from '../components/common/Toast';
 import { useAuthStore } from './useAuthStore';
+import axios from 'axios';
 
-export const useProctor = (isActive, faceData, onStrike) => {
+export const useProctor = (isActive, faceData, onStrike, sessionId = 'session-default') => {
   const { addToast } = useToastStore();
-  const { user } = useAuthStore();
+  const { token } = useAuthStore();
   const [strikes, setStrikes] = useState(0);
   const [audioLevel, setAudioLevel] = useState(0);
   
   const lastStrikeTime = useRef(0);
+  const lastVerifyTime = useRef(0);
   const violationBuffer = useRef({ face: 0, gaze: 0, noise: 0, mismatch: 0 });
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const audioStreamRef = useRef(null);
   const animFrameRef = useRef(null);
   const lastAudioUpdateRef = useRef(0);
-  const storedDescriptor = useRef(null);
 
   const COOLDOWN = 5000;
-
-  // Load user face profile once
-  useEffect(() => {
-    if (user?.email) {
-      const stored = localStorage.getItem('faceDescriptor_' + user.email);
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          storedDescriptor.current = new Float32Array(Object.values(parsed));
-        } catch (e) {
-          console.warn("Face descriptor parse error", e);
-        }
-      }
-    }
-  }, [user]);
+  const VERIFY_SAMPLER_INTERVAL = 20000; // Verify identity every 20 seconds during active session
 
   const addStrike = useCallback((reason) => {
     const now = Date.now();
@@ -130,22 +116,46 @@ export const useProctor = (isActive, faceData, onStrike) => {
     };
   }, [isActive, addStrike]);
 
-  // Vision Proctoring & Identity Match
+  // Vision Proctoring & Server-side Continuous Identity Match
   useEffect(() => {
     if (!isActive || !faceData) return;
 
-    // 1. Check Identity Match
-    if (faceData.detected && faceData.descriptor && storedDescriptor.current) {
-      const distance = faceapi.euclideanDistance(storedDescriptor.current, faceData.descriptor);
-      if (distance > 0.6) {
-        violationBuffer.current.mismatch++;
-        if (violationBuffer.current.mismatch > 5) {
-          addStrike('Identity Mismatch: Different person detected');
-          violationBuffer.current.mismatch = 0;
+    const now = Date.now();
+
+    // 1. Continuous Server-side Identity Verification via /api/proctor/verify
+    if (
+      faceData.detected && 
+      Array.isArray(faceData.descriptor) && 
+      faceData.descriptor.length === 512 &&
+      now - lastVerifyTime.current > VERIFY_SAMPLER_INTERVAL
+    ) {
+      lastVerifyTime.current = now;
+
+      const verifyOnServer = async () => {
+        try {
+          const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+          const response = await axios.post(
+            'http://localhost:5000/api/proctor/verify',
+            {
+              sessionId: sessionId || 'session-default',
+              embedding: faceData.descriptor,
+              modelVersion: 'mediapipe-face-embedder-v1'
+            },
+            { headers: authHeaders }
+          );
+
+          if (response.data && response.data.match === false) {
+            violationBuffer.current.mismatch++;
+            addStrike('Identity Mismatch: Different person detected');
+          } else {
+            violationBuffer.current.mismatch = 0;
+          }
+        } catch (err) {
+          console.warn("Proctor server verification error:", err?.response?.data || err.message);
         }
-      } else {
-        violationBuffer.current.mismatch = 0;
-      }
+      };
+
+      verifyOnServer();
     }
 
     // 2. Check Multiple Faces
@@ -173,7 +183,7 @@ export const useProctor = (isActive, faceData, onStrike) => {
       violationBuffer.current.gaze = 0;
     }
 
-  }, [faceData, isActive, addStrike]);
+  }, [faceData, isActive, addStrike, token, sessionId]);
 
   // Browser Visibility & Focus Events
   useEffect(() => {

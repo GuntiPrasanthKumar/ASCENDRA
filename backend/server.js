@@ -28,6 +28,7 @@ const assessmentRoutes = require('./app/routes/assessment.routes');
 const analyticsRoutes = require('./app/routes/analytics.routes');
 const leaderboardRoutes = require('./app/routes/leaderboard.routes');
 const chatRoutes = require('./app/routes/chat.routes');
+const proctorRoutes = require('./app/routes/proctor.routes');
 
 // Mount routers
 app.use('/api/auth', authRoutes);
@@ -35,6 +36,7 @@ app.use('/api/assessments', assessmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/proctor', proctorRoutes);
 
 // Base route
 app.get('/', (req, res) => {

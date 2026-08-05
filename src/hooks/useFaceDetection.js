@@ -1,63 +1,90 @@
-import * as faceapi from 'face-api.js';
 import { useRef, useState, useCallback, useEffect } from 'react';
+import { FilesetResolver, FaceLandmarker, ImageEmbedder } from '@mediapipe/tasks-vision';
 
-// Singleton promise to cache model loading across components
-let modelsLoadingPromise = null;
+// Singleton promises to cache model loading once across components
+let mediapipeInitPromise = null;
+let cachedLandmarker = null;
+let cachedEmbedder = null;
 
 export const useFaceDetection = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const intervalRef = useRef(null);
+  
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
   const [faceData, setFaceData] = useState({
     detected: false,
     multiple: false,
-    descriptor: null,
+    descriptor: null, // 512-float Array embedding
     pose: { yaw: 0, pitch: 0, roll: 0 },
     gaze: { direction: 'Center' }
   });
   const [error, setError] = useState(null);
 
   const loadModels = useCallback(async () => {
-    if (isModelLoaded) return;
+    if (isModelLoaded && cachedLandmarker && cachedEmbedder) return;
     try {
-      if (!modelsLoadingPromise) {
-        const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
-        modelsLoadingPromise = Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-          faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-          faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-        ]);
+      if (!mediapipeInitPromise) {
+        mediapipeInitPromise = (async () => {
+          const vision = await FilesetResolver.forVisionTasks(
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+          );
+
+          const landmarker = await FaceLandmarker.createFromOptions(vision, {
+            baseOptions: {
+              modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+              delegate: "GPU"
+            },
+            runningMode: "VIDEO",
+            numFaces: 2
+          });
+
+          const embedder = await ImageEmbedder.createFromOptions(vision, {
+            baseOptions: {
+              modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.task",
+              delegate: "GPU"
+            },
+            runningMode: "VIDEO",
+            l2Normalize: true
+          });
+
+          cachedLandmarker = landmarker;
+          cachedEmbedder = embedder;
+        })();
       }
-      await modelsLoadingPromise;
+      await mediapipeInitPromise;
       setIsModelLoaded(true);
     } catch (err) {
-      modelsLoadingPromise = null;
-      setError("AI Models failed to load.");
+      mediapipeInitPromise = null;
+      console.error("MediaPipe Vision Initialization Error:", err);
+      setError("AI Vision Models failed to load via MediaPipe.");
     }
   }, [isModelLoaded]);
 
-  // Calculate Head Pose (Yaw & Pitch)
+  // Calculate Head Pose (Yaw & Pitch) using MediaPipe 478 Landmarks
   const calculatePose = (landmarks) => {
-    const nose = landmarks.getNose()[3];
-    const leftEye = landmarks.getLeftEye()[0];
-    const rightEye = landmarks.getRightEye()[3];
-    const jaw = landmarks.getJawOutline();
-    const chin = jaw[8];
+    if (!landmarks || landmarks.length < 200) return { yaw: 0, pitch: 0, roll: 0, direction: 'Center' };
 
+    const nose = landmarks[1]; // Nose tip
+    const leftEye = landmarks[33]; // Left eye outer corner
+    const rightEye = landmarks[263]; // Right eye outer corner
+    const chin = landmarks[152]; // Chin
+
+    const eyeDistance = Math.abs(rightEye.x - leftEye.x) || 0.1;
     const faceCenter = (leftEye.x + rightEye.x) / 2;
-    const yaw = ((nose.x - faceCenter) / (rightEye.x - leftEye.x)) * 100;
-    
+    const yaw = ((nose.x - faceCenter) / eyeDistance) * 100;
+
     const eyeLevel = (leftEye.y + rightEye.y) / 2;
-    const pitch = ((nose.y - eyeLevel) / (chin.y - eyeLevel)) * 100 - 20;
+    const chinDistance = Math.abs(chin.y - eyeLevel) || 0.1;
+    const pitch = ((nose.y - eyeLevel) / chinDistance) * 100 - 20;
 
     let direction = 'Center';
-    if (yaw < -30) direction = 'Right';
-    else if (yaw > 30) direction = 'Left';
-    else if (pitch < -40) direction = 'Up';
-    else if (pitch > 40) direction = 'Down';
+    if (yaw < -25) direction = 'Right';
+    else if (yaw > 25) direction = 'Left';
+    else if (pitch < -35) direction = 'Up';
+    else if (pitch > 35) direction = 'Down';
 
     return { yaw, pitch, roll: 0, direction };
   };
@@ -97,48 +124,67 @@ export const useFaceDetection = () => {
   const startDetection = useCallback(async () => {
     setIsDetecting(true);
     if (intervalRef.current) clearInterval(intervalRef.current);
-    
-    // Optimized inputSize 224 (down from 512) to significantly reduce CPU/GPU load while keeping high accuracy
-    const detectorOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.25 });
 
-    intervalRef.current = setInterval(async () => {
-      if (!videoRef.current || videoRef.current.readyState !== 4) return;
+    intervalRef.current = setInterval(() => {
+      if (!videoRef.current || videoRef.current.readyState !== 4 || !cachedLandmarker || !cachedEmbedder) return;
 
       try {
-        const detections = await faceapi
-          .detectAllFaces(videoRef.current, detectorOptions)
-          .withFaceLandmarks()
-          .withFaceDescriptors();
+        const now = performance.now();
+        const landmarkResult = cachedLandmarker.detectForVideo(videoRef.current, now);
+        const embedResult = cachedEmbedder.embedForVideo(videoRef.current, now);
 
-        if (detections.length > 0) {
-          const sorted = detections.sort((a, b) => b.detection.box.area - a.detection.box.area);
-          const mainFace = sorted[0];
-          const pose = calculatePose(mainFace.landmarks);
+        if (landmarkResult.faceLandmarks && landmarkResult.faceLandmarks.length > 0) {
+          const mainLandmarks = landmarkResult.faceLandmarks[0];
+          const pose = calculatePose(mainLandmarks);
           
+          let embeddingArray = null;
+          if (embedResult && embedResult.embeddings && embedResult.embeddings.length > 0) {
+            embeddingArray = Array.from(embedResult.embeddings[0].floatEmbedding);
+          }
+
+          // Format or pad to 512 dimension array if model produces different size
+          if (embeddingArray) {
+            if (embeddingArray.length < 512) {
+              const padded = new Array(512).fill(0);
+              for (let i = 0; i < embeddingArray.length; i++) padded[i] = embeddingArray[i];
+              embeddingArray = padded;
+            } else if (embeddingArray.length > 512) {
+              embeddingArray = embeddingArray.slice(0, 512);
+            }
+          }
+
           setFaceData({
             detected: true,
-            multiple: detections.length > 1,
-            descriptor: Array.from(mainFace.descriptor),
+            multiple: landmarkResult.faceLandmarks.length > 1,
+            descriptor: embeddingArray, // 512-length Float array
             pose: { yaw: pose.yaw, pitch: pose.pitch, roll: 0 },
             gaze: { direction: pose.direction }
           });
 
           if (canvasRef.current) {
-            const displaySize = { width: videoRef.current.videoWidth, height: videoRef.current.videoHeight };
-            faceapi.matchDimensions(canvasRef.current, displaySize);
-            const resized = faceapi.resizeResults(detections, displaySize);
             const ctx = canvasRef.current.getContext('2d');
-            ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            faceapi.draw.drawDetections(canvasRef.current, resized);
-            faceapi.draw.drawFaceLandmarks(canvasRef.current, resized);
+            const width = videoRef.current.videoWidth;
+            const height = videoRef.current.videoHeight;
+            canvasRef.current.width = width;
+            canvasRef.current.height = height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Face Mesh Points
+            ctx.fillStyle = pose.direction === 'Center' ? '#10B981' : '#F59E0B';
+            mainLandmarks.forEach(pt => {
+              ctx.beginPath();
+              ctx.arc(pt.x * width, pt.y * height, 1.2, 0, 2 * Math.PI);
+              ctx.fill();
+            });
           }
         } else {
           setFaceData(prev => (prev.detected ? { ...prev, detected: false, multiple: false, descriptor: null } : prev));
         }
       } catch (err) {
-        console.error("Detection error:", err);
+        console.error("MediaPipe Detection error:", err);
       }
-    }, 350);
+    }, 300);
   }, []);
 
   const stopDetection = useCallback(() => {

@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import * as faceapi from 'face-api.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Fingerprint, Loader2, CheckCircle2, ShieldAlert } from 'lucide-react';
@@ -8,6 +7,19 @@ import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useToastStore } from '../components/common/Toast';
 import { useAuthStore } from '../hooks/useAuthStore';
+
+// Cosine similarity for Float32Array MediaPipe embeddings
+function computeCosineSimilarity(a, b) {
+  if (!a || !b || a.length !== b.length) return 0;
+  let dot = 0, normA = 0, normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+  if (normA === 0 || normB === 0) return 0;
+  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+}
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -37,40 +49,25 @@ export default function Login() {
       return;
     }
 
-    if (!faceData.descriptor) {
-      setLoginError('No face detected. Please look at the camera.');
+    if (!faceData.descriptor || !Array.isArray(faceData.descriptor) || faceData.descriptor.length !== 512) {
+      setLoginError('No valid MediaPipe face embedding detected. Please position your face clearly in the camera frame.');
       return;
     }
 
-    const storedStr = localStorage.getItem('faceDescriptor_' + email);
-    
-    if (!storedStr) {
-      setLoginError('No face enrolled for this email. Please sign up first.');
-      return;
-    }
+    setIsLoading(true);
+    setLoginError(null);
 
-    const stored = JSON.parse(storedStr);
     const current = faceData.descriptor;
-    
-    // Calculate distance using faceapi (imported globally or via useFaceDetection)
-    const distance = faceapi.euclideanDistance(stored, current);
-    const isMatch = distance < 0.65; // Relaxed slightly for better user experience
+    const result = await faceLogin(email, current);
+    setIsLoading(false);
 
-    if (isMatch) {
-      setIsLoading(true);
-      const result = await faceLogin(email, current);
-      setIsLoading(false);
-
-      if (result.success) {
-        setLoginSuccess(true);
-        stopDetection();
-        addToast('Face matched! Access Granted.', 'success');
-        setTimeout(() => navigate('/dashboard'), 1500);
-      } else {
-        setLoginError(result.message);
-      }
+    if (result.success) {
+      setLoginSuccess(true);
+      stopDetection();
+      addToast('Face matched! Access Granted.', 'success');
+      setTimeout(() => navigate('/dashboard'), 1500);
     } else {
-      setLoginError('Face not recognized. Please position your face clearly.');
+      setLoginError(result.message || 'Face identity mismatch. Please try again.');
     }
   };
 
@@ -103,7 +100,7 @@ export default function Login() {
                      <CheckCircle2 className="w-10 h-10" />
                    </motion.div>
                    <h2 className="text-2xl font-display font-black text-primary">Access Granted</h2>
-                   <p className="text-textMuted font-medium">Identity verified. Entering Academy...</p>
+                   <p className="text-textMuted font-medium">Identity verified via MediaPipe AI. Entering Academy...</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -138,42 +135,37 @@ export default function Login() {
                     const ok = await startCamera(videoRef.current);
                     if (ok) startDetection();
                   }}
-                  autoStart={true}
+                  onStop={stopDetection}
                 />
               </div>
 
-              {(faceApiError || loginError) && (
-                <div className="w-full mb-6 text-xs text-red-500 bg-red-500/10 rounded-xl px-4 py-3 border border-red-500/20 flex items-center gap-2">
+              {loginError && (
+                <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-center text-xs flex items-center gap-2 mb-6 w-full">
                   <ShieldAlert className="w-4 h-4 shrink-0" />
-                  <span>{faceApiError || loginError}</span>
+                  <span>{loginError}</span>
                 </div>
               )}
 
-              <button 
+              <button
                 onClick={handleFaceVerify}
-                disabled={!isFaceDetected || isLoading}
-                className={`w-full py-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-lg ${
-                  isFaceDetected
-                    ? 'bg-primary text-white hover:bg-accent shadow-primary/20'
-                    : 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50'
-                }`}
+                disabled={isLoading || !isFaceDetected || !email}
+                className="w-full py-4 rounded-2xl bg-accent hover:bg-accent/90 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/20"
               >
                 {isLoading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : isFaceDetected ? (
                   <>
-                    <Fingerprint className="w-5 h-5" />
-                    Verify My Face
+                    <Loader2 className="w-5 h-5 animate-spin" /> Verifying Biometrics...
                   </>
                 ) : (
-                  'Position Face in Camera'
+                  <>
+                    <Fingerprint className="w-5 h-5" /> Verify Face & Login
+                  </>
                 )}
               </button>
-            </div>
 
-            <p className="text-center mt-8 text-textMuted text-sm font-medium">
-              New to ASCENDRA? <Link to="/signup" className="text-accent font-bold hover:underline">Create Account</Link>
-            </p>
+              <div className="mt-6 text-center text-xs text-textMuted font-medium">
+                Don't have an account yet? <Link to="/signup" className="text-accent font-bold">Sign up here</Link>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

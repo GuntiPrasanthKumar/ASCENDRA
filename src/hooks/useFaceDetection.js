@@ -12,7 +12,7 @@ export const useFaceDetection = () => {
   const streamRef = useRef(null);
   const intervalRef = useRef(null);
   
-  const [isModelLoaded, setIsModelLoaded] = useState(false);
+  const [isModelLoaded, setIsModelLoaded] = useState(Boolean(cachedLandmarker && cachedEmbedder));
   const [isDetecting, setIsDetecting] = useState(false);
   const [faceData, setFaceData] = useState({
     detected: false,
@@ -24,7 +24,10 @@ export const useFaceDetection = () => {
   const [error, setError] = useState(null);
 
   const loadModels = useCallback(async () => {
-    if (isModelLoaded && cachedLandmarker && cachedEmbedder) return;
+    if (cachedLandmarker && cachedEmbedder) {
+      setIsModelLoaded(true);
+      return;
+    }
     try {
       if (!mediapipeInitPromise) {
         mediapipeInitPromise = (async () => {
@@ -32,23 +35,50 @@ export const useFaceDetection = () => {
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
           );
 
-          const landmarker = await FaceLandmarker.createFromOptions(vision, {
-            baseOptions: {
-              modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-              delegate: "GPU"
-            },
-            runningMode: "VIDEO",
-            numFaces: 2
-          });
+          // Try GPU delegate first, fallback to CPU delegate on failure
+          let landmarker = null;
+          try {
+            landmarker = await FaceLandmarker.createFromOptions(vision, {
+              baseOptions: {
+                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+                delegate: "GPU"
+              },
+              runningMode: "VIDEO",
+              numFaces: 2
+            });
+          } catch (gpuErr) {
+            console.warn("GPU delegate unavailable for FaceLandmarker, falling back to CPU:", gpuErr);
+            landmarker = await FaceLandmarker.createFromOptions(vision, {
+              baseOptions: {
+                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+                delegate: "CPU"
+              },
+              runningMode: "VIDEO",
+              numFaces: 2
+            });
+          }
 
-          const embedder = await ImageEmbedder.createFromOptions(vision, {
-            baseOptions: {
-              modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.task",
-              delegate: "GPU"
-            },
-            runningMode: "VIDEO",
-            l2Normalize: true
-          });
+          let embedder = null;
+          try {
+            embedder = await ImageEmbedder.createFromOptions(vision, {
+              baseOptions: {
+                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite",
+                delegate: "GPU"
+              },
+              runningMode: "VIDEO",
+              l2Normalize: true
+            });
+          } catch (gpuErr) {
+            console.warn("GPU delegate unavailable for ImageEmbedder, falling back to CPU:", gpuErr);
+            embedder = await ImageEmbedder.createFromOptions(vision, {
+              baseOptions: {
+                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite",
+                delegate: "CPU"
+              },
+              runningMode: "VIDEO",
+              l2Normalize: true
+            });
+          }
 
           cachedLandmarker = landmarker;
           cachedEmbedder = embedder;
@@ -61,7 +91,7 @@ export const useFaceDetection = () => {
       console.error("MediaPipe Vision Initialization Error:", err);
       setError("AI Vision Models failed to load via MediaPipe.");
     }
-  }, [isModelLoaded]);
+  }, []);
 
   // Calculate Head Pose (Yaw & Pitch) using MediaPipe 478 Landmarks
   const calculatePose = (landmarks) => {

@@ -1,0 +1,366 @@
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../../hooks/useAuthStore';
+import { useTheme } from '../../contexts/ThemeContext';
+import { 
+  LayoutDashboard, BookOpen, Activity, Code, Video, Sparkles, Award, 
+  User, Settings, LogOut, Sun, Moon, Bell, Search, Menu, X, ShieldAlert, Users, ShieldCheck
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const SEARCHABLE_ITEMS = [
+  { title: 'Advanced Algorithms', category: 'Subject', path: '/learn/adv-algorithms' },
+  { title: 'Quantitative Aptitude', category: 'Subject', path: '/learn/quant-aptitude' },
+  { title: 'Introduction to Dynamic Programming', category: 'Lesson', path: '/learn/adv-algorithms/dynamic-programming/dp-introduction' },
+  { title: 'Memoization Basics', category: 'Lesson', path: '/learn/adv-algorithms/dynamic-programming/memoization-basics' },
+  { title: 'Reverse String', category: 'Coding Problem', path: '/codelab/reverse-string' },
+  { title: 'Two Sum', category: 'Coding Problem', path: '/codelab/two-sum' },
+  { title: 'Behavioral & HR Interview', category: 'Interview Category', path: '/interview/int-hr/setup' },
+  { title: 'Technical Algorithm Round', category: 'Interview Category', path: '/interview/int-tech/setup' }
+];
+
+export default function TopNavbar() {
+  const { user, logout } = useAuthStore();
+  const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchVal, setSearchVal] = useState('');
+  const [notiOpen, setNotiOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const userRole = user?.role?.toLowerCase() || 'student';
+
+  const menuItems = [
+    { path: '/dashboard', label: 'Overview', icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
+    { path: '/learn', label: 'Learning', icon: <BookOpen className="w-3.5 h-3.5" /> },
+    { path: '/practice', label: 'Practice', icon: <Activity className="w-3.5 h-3.5" /> },
+    { path: '/codelab', label: 'CodeLab', icon: <Code className="w-3.5 h-3.5" /> },
+    { path: '/interview', label: 'Interview', icon: <Video className="w-3.5 h-3.5" /> },
+    { path: '/ai-mentor', label: 'AI Coach', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { path: '/my-learning', label: 'Portfolio', icon: <Award className="w-3.5 h-3.5" /> },
+  ];
+
+  useEffect(() => {
+    const list = [
+      { id: 1, type: 'proctor', text: 'Webcam proctoring matches active and verified.', read: false }
+    ];
+    const completedLessons = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+    if (completedLessons.length > 0) {
+      list.push({ id: 2, type: 'lesson', text: 'Lesson completed: Dynamic Programming Introduction! +50 XP', read: false });
+    }
+    const completedQuizzes = JSON.parse(localStorage.getItem('completed_quizzes') || '[]');
+    if (completedQuizzes.length > 0) {
+      list.push({ id: 3, type: 'quiz', text: 'Diagnostic Quiz completed with 100% accuracy! +300 XP', read: false });
+    }
+    const completedCoding = JSON.parse(localStorage.getItem('completed_coding') || '[]');
+    if (completedCoding.length > 0) {
+      list.push({ id: 4, type: 'codelab', text: 'CodeLab solution accepted! +150 XP', read: false });
+    }
+    setNotifications(list);
+  }, []);
+
+  const handleSignOut = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const markAllRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  return (
+    <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
+        
+        {/* Left: Brand Logo */}
+        <div className="flex items-center gap-6 shrink-0">
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-2 focus:outline-none"
+          >
+            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 md:h-10 w-auto object-contain" />
+          </button>
+        </div>
+
+        {/* Center: Curvy Top Navigation Links (Desktop) */}
+        <nav className="hidden xl:flex items-center bg-slate-100/80 dark:bg-slate-900/90 p-1 rounded-full border border-slate-200/70 dark:border-slate-800 shadow-xs">
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 select-none ${
+                  isActive
+                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/60'
+                }`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+
+        {/* Right: Command Bar Search, Theme, Notifications & User Avatar */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          
+          {/* Linear / Cursor style Search Bar */}
+          <div className="relative hidden lg:block w-56 xl:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+            <input
+              type="text"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              placeholder="Command search..."
+              className="w-full pl-9 pr-10 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-black text-xs font-semibold text-black dark:text-white placeholder-slate-400"
+            />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+              ⌘K
+            </span>
+
+            {/* Search Dropdown */}
+            {searchVal.trim().length > 0 && (
+              <div className="absolute top-11 left-0 right-0 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[1.5rem] shadow-xl z-50 p-2 flex flex-col gap-1">
+                {SEARCHABLE_ITEMS.filter(item =>
+                  item.title.toLowerCase().includes(searchVal.toLowerCase()) ||
+                  item.category.toLowerCase().includes(searchVal.toLowerCase())
+                ).map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      navigate(item.path);
+                      setSearchVal('');
+                    }}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col gap-0.5 border border-transparent transition-all select-none"
+                  >
+                    <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">{item.category}</span>
+                    <span className="text-xs font-bold text-black dark:text-white">{item.title}</span>
+                  </button>
+                ))}
+                {SEARCHABLE_ITEMS.filter(item =>
+                  item.title.toLowerCase().includes(searchVal.toLowerCase()) ||
+                  item.category.toLowerCase().includes(searchVal.toLowerCase())
+                ).length === 0 && (
+                  <span className="text-[10px] text-slate-400 font-bold text-center py-4 select-none">No command matches found.</span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-slate-100/80 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/70 dark:border-slate-800 transition-all"
+            aria-label="Toggle visual theme"
+          >
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+          </button>
+
+          {/* Notification Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setNotiOpen(!notiOpen)}
+              className={`p-2 rounded-full border transition-all flex items-center justify-center relative ${
+                notiOpen 
+                  ? 'bg-slate-900 text-white border-black dark:bg-white dark:text-black' 
+                  : 'bg-slate-100/80 dark:bg-slate-900 border-slate-200/70 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
+              }`}
+              aria-label="Notifications"
+            >
+              <Bell className="w-3.5 h-3.5" />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-black ring-2 ring-white" />
+              )}
+            </button>
+
+            <AnimatePresence>
+              {notiOpen && (
+                <>
+                  <div onClick={() => setNotiOpen(false)} className="fixed inset-0 z-30" />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] shadow-xl p-5 z-40"
+                  >
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="text-xs font-black uppercase tracking-widest text-slate-500">Notifications</h4>
+                      {unreadCount > 0 && (
+                        <button onClick={markAllRead} className="text-[10px] font-black text-black dark:text-white uppercase tracking-widest">
+                          Mark Read
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      {notifications.map(n => (
+                        <div key={n.id} className={`p-3 rounded-2xl text-[11px] leading-relaxed font-semibold border ${
+                          n.read 
+                            ? 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 text-slate-400' 
+                            : 'bg-slate-50 dark:bg-slate-800 border-slate-200/60 dark:border-slate-700 text-black dark:text-white'
+                        }`}>
+                          <div className="flex gap-2 items-start">
+                            {n.type === 'proctor' ? (
+                              <ShieldAlert className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+                            ) : (
+                              <Sparkles className="w-4 h-4 text-black dark:text-white shrink-0 mt-0.5" />
+                            )}
+                            <span>{n.text}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* User Profile Pill Menu */}
+          <div className="relative">
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center gap-2 p-1 pr-3 rounded-full border border-slate-200/70 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all shrink-0"
+            >
+              <div className="w-7 h-7 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-black text-xs">
+                {user?.name?.charAt(0) || 'S'}
+              </div>
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 hidden sm:inline">{user?.name?.split(' ')[0] || 'Scholar'}</span>
+            </button>
+
+            <AnimatePresence>
+              {profileOpen && (
+                <>
+                  <div onClick={() => setProfileOpen(false)} className="fixed inset-0 z-30" />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] shadow-xl p-4 z-40 flex flex-col gap-1.5"
+                  >
+                    <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
+                      <p className="text-xs font-bold text-black dark:text-white">{user?.name || 'Scholar'}</p>
+                      <p className="text-[10px] text-slate-400 capitalize">{userRole}</p>
+                    </div>
+
+                    <button
+                      onClick={() => { setProfileOpen(false); navigate('/profile'); }}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
+                    >
+                      <User className="w-4 h-4 text-black dark:text-white" /> My Profile
+                    </button>
+
+                    <button
+                      onClick={() => { setProfileOpen(false); navigate('/settings'); }}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
+                    >
+                      <Settings className="w-4 h-4 text-black dark:text-white" /> System Settings
+                    </button>
+
+                    {(userRole === 'teacher' || userRole === 'faculty') && (
+                      <button
+                        onClick={() => { setProfileOpen(false); navigate('/teacher'); }}
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
+                      >
+                        <Users className="w-4 h-4 text-black dark:text-white" /> Teacher Console
+                      </button>
+                    )}
+
+                    {userRole === 'admin' && (
+                      <button
+                        onClick={() => { setProfileOpen(false); navigate('/admin'); }}
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
+                      >
+                        <ShieldCheck className="w-4 h-4 text-black dark:text-white" /> Admin Panel
+                      </button>
+                    )}
+
+                    <div className="border-t border-slate-100 dark:border-slate-800 my-1" />
+
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
+                    >
+                      <LogOut className="w-4 h-4" /> Sign Out
+                    </button>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Mobile Menu Toggle Button (XL and smaller) */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-full bg-slate-100/80 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 text-black dark:text-white xl:hidden"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+
+        </div>
+      </div>
+
+      {/* Mobile Drawer Navigation Modal */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs xl:hidden"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="fixed top-16 left-4 right-4 z-50 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[2.5rem] p-6 shadow-2xl xl:hidden flex flex-col gap-4"
+            >
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                {menuItems.map((item) => {
+                  const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+                  return (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+                        isActive
+                          ? 'bg-black text-white dark:bg-white dark:text-black'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                      }`}
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+
+              {/* Mobile Search input */}
+              <div className="relative mt-2">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchVal}
+                  onChange={(e) => setSearchVal(e.target.value)}
+                  placeholder="Command search..."
+                  className="w-full pl-10 pr-4 py-3 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-xs font-semibold text-black dark:text-white placeholder-slate-400"
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}

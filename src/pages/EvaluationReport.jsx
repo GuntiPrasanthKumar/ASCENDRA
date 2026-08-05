@@ -39,7 +39,7 @@ export default function EvaluationReport() {
   if (isLoading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6">
+        <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6">
           <div className="max-w-7xl mx-auto animate-pulse">
             <PageSkeleton />
           </div>
@@ -51,14 +51,14 @@ export default function EvaluationReport() {
   if (!data) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-error mb-4" />
-            <h2 className="text-xl font-bold text-primary mb-2">Evaluation Report Not Found</h2>
-            <p className="text-xs text-textMuted mb-6 leading-relaxed">
+        <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 flex items-center justify-center">
+          <div className="bg-white max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/80 text-center flex flex-col items-center shadow-xs">
+            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4" />
+            <h2 className="text-xl font-display font-extrabold text-black mb-2">Evaluation Report Not Found</h2>
+            <p className="text-xs font-medium text-slate-500 mb-6 leading-relaxed">
               We could not find scorecard logs for this completed interview session.
             </p>
-            <button onClick={() => navigate('/interview')} className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-xs hover:bg-accent transition-all">
+            <button onClick={() => navigate('/interview')} className="w-full py-3.5 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all">
               Return to Hub
             </button>
           </div>
@@ -71,11 +71,11 @@ export default function EvaluationReport() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 relative overflow-hidden">
+      <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10">
           
           {/* Evaluation score overview */}
-          <div className="mb-10 animate-fade-in">
+          <div className="mb-10">
             <EvaluationCard score={score} />
           </div>
 
@@ -88,13 +88,13 @@ export default function EvaluationReport() {
               <div className="flex gap-4">
                 <button
                   onClick={() => navigate(`/interview/${activeInterview.id}/setup`)}
-                  className="flex-1 py-4 rounded-2xl border border-slate-200 bg-white text-slate-700 font-bold hover:bg-slate-50 transition-all text-xs"
+                  className="flex-1 py-3.5 rounded-full border border-slate-200/80 bg-white text-black font-bold hover:bg-slate-50 transition-all text-xs shadow-xs"
                 >
                   Retry Interview
                 </button>
                 <button
                   onClick={() => navigate('/dashboard')}
-                  className="flex-1 py-4 rounded-2xl bg-slate-900 text-white font-bold hover:bg-slate-800 transition-all text-xs"
+                  className="flex-1 py-3.5 rounded-full bg-black text-white font-bold hover:bg-slate-800 transition-all text-xs shadow-xs"
                 >
                   Return to Dashboard
                 </button>

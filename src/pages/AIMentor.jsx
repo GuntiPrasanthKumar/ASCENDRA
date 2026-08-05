@@ -3,12 +3,9 @@ import PageTransition from '../components/common/PageTransition';
 import { PageSkeleton } from '../components/common/FeedbackStates';
 import { useAuthStore } from '../hooks/useAuthStore';
 
-// Modular AI Mentor Components
-import AIMentorHeader from '../components/aimentor/AIMentorHeader';
-import ConversationPanel from '../components/aimentor/ConversationPanel';
-import RecommendationPanel from '../components/aimentor/RecommendationPanel';
-import LearningInsightsPanel from '../components/aimentor/LearningInsightsPanel';
-import CareerInsightsPanel from '../components/aimentor/CareerInsightsPanel';
+// AI Mentor Redesign Components
+import ConversationWorkspace from '../components/aimentor/ConversationWorkspace';
+import UnifiedAIBriefingPanel from '../components/aimentor/UnifiedAIBriefingPanel';
 import { ShieldAlert } from 'lucide-react';
 
 export default function AIMentor() {
@@ -21,7 +18,7 @@ export default function AIMentor() {
   if (isLoading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-28 pb-20 px-4 md:px-6">
+        <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6">
           <div className="max-w-7xl mx-auto">
             <PageSkeleton />
           </div>
@@ -33,18 +30,18 @@ export default function AIMentor() {
   if (hasError) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-32 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-rose-500 mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 mb-2">AI Coach Unavailable</h2>
-            <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+        <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 flex items-center justify-center">
+          <div className="max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/80 bg-white text-center flex flex-col items-center shadow-xs">
+            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4" />
+            <h2 className="text-xl font-display font-extrabold text-black mb-2">AI Mentor Workspace Offline</h2>
+            <p className="text-xs font-medium text-slate-500 mb-6 leading-relaxed">
               We encountered an issue connecting to your career guidance engine.
             </p>
             <button
               onClick={() => setHasError(false)}
-              className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-indigo-600 transition-all"
+              className="w-full py-3.5 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all"
             >
-              Retry Connection
+              Reconnect Mentor Engine
             </button>
           </div>
         </div>
@@ -55,31 +52,26 @@ export default function AIMentor() {
   return (
     <PageTransition>
       <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
-        {/* Ambient Lighting */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-10 left-0 w-96 h-96 bg-cyan-500/[0.02] rounded-full blur-[100px] pointer-events-none" />
-
         <div className="max-w-7xl mx-auto relative z-10">
           
-          {/* AI Mentor Header */}
-          <AIMentorHeader
-            name={studentName}
-            streak="7 Days"
-            progress={74}
-            weeklyGoal="5 / 7 Days"
-          />
+          {/* AI Mentor 70% / 30% NotebookLM Workspace Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 items-start">
+            
+            {/* Left 70%: Conversation Workspace & Quick Action Chips */}
+            <div className="lg:col-span-7">
+              <ConversationWorkspace userName={studentName} />
+            </div>
 
-          {/* Conversation Panel (Interactive AI Coach Chat UI) */}
-          <ConversationPanel />
+            {/* Right 30%: Single Unified AI Briefing Panel */}
+            <div className="lg:col-span-3">
+              <UnifiedAIBriefingPanel 
+                progress={74}
+                weeklyGoal="5 / 7 Days"
+                streak="7 Days"
+              />
+            </div>
 
-          {/* Intelligent Recommendation Panel */}
-          <RecommendationPanel />
-
-          {/* Learning Insights Panel */}
-          <LearningInsightsPanel />
-
-          {/* Career Insights Panel */}
-          <CareerInsightsPanel />
+          </div>
 
         </div>
       </div>

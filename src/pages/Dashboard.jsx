@@ -11,14 +11,12 @@ import AIRecommendationGrid from '../components/dashboard/AIRecommendationGrid';
 import LearningAnalytics from '../components/dashboard/LearningAnalytics';
 import ActivityTimeline from '../components/dashboard/ActivityTimeline';
 import GoalChecklist from '../components/dashboard/GoalChecklist';
-import AICoachCard from '../components/dashboard/AICoachCard';
 import GrowthTracker from '../components/dashboard/GrowthTracker';
-import UpcomingTaskCard from '../components/dashboard/UpcomingTaskCard';
 import ChallengeCard from '../components/dashboard/ChallengeCard';
 import AchievementCard from '../components/dashboard/AchievementCard';
 
 // Lucide Icons
-import { PlayCircle, ShieldAlert, Sparkles, Target, ArrowRight, Zap, Award, Flame } from 'lucide-react';
+import { PlayCircle, ShieldAlert, Sparkles, ArrowRight, Zap, Flame, Award } from 'lucide-react';
 
 function useMemoGreeting() {
   return useMemo(() => {
@@ -35,7 +33,7 @@ export default function Dashboard() {
   const greeting = useMemoGreeting();
   const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   const studentName = user?.name?.split(' ')[0] || 'Scholar';
@@ -105,12 +103,8 @@ export default function Dashboard() {
           <AICommandHeader
             name={studentName}
             greeting={greeting}
-            streak={currentStreak}
-            focusArea={data.userProgress.focusArea}
-            overallProgress={data.userProgress.overallProgress}
-            streakCount={data.userProgress.streak}
-            lastLessonTitle={data.userProgress.lastLessonTitle}
-            lastLessonPath={data.userProgress.lastLessonPath}
+            streak={`${currentStreak} Days`}
+            aiInsight={data.welcomeHero?.aiInsight}
           />
 
           {/* NotebookLM / Linear Style 70% / 30% Split Layout */}
@@ -126,10 +120,10 @@ export default function Dashboard() {
                     <Zap className="w-3.5 h-3.5" /> Daily Focus Action
                   </div>
                   <h3 className="text-xl font-display font-extrabold text-black mb-1">
-                    Resume Dynamic Programming & Memoization
+                    {data.continueLearning.chapter}
                   </h3>
                   <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                    Lesson 9 of 12 • Completion increases core algorithm score by <strong className="text-black">+12%</strong>
+                    {data.continueLearning.subject} • {data.continueLearning.aiInsight}
                   </p>
                 </div>
 
@@ -144,15 +138,40 @@ export default function Dashboard() {
               </div>
 
               {/* AI Recommendation Grid */}
-              <AIRecommendationGrid recommendations={data.recommendations} />
+              <AIRecommendationGrid />
 
               {/* Learning Telemetry & Analytics */}
-              <LearningAnalytics analytics={data.analytics} />
+              <LearningAnalytics codingCount={completedLessonsCount + 1} quizCount={completedQuizzesCount + 3} />
 
-              {/* Challenge & Achievement Row */}
+              {/* Challenge & Achievement Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ChallengeCard challenge={data.dailyChallenge} />
-                <AchievementCard achievements={data.recentAchievements} />
+                <ChallengeCard 
+                  title={data.codingChallenge.title}
+                  category={data.codingChallenge.category}
+                  difficulty={data.codingChallenge.difficulty}
+                  points={data.codingChallenge.points}
+                  description={data.codingChallenge.description}
+                  onAction={() => navigate('/codelab')}
+                />
+                
+                <div className="p-8 rounded-[2.5rem] border border-slate-200/80 bg-white flex flex-col justify-between h-full shadow-xs">
+                  <div>
+                    <h3 className="text-md font-bold font-display text-black mb-4 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-black" /> Recent Accomplishments
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                      {data.achievements.items.slice(0, 2).map((item) => (
+                        <AchievementCard 
+                          key={item.id}
+                          title={item.title}
+                          desc={item.desc}
+                          iconName={item.icon}
+                          unlockedAt={item.unlockedAt}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -177,10 +196,10 @@ export default function Dashboard() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs font-bold">
                     <span className="text-slate-400 uppercase tracking-wider text-[10px]">Mastery Score</span>
-                    <span className="text-black font-extrabold">{data.userProgress.overallProgress}%</span>
+                    <span className="text-black font-extrabold">{data.continueLearning.progress}%</span>
                   </div>
                   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
-                    <div className="h-full bg-black rounded-full" style={{ width: `${data.userProgress.overallProgress}%` }} />
+                    <div className="h-full bg-black rounded-full" style={{ width: `${data.continueLearning.progress}%` }} />
                   </div>
                 </div>
 
@@ -207,13 +226,18 @@ export default function Dashboard() {
               </div>
 
               {/* Goal Checklist */}
-              <GoalChecklist goals={data.weeklyGoals} />
+              <GoalChecklist initialGoals={data.goals} />
 
               {/* Growth Tracker */}
-              <GrowthTracker growthData={data.growthData} />
+              <GrowthTracker 
+                tracks={data.progressTracks.tracks} 
+                aiInsight={data.progressTracks.aiInsight} 
+                actionText={data.progressTracks.actionText} 
+                onAction={() => navigate('/my-learning')} 
+              />
 
               {/* Activity Timeline */}
-              <ActivityTimeline activities={data.activities} />
+              <ActivityTimeline />
 
             </div>
 

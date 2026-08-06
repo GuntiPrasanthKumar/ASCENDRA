@@ -12,7 +12,7 @@ export const useFaceDetection = () => {
   const streamRef = useRef(null);
   const intervalRef = useRef(null);
   
-  const [isModelLoaded, setIsModelLoaded] = useState(Boolean(cachedLandmarker && cachedEmbedder));
+  const [isModelLoaded, setIsModelLoaded] = useState(Boolean(cachedLandmarker));
   const [isDetecting, setIsDetecting] = useState(false);
   const [faceData, setFaceData] = useState({
     detected: false,
@@ -24,7 +24,7 @@ export const useFaceDetection = () => {
   const [error, setError] = useState(null);
 
   const loadModels = useCallback(async () => {
-    if (cachedLandmarker && cachedEmbedder) {
+    if (cachedLandmarker) {
       setIsModelLoaded(true);
       return;
     }
@@ -70,14 +70,18 @@ export const useFaceDetection = () => {
             });
           } catch (gpuErr) {
             console.warn("GPU delegate unavailable for ImageEmbedder, falling back to CPU:", gpuErr);
-            embedder = await ImageEmbedder.createFromOptions(vision, {
-              baseOptions: {
-                modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite",
-                delegate: "CPU"
-              },
-              runningMode: "VIDEO",
-              l2Normalize: true
-            });
+            try {
+              embedder = await ImageEmbedder.createFromOptions(vision, {
+                baseOptions: {
+                  modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite",
+                  delegate: "CPU"
+                },
+                runningMode: "VIDEO",
+                l2Normalize: true
+              });
+            } catch (cpuErr) {
+              console.warn("ImageEmbedder failed on CPU delegate, falling back to landmark normalization embedding:", cpuErr);
+            }
           }
 
           cachedLandmarker = landmarker;
@@ -158,20 +162,38 @@ export const useFaceDetection = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
-      if (!videoRef.current || videoRef.current.readyState < 2 || !cachedLandmarker || !cachedEmbedder) return;
+      if (!videoRef.current || videoRef.current.readyState < 2 || !cachedLandmarker) return;
 
       try {
         const now = performance.now();
         const landmarkResult = cachedLandmarker.detectForVideo(videoRef.current, now);
-        const embedResult = cachedEmbedder.embedForVideo(videoRef.current, now);
+        let embedResult = null;
+        if (cachedEmbedder) {
+          try {
+            embedResult = cachedEmbedder.embedForVideo(videoRef.current, now);
+          } catch (e) {
+            console.warn("Embedder video frame extract warning:", e);
+          }
+        }
 
         if (landmarkResult.faceLandmarks && landmarkResult.faceLandmarks.length > 0) {
           const mainLandmarks = landmarkResult.faceLandmarks[0];
           const pose = calculatePose(mainLandmarks);
           
           let embeddingArray = null;
-          if (embedResult && embedResult.embeddings && embedResult.embeddings.length > 0) {
+          if (cachedEmbedder && embedResult && embedResult.embeddings && embedResult.embeddings.length > 0) {
             embeddingArray = Array.from(embedResult.embeddings[0].floatEmbedding);
+          } else {
+            // Normalized landmark 512-float vector fallback
+            const landmarkFloats = new Array(512).fill(0);
+            mainLandmarks.forEach((lm, i) => {
+              if (i * 3 + 2 < 512) {
+                landmarkFloats[i * 3] = lm.x;
+                landmarkFloats[i * 3 + 1] = lm.y;
+                landmarkFloats[i * 3 + 2] = lm.z;
+              }
+            });
+            embeddingArray = landmarkFloats;
           }
 
           // Format or pad to 512 dimension array if model produces different size

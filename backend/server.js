@@ -13,6 +13,7 @@ const { swaggerMiddleware } = require('./app/config/swagger.config');
 const healthRoutes = require('./app/routes/health.routes');
 const systemRoutes = require('./app/routes/system.routes');
 const authRoutes = require('./app/routes/auth.routes');
+const profileRoutes = require('./app/routes/profile.routes');
 const assessmentRoutes = require('./app/routes/assessment.routes');
 const analyticsRoutes = require('./app/routes/analytics.routes');
 const leaderboardRoutes = require('./app/routes/leaderboard.routes');
@@ -52,6 +53,8 @@ app.use('/api/v1/system', systemRoutes);
 
 // Business Domain Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/v1/profile', profileRoutes);
+app.use('/api/profile', profileRoutes);
 app.use('/api/assessments', assessmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);

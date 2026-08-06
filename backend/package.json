@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node app/tests/health.test.js && node app/tests/auth.test.js && node app/tests/profile.test.js"
+    "test": "node app/tests/health.test.js && node app/tests/auth.test.js && node app/tests/profile.test.js && node app/tests/learning.test.js"
   },
   "keywords": [],
   "author": "",

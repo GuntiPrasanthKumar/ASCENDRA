@@ -8,16 +8,13 @@ import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useProctor } from '../hooks/useProctor';
 import { useToastStore } from '../components/common/Toast';
 
-// Reusable Components
 import InterviewHeader from '../components/interview/InterviewHeader';
 import QuestionCard from '../components/interview/QuestionCard';
 import CameraPreview from '../components/interview/CameraPreview';
 import TranscriptPanel from '../components/interview/TranscriptPanel';
 import Timer from '../components/interview/Timer';
-import ProgressIndicator from '../components/interview/ProgressIndicator';
 import MicrophoneIndicator from '../components/interview/MicrophoneIndicator';
 
-// Icons
 import { ShieldAlert, Video } from 'lucide-react';
 
 export default function InterviewSession() {
@@ -25,7 +22,6 @@ export default function InterviewSession() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Rehearsal Session States
   const [currentIdx, setCurrentIdx] = useState(0);
   const [transcripts, setTranscripts] = useState({});
 
@@ -35,7 +31,6 @@ export default function InterviewSession() {
 
   const { loadModels, startCamera, startDetection, stopCamera, faceData, error, isModelLoaded } = useFaceDetection();
 
-  // Load Interview details
   useEffect(() => {
     const timer = setTimeout(() => {
       const activeInterview = mockInterviews.find(i => i.id === interviewId);
@@ -49,10 +44,8 @@ export default function InterviewSession() {
     return () => clearTimeout(timer);
   }, [interviewId]);
 
-  // Load faceAPI and start webcam stream
   useEffect(() => {
     if (isLoading || !data) return;
-
     const startSession = async () => {
       await loadModels();
     };
@@ -74,7 +67,6 @@ export default function InterviewSession() {
     };
   }, [isModelLoaded, startCamera, startDetection, stopCamera]);
 
-  // Hook up Proctor verification strikes proctor check
   const handleStrike = (strikeCount, reason) => {
     addToast(`Strike ${strikeCount}/3: ${reason}`, 'warning');
     if (strikeCount >= 3) {
@@ -101,14 +93,14 @@ export default function InterviewSession() {
     return (
       <PageTransition>
         <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-error mb-4" />
-            <h2 className="text-xl font-bold text-primary mb-2">Rehearsal Session Not Found</h2>
-            <p className="text-xs text-textMuted mb-6 leading-relaxed">
+          <div className="max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/80 bg-white text-center flex flex-col items-center">
+            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4" />
+            <h2 className="text-xl font-display font-extrabold text-black mb-2">Rehearsal Session Not Found</h2>
+            <p className="text-xs text-slate-500 mb-6 leading-relaxed">
               We could not find active questions for the requested interview.
             </p>
-            <button onClick={() => navigate('/interview')} className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-xs hover:bg-accent transition-all">
-              Return to Hub
+            <button onClick={() => navigate('/interview')} className="w-full py-4 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all">
+              Return to Studio Hub
             </button>
           </div>
         </div>
@@ -132,35 +124,21 @@ export default function InterviewSession() {
     if (currentIdx < interviewQuestions.length - 1) {
       setCurrentIdx(prev => prev + 1);
     } else {
-      // Progress Sync:
       const completed = JSON.parse(localStorage.getItem('completed_interviews') || '[]');
       if (!completed.includes(activeInterview.id)) {
         completed.push(activeInterview.id);
         localStorage.setItem('completed_interviews', JSON.stringify(completed));
       }
 
-      // Increment streak
-      const currentStreak = parseInt(localStorage.getItem('skilltrove_streak') || '7');
-      localStorage.setItem('skilltrove_streak', currentStreak + 1);
-
-      // Log recent activity
-      const activities = JSON.parse(localStorage.getItem('skilltrove_activities') || '[]');
-      activities.unshift({
-        title: `Interview Rehearsal: ${activeInterview.title}`,
-        time: 'Just now',
-        xp: '+200 XP'
-      });
-      localStorage.setItem('skilltrove_activities', JSON.stringify(activities.slice(0, 5)));
-
-      addToast('Session completed successfully!', 'success');
+      addToast('Interview session completed successfully!', 'success');
       navigate(`/interview/${activeInterview.id}/results`);
     }
   };
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
+      <div className="min-h-screen bg-background text-slate-800 dark:text-slate-100 pb-20 px-4 md:px-6">
+        <div className="max-w-6xl mx-auto space-y-6">
           
           <InterviewHeader
             title={activeInterview.title}
@@ -172,10 +150,29 @@ export default function InterviewSession() {
             }}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {/* Google Meet Inspired Distraction-Free Studio Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* Left Column: Questions and Transcript Panel (span 2) */}
-            <div className="lg:col-span-2 flex flex-col gap-6">
+            {/* Camera Video Stream & Proctoring Indicator (Span 4) */}
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              <CameraPreview
+                videoRef={videoRef}
+                canvasRef={null}
+                isFaceDetected={faceData.detected}
+                error={error}
+              />
+              
+              <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+                <MicrophoneIndicator
+                  isActive={true}
+                  volumeLevel={proctor ? proctor.audioLevel : 10}
+                />
+                <Timer durationMinutes={15} onTimeUp={handleNextOrFinish} />
+              </div>
+            </div>
+
+            {/* Question Display & Live Speech Transcript (Span 8) */}
+            <div className="lg:col-span-8 flex flex-col gap-6">
               <QuestionCard
                 question={question}
                 index={currentIdx + 1}
@@ -187,36 +184,13 @@ export default function InterviewSession() {
                 onChange={handleTranscriptChange}
               />
 
-              <div className="flex justify-between items-center w-full pt-4 border-t border-slate-100">
-                <MicrophoneIndicator
-                  isActive={true}
-                  volumeLevel={proctor ? proctor.audioLevel : 10}
-                />
-
+              <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button
                   onClick={handleNextOrFinish}
-                  className="px-6 py-3.5 rounded-2xl bg-primary text-white font-bold text-xs hover:bg-accent transition-all shadow-lg shadow-primary/15"
+                  className="px-8 py-4 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold text-xs hover:opacity-90 transition-all shadow-xs"
                 >
-                  {currentIdx < interviewQuestions.length - 1 ? 'Next Question' : 'Finish Interview'}
+                  {currentIdx < interviewQuestions.length - 1 ? 'Next Question →' : 'Complete Interview & Evaluate'}
                 </button>
-              </div>
-            </div>
-
-            {/* Right Column: Camera proctoring and diagnostics (span 1) */}
-            <div className="flex flex-col gap-6">
-              <CameraPreview
-                videoRef={videoRef}
-                canvasRef={null}
-                isFaceDetected={faceData.detected}
-                error={error}
-              />
-
-              <div className="glass p-5 rounded-3xl border border-slate-200/50 flex justify-between items-center select-none">
-                <ProgressIndicator
-                  current={Object.keys(transcripts).length}
-                  total={interviewQuestions.length}
-                />
-                <Timer durationMinutes={15} onTimeUp={handleNextOrFinish} />
               </div>
             </div>
 

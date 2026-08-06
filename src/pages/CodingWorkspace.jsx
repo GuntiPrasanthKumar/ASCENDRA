@@ -7,7 +7,6 @@ import { mockLanguages } from '../features/codelab/mock/languages';
 import { mockResults } from '../features/codelab/mock/results';
 import { useToastStore } from '../components/common/Toast';
 
-// Reusable Components
 import ProblemHeader from '../components/codelab/ProblemHeader';
 import ProblemDescription from '../components/codelab/ProblemDescription';
 import CodeEditor from '../components/codelab/CodeEditor';
@@ -18,21 +17,18 @@ import AIReviewCard from '../components/codelab/AIReviewCard';
 import SubmissionSummary from '../components/codelab/SubmissionSummary';
 import Toolbar from '../components/codelab/Toolbar';
 
-// Icons
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert, Sparkles, Terminal } from 'lucide-react';
 
 export default function CodingWorkspace() {
   const { problemId } = useParams();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Workspace States
   const [selectedLangId, setSelectedLangId] = useState('javascript');
   const [code, setCode] = useState('');
   const [customInput, setCustomInput] = useState('');
   const [activeCaseIdx, setActiveCaseIdx] = useState(0);
 
-  // Execution States
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [outputResult, setOutputResult] = useState(null);
@@ -43,7 +39,6 @@ export default function CodingWorkspace() {
   const navigate = useNavigate();
   const { addToast } = useToastStore();
 
-  // Load Problem Info
   useEffect(() => {
     const activeProblem = mockProblems.find(p => p.id === problemId);
     if (activeProblem) {
@@ -53,7 +48,6 @@ export default function CodingWorkspace() {
     setIsLoading(false);
   }, [problemId, selectedLangId]);
 
-  // Update code template when language changes
   const handleSelectLanguage = (langId) => {
     setSelectedLangId(langId);
     if (data?.activeProblem) {
@@ -81,13 +75,13 @@ export default function CodingWorkspace() {
     return (
       <PageTransition>
         <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-error mb-4 animate-pulse" />
-            <h2 className="text-xl font-bold text-primary mb-2">Coding Workspace Not Found</h2>
-            <p className="text-xs text-textMuted mb-6 leading-relaxed">
+          <div className="max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/80 bg-white text-center flex flex-col items-center">
+            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4 animate-pulse" />
+            <h2 className="text-xl font-display font-extrabold text-black mb-2">Coding Workspace Not Found</h2>
+            <p className="text-xs font-medium text-slate-500 mb-6 leading-relaxed">
               We could not find details for the requested programming problem.
             </p>
-            <button onClick={() => navigate('/codelab')} className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-xs hover:bg-accent transition-all">
+            <button onClick={() => navigate('/codelab')} className="w-full py-4 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all">
               Return to CodeLab Home
             </button>
           </div>
@@ -127,21 +121,11 @@ export default function CodingWorkspace() {
       setSubmitResult(mockResults.submit);
       setAiReview(mockResults.submit.aiReview);
 
-      // Progress Sync: Store completed coding problem in local storage
       const completedCoding = JSON.parse(localStorage.getItem('completed_coding') || '[]');
       if (!completedCoding.includes(activeProblem.id)) {
         completedCoding.push(activeProblem.id);
         localStorage.setItem('completed_coding', JSON.stringify(completedCoding));
       }
-
-      // Log activity
-      const activities = JSON.parse(localStorage.getItem('skilltrove_activities') || '[]');
-      activities.unshift({
-        title: `CodeLab Accepted: ${activeProblem.title}`,
-        time: 'Just now',
-        xp: '+150 XP'
-      });
-      localStorage.setItem('skilltrove_activities', JSON.stringify(activities.slice(0, 5)));
 
       addToast('Solution Accepted! Passed all test cases. AI Review generated.', 'success');
     }, 1500);
@@ -160,8 +144,8 @@ export default function CodingWorkspace() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
+      <div className="min-h-screen bg-background text-slate-800 dark:text-slate-100 pb-20 px-4 md:px-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           
           <ProblemHeader
             title={activeProblem.title}
@@ -169,23 +153,20 @@ export default function CodingWorkspace() {
             onBack={() => navigate('/codelab')}
           />
 
-          {/* Core Split Layout Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Cursor Inspired 3-Pane Studio Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* Left Column: Problem Statements description & AI Review */}
-            <div className="flex flex-col gap-6">
+            {/* Pane 1: Problem Specifications (Span 4) */}
+            <div className="lg:col-span-4 p-6 rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-6">
               <ProblemDescription
                 description={activeProblem.description}
                 examples={activeProblem.examples}
                 constraints={activeProblem.constraints}
               />
-
-              {aiReview && <AIReviewCard review={aiReview} />}
             </div>
 
-            {/* Right Column: Code Editor workspace & Console panels */}
-            <div className="flex flex-col gap-6">
-              
+            {/* Pane 2: Monaco Code Editor & Integrated Execution Console (Span 5) */}
+            <div className="lg:col-span-5 flex flex-col gap-4">
               <Toolbar
                 languages={mockLanguages}
                 selectedLangId={selectedLangId}
@@ -197,35 +178,58 @@ export default function CodingWorkspace() {
                 isSubmitting={isSubmitting}
               />
 
-              <CodeEditor
-                value={code}
-                onChange={setCode}
-                language={selectedLangId}
-              />
-
-              <TestCasePanel
-                examples={activeProblem.examples}
-                activeCaseIdx={activeCaseIdx}
-                onSelectCase={setActiveCaseIdx}
-                testStatus={testStatus}
-              />
-
-              <ConsolePanel
-                value={customInput}
-                onChange={setCustomInput}
-              />
-
-              {(outputResult || isRunning) && (
-                <OutputPanel
-                  result={outputResult}
-                  isRunning={isRunning}
+              <div className="rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 overflow-hidden bg-slate-950">
+                <CodeEditor
+                  value={code}
+                  onChange={setCode}
+                  language={selectedLangId}
                 />
-              )}
+              </div>
 
-              {submitResult && !isSubmitting && (
-                <SubmissionSummary result={submitResult} />
-              )}
+              <div className="p-6 rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <Terminal className="w-4 h-4 text-black dark:text-white" />
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider">Execution Terminal</span>
+                </div>
+                <TestCasePanel
+                  examples={activeProblem.examples}
+                  activeCaseIdx={activeCaseIdx}
+                  onSelectCase={setActiveCaseIdx}
+                  testStatus={testStatus}
+                />
+                <ConsolePanel
+                  value={customInput}
+                  onChange={setCustomInput}
+                />
+                {(outputResult || isRunning) && (
+                  <OutputPanel
+                    result={outputResult}
+                    isRunning={isRunning}
+                  />
+                )}
+                {submitResult && !isSubmitting && (
+                  <SubmissionSummary result={submitResult} />
+                )}
+              </div>
+            </div>
 
+            {/* Pane 3: Cursor AI Reviewer & Assistant (Span 3) */}
+            <div className="lg:col-span-3 flex flex-col gap-6">
+              <div className="p-6 rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <Sparkles className="w-4 h-4 text-black dark:text-white" />
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-black dark:text-white">
+                    Cursor AI Code Intelligence
+                  </h4>
+                </div>
+                {aiReview ? (
+                  <AIReviewCard review={aiReview} />
+                ) : (
+                  <p className="text-xs font-medium text-slate-500 leading-relaxed">
+                    Submit your code solution to receive real-time Cursor AI complexity analysis, optimization suggestions, and memory footprint breakdown.
+                  </p>
+                )}
+              </div>
             </div>
 
           </div>

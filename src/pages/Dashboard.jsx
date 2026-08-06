@@ -61,12 +61,12 @@ export default function Dashboard() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] px-4 md:px-12 py-6 w-full font-body">
-        <div className="max-w-6xl mx-auto space-y-8">
+      <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] px-2 md:px-6 py-4 w-full font-body">
+        <div className="w-full space-y-8">
           
           {/* Top Search Bar */}
           <div className="w-full flex justify-center pt-2 pb-4">
-            <div className="relative w-full max-w-2xl">
+            <div className="relative w-full max-w-3xl">
               <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input 
                 type="text" 

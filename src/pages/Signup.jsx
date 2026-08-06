@@ -8,7 +8,7 @@ import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useToastStore } from '../components/common/Toast';
 import { useAuthStore } from '../hooks/useAuthStore';
-import axios from 'axios';
+import api from '../utils/api';
 
 const BlobScene = React.lazy(() => import('../components/3d/HeroScene'));
 
@@ -59,12 +59,9 @@ export default function Signup() {
       if (result.success) {
         // Enrol encrypted face profile in backend /api/proctor/enroll
         try {
-          const token = localStorage.getItem('token');
-          await axios.post('http://localhost:5000/api/proctor/enroll', {
+          await api.post('/proctor/enroll', {
             embedding: descriptor,
             modelVersion: 'mediapipe-face-embedder-v1'
-          }, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {}
           });
           console.log('[BIOMETRIC LOG] Encrypted FaceProfile enrolled on server.');
         } catch (enrollErr) {

@@ -1,17 +1,18 @@
 const User = require('../models/User.model.js');
-
+const FaceProfile = require('../models/FaceProfile.model.js');
+const { decryptEmbedding, cosineSimilarity } = require('../utils/crypto.utils.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const generateToken = (user) => {
   return jwt.sign(
-    { userId: user._id, email: user.email, role: user.role },
+    { id: user._id, userId: user._id, email: user.email, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '2h' }
   );
 };
 
-// Euclidean distance for face matching
+// Euclidean distance fallback
 const getEuclideanDistance = (descriptor1, descriptor2) => {
   if (!descriptor1 || !descriptor2 || descriptor1.length !== descriptor2.length) return 1.0;
   let sum = 0;
@@ -34,13 +35,18 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
+    let passwordHash = null;
+    if (password) {
+      passwordHash = await bcrypt.hash(password, 10);
+    }
+
     const user = new User({
       name: name.trim(),
       email: email.trim().toLowerCase(),
-      // password_hash removed
+      password_hash: passwordHash,
       department: department || 'CSE',
       role: role || 'Student',
-      faceDescriptor: faceDescriptor // 128-float array from frontend
+      faceDescriptor: faceDescriptor || []
     });
 
     const savedUser = await user.save();
@@ -103,15 +109,35 @@ const faceLogin = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (!user.faceDescriptor || user.faceDescriptor.length === 0) {
-      return res.status(400).json({ message: 'No face data found for this account' });
+    let isMatch = false;
+
+    // Check encrypted FaceProfile first (MediaPipe 512-float vector)
+    const faceProfile = await FaceProfile.findOne({ userId: user._id });
+    if (faceProfile && Array.isArray(faceDescriptor) && faceDescriptor.length === 512) {
+      try {
+        const enrolledEmbedding = decryptEmbedding(
+          faceProfile.embeddingCipher,
+          faceProfile.iv,
+          faceProfile.authTag
+        );
+        const score = cosineSimilarity(enrolledEmbedding, faceDescriptor);
+        if (score >= 0.60) {
+          isMatch = true;
+        }
+      } catch (decryptErr) {
+        console.warn('FaceProfile decryption error:', decryptErr.message);
+      }
     }
 
-    // Compare descriptors using Euclidean distance
-    const distance = getEuclideanDistance(user.faceDescriptor, faceDescriptor);
+    // Fallback: check user.faceDescriptor (Euclidean distance)
+    if (!isMatch && user.faceDescriptor && user.faceDescriptor.length > 0) {
+      const distance = getEuclideanDistance(user.faceDescriptor, faceDescriptor);
+      if (distance <= 0.6) {
+        isMatch = true;
+      }
+    }
 
-    // face-api.js recommended threshold is usually 0.6
-    if (distance > 0.6) {
+    if (!isMatch) {
       return res.status(401).json({ message: 'Face not recognized' });
     }
 
@@ -134,7 +160,8 @@ const faceLogin = async (req, res) => {
 
 const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password_hash');
+    const userId = req.user?._id || req.user?.id;
+    const user = await User.findById(userId).select('-password_hash');
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });

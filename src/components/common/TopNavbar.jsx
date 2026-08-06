@@ -50,32 +50,32 @@ export default function TopNavbar({ onOpenCommandPalette }) {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-50 bg-white text-black border-b border-neutral-200 transition-colors duration-200">
+    <header className="w-full bg-[#F8F9FA] text-black transition-colors duration-200">
       <div className="w-full px-6 md:px-12 h-16 flex items-center justify-between">
         
-        {/* Left: Gemini Notebook Inspired Logo + Title */}
+        {/* Left: Brand Logo & Title */}
         <button 
           onClick={() => navigate('/dashboard')}
           className="flex items-center gap-3 focus:outline-none shrink-0"
         >
-          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-8 w-auto object-contain" />
-          <span className="font-display font-semibold text-base text-black tracking-tight">
+          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 w-auto object-contain" />
+          <span className="font-display font-bold text-lg text-black tracking-tight">
             ASCENDRA
           </span>
         </button>
 
-        {/* Right Pushed Navigation & Actions (Matching Gemini Notebook style) */}
+        {/* Right Pushed Navigation & Actions (Increases font size slightly, direct on screen) */}
         <div className="hidden lg:flex items-center gap-8">
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-7">
             {menuItems.map((item) => {
               const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
               return (
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  className={`text-xs transition-colors duration-150 select-none py-1 ${
+                  className={`text-sm transition-colors duration-150 select-none py-1 ${
                     isActive
-                      ? 'text-black font-semibold border-b-2 border-black'
+                      ? 'text-black font-bold border-b-2 border-black'
                       : 'text-neutral-600 hover:text-black font-medium'
                   }`}
                 >
@@ -86,14 +86,14 @@ export default function TopNavbar({ onOpenCommandPalette }) {
           </nav>
 
           {/* Quick Action Controls */}
-          <div className="flex items-center gap-5 border-l border-neutral-200 pl-6">
+          <div className="flex items-center gap-5 border-l border-neutral-300 pl-6">
             
             {/* Search Trigger */}
             <button
               onClick={onOpenCommandPalette}
-              className="text-xs text-neutral-600 hover:text-black font-medium transition-colors flex items-center gap-1.5"
+              className="text-sm text-neutral-600 hover:text-black font-medium transition-colors flex items-center gap-2"
             >
-              <Search className="w-3.5 h-3.5" />
+              <Search className="w-4 h-4" />
               <span>Search</span>
             </button>
 
@@ -103,7 +103,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
               className="text-neutral-600 hover:text-black transition-colors"
               aria-label="Toggle visual theme"
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {theme === 'dark' ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
             </button>
 
             {/* Notifications */}
@@ -113,7 +113,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                 className="text-neutral-600 hover:text-black transition-colors relative"
                 aria-label="Notifications"
               >
-                <Bell className="w-4 h-4" />
+                <Bell className="w-4.5 h-4.5" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-black" />
                 )}
@@ -128,7 +128,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="flex items-center gap-2 focus:outline-none"
               >
-                <div className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
                   {user?.name?.charAt(0) || 'S'}
                 </div>
               </button>
@@ -141,18 +141,18 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 5 }}
-                      className="absolute right-0 mt-2 w-48 bg-white text-black border border-neutral-200 rounded-md shadow-md p-2 z-40 flex flex-col gap-0.5"
+                      className="absolute right-0 mt-2 w-52 bg-white text-black border border-neutral-200 rounded-md shadow-md p-2 z-40 flex flex-col gap-0.5"
                     >
                       <div className="px-3 py-2 border-b border-neutral-100 mb-1">
-                        <p className="text-xs font-bold text-black">{user?.name || 'Scholar'}</p>
-                        <p className="text-[10px] text-neutral-500 capitalize">{userRole}</p>
+                        <p className="text-sm font-bold text-black">{user?.name || 'Scholar'}</p>
+                        <p className="text-xs text-neutral-500 capitalize">{userRole}</p>
                       </div>
 
                       <button
                         onClick={() => { setProfileOpen(false); navigate('/profile'); }}
                         className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
                       >
-                        <User className="w-3.5 h-3.5" /> Profile Dossier
+                        <User className="w-4 h-4" /> Profile Dossier
                       </button>
 
                       {userRole === 'teacher' && (
@@ -160,7 +160,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                           onClick={() => { setProfileOpen(false); navigate('/teacher'); }}
                           className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
                         >
-                          <Users className="w-3.5 h-3.5" /> Educator Desk
+                          <Users className="w-4 h-4" /> Educator Desk
                         </button>
                       )}
 
@@ -169,7 +169,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                           onClick={() => { setProfileOpen(false); navigate('/admin'); }}
                           className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
                         >
-                          <ShieldCheck className="w-3.5 h-3.5" /> System Admin
+                          <ShieldCheck className="w-4 h-4" /> System Admin
                         </button>
                       )}
 
@@ -177,14 +177,14 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                         onClick={() => { setProfileOpen(false); navigate('/settings'); }}
                         className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
                       >
-                        <Settings className="w-3.5 h-3.5" /> Preferences
+                        <Settings className="w-4 h-4" /> Preferences
                       </button>
 
                       <button
                         onClick={handleSignOut}
                         className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left mt-1 border-t border-neutral-100"
                       >
-                        <LogOut className="w-3.5 h-3.5" /> Sign Out
+                        <LogOut className="w-4 h-4" /> Sign Out
                       </button>
                     </motion.div>
                   </>
@@ -200,7 +200,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden p-2 text-black transition-colors"
         >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
 
       </div>
@@ -212,7 +212,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-b border-neutral-200 px-6 py-4 space-y-2 overflow-hidden"
+            className="lg:hidden bg-[#F8F9FA] px-6 py-4 space-y-2 overflow-hidden border-t border-neutral-200"
           >
             {menuItems.map((item) => (
               <button
@@ -221,7 +221,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                   setMobileMenuOpen(false);
                   navigate(item.path);
                 }}
-                className={`w-full text-left py-2 text-xs font-medium ${
+                className={`w-full text-left py-2.5 text-sm font-medium ${
                   location.pathname === item.path
                     ? 'text-black font-bold'
                     : 'text-neutral-600 hover:text-black'

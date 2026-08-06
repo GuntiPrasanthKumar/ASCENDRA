@@ -1,11 +1,9 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useToastStore } from '../components/common/Toast';
-import { useAuthStore } from './useAuthStore';
-import axios from 'axios';
+import api from '../utils/api';
 
 export const useProctor = (isActive, faceData, onStrike, sessionId = 'session-default') => {
   const { addToast } = useToastStore();
-  const { token } = useAuthStore();
   const [strikes, setStrikes] = useState(0);
   const [audioLevel, setAudioLevel] = useState(0);
   
@@ -133,16 +131,11 @@ export const useProctor = (isActive, faceData, onStrike, sessionId = 'session-de
 
       const verifyOnServer = async () => {
         try {
-          const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
-          const response = await axios.post(
-            'http://localhost:5000/api/proctor/verify',
-            {
-              sessionId: sessionId || 'session-default',
-              embedding: faceData.descriptor,
-              modelVersion: 'mediapipe-face-embedder-v1'
-            },
-            { headers: authHeaders }
-          );
+          const response = await api.post('/proctor/verify', {
+            sessionId: sessionId || 'session-default',
+            embedding: faceData.descriptor,
+            modelVersion: 'mediapipe-face-embedder-v1'
+          });
 
           if (response.data && response.data.match === false) {
             violationBuffer.current.mismatch++;
@@ -151,7 +144,7 @@ export const useProctor = (isActive, faceData, onStrike, sessionId = 'session-de
             violationBuffer.current.mismatch = 0;
           }
         } catch (err) {
-          console.warn("Proctor server verification error:", err?.response?.data || err.message);
+          console.warn("Proctor server verification warning:", err?.response?.data || err.message);
         }
       };
 
@@ -183,7 +176,7 @@ export const useProctor = (isActive, faceData, onStrike, sessionId = 'session-de
       violationBuffer.current.gaze = 0;
     }
 
-  }, [faceData, isActive, addStrike, token, sessionId]);
+  }, [faceData, isActive, addStrike, sessionId]);
 
   // Browser Visibility & Focus Events
   useEffect(() => {

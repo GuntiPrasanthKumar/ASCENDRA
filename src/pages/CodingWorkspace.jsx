@@ -62,7 +62,7 @@ export default function CodingWorkspace() {
   if (isLoading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6">
+        <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#131314] pt-8 pb-20 px-4 md:px-6">
           <div className="max-w-7xl mx-auto">
             <PageSkeleton />
           </div>
@@ -74,14 +74,16 @@ export default function CodingWorkspace() {
   if (!data) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/80 bg-white text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-slate-400 mb-4 animate-pulse" />
-            <h2 className="text-xl font-display font-extrabold text-black mb-2">Coding Workspace Not Found</h2>
-            <p className="text-xs font-medium text-slate-500 mb-6 leading-relaxed">
+        <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#131314] pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
+          <div className="google-card max-w-md w-full p-8 text-center flex flex-col items-center">
+            <ShieldAlert className="w-12 h-12 text-[#D93025] mb-4 animate-pulse" />
+            <h2 className="text-xl font-display font-bold text-[#1F1F1F] dark:text-[#E3E3E3] mb-2">
+              Coding Workspace Not Found
+            </h2>
+            <p className="text-xs font-medium text-[#5F6368] dark:text-[#8E918F] mb-6 leading-relaxed">
               We could not find details for the requested programming problem.
             </p>
-            <button onClick={() => navigate('/codelab')} className="w-full py-4 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all">
+            <button onClick={() => navigate('/codelab')} className="w-full py-3.5 rounded-full bg-[#1A73E8] text-white font-bold text-xs hover:bg-[#1557B0] transition-all">
               Return to CodeLab Home
             </button>
           </div>
@@ -144,7 +146,7 @@ export default function CodingWorkspace() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background text-slate-800 dark:text-slate-100 pb-20 px-4 md:px-6">
+      <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#131314] text-[#1F1F1F] dark:text-[#E3E3E3] pb-20 px-4 md:px-6 transition-colors duration-300">
         <div className="max-w-7xl mx-auto space-y-6">
           
           <ProblemHeader
@@ -157,7 +159,7 @@ export default function CodingWorkspace() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* Pane 1: Problem Specifications (Span 4) */}
-            <div className="lg:col-span-4 p-6 rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-6">
+            <div className="lg:col-span-4 google-card p-6 flex flex-col gap-6">
               <ProblemDescription
                 description={activeProblem.description}
                 examples={activeProblem.examples}
@@ -178,7 +180,7 @@ export default function CodingWorkspace() {
                 isSubmitting={isSubmitting}
               />
 
-              <div className="rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 overflow-hidden bg-slate-950">
+              <div className="rounded-[1.75rem] border border-[#E3E3E3] dark:border-[#2E2F31] overflow-hidden bg-[#1E1E20] shadow-xs">
                 <CodeEditor
                   value={code}
                   onChange={setCode}
@@ -186,9 +188,9 @@ export default function CodingWorkspace() {
                 />
               </div>
 
-              <div className="p-6 rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <Terminal className="w-4 h-4 text-black dark:text-white" />
+              <div className="google-card p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-[#E3E3E3] dark:border-[#2E2F31]">
+                  <Terminal className="w-4 h-4 text-[#1A73E8] dark:text-[#A8C7FA]" />
                   <span className="text-xs font-mono font-bold uppercase tracking-wider">Execution Terminal</span>
                 </div>
                 <TestCasePanel
@@ -215,17 +217,17 @@ export default function CodingWorkspace() {
 
             {/* Pane 3: Cursor AI Reviewer & Assistant (Span 3) */}
             <div className="lg:col-span-3 flex flex-col gap-6">
-              <div className="p-6 rounded-[2.5rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <Sparkles className="w-4 h-4 text-black dark:text-white" />
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-black dark:text-white">
-                    Cursor AI Code Intelligence
+              <div className="google-card p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-[#E3E3E3] dark:border-[#2E2F31]">
+                  <Sparkles className="w-4 h-4 text-[#1A73E8] dark:text-[#A8C7FA]" />
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1F1F1F] dark:text-[#E3E3E3]">
+                    Cursor AI Intelligence
                   </h4>
                 </div>
                 {aiReview ? (
                   <AIReviewCard review={aiReview} />
                 ) : (
-                  <p className="text-xs font-medium text-slate-500 leading-relaxed">
+                  <p className="text-xs font-medium text-[#5F6368] dark:text-[#8E918F] leading-relaxed">
                     Submit your code solution to receive real-time Cursor AI complexity analysis, optimization suggestions, and memory footprint breakdown.
                   </p>
                 )}

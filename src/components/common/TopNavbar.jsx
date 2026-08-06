@@ -75,31 +75,31 @@ export default function TopNavbar({ onOpenCommandPalette }) {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800/80 transition-colors duration-300">
+    <header className="sticky top-0 z-50 bg-[#F8F9FA]/90 dark:bg-[#131314]/90 backdrop-blur-xl border-b border-[#E3E3E3]/80 dark:border-[#2E2F31]/80 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
         
         {/* Left: Brand Logo */}
         <div className="flex items-center gap-6 shrink-0">
           <button 
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 focus:outline-none"
+            className="flex items-center gap-2.5 focus:outline-none group"
           >
-            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 md:h-10 w-auto object-contain" />
+            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 md:h-10 w-auto object-contain transition-transform group-hover:scale-105" />
           </button>
         </div>
 
-        {/* Center: Curvy Top Navigation Links (Desktop) */}
-        <nav className="hidden xl:flex items-center bg-slate-100/80 dark:bg-slate-900/90 p-1 rounded-full border border-slate-200/70 dark:border-slate-800 shadow-xs">
+        {/* Center: Curvy Google Navigation Links (Desktop) */}
+        <nav className="hidden xl:flex items-center bg-[#F0F4F9]/80 dark:bg-[#1E1E20]/90 p-1 rounded-full border border-[#E3E3E3]/70 dark:border-[#2E2F31] shadow-xs">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 select-none ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 select-none ${
                   isActive
-                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/60'
+                    ? 'bg-[#1A73E8] text-white dark:bg-[#A8C7FA] dark:text-[#041E49] shadow-xs'
+                    : 'text-[#5F6368] dark:text-[#C4C7C5] hover:text-[#1F1F1F] dark:hover:text-white hover:bg-white/80 dark:hover:bg-[#282A2C]'
                 }`}
               >
                 {item.icon}
@@ -112,20 +112,20 @@ export default function TopNavbar({ onOpenCommandPalette }) {
         {/* Right: Command Bar Search, Theme, Notifications & User Avatar */}
         <div className="flex items-center gap-2.5 shrink-0">
           
-          {/* Linear / Cursor style Search Bar */}
+          {/* Google / Cursor style Command Search Bar */}
           <div className="relative hidden lg:block w-56 xl:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#5F6368] dark:text-[#8E918F]" />
             <input
               type="text"
               readOnly
               onClick={onOpenCommandPalette}
               value={searchVal}
-              placeholder="Command search..."
-              className="w-full pl-9 pr-10 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-black text-xs font-semibold text-black dark:text-white placeholder-slate-400 cursor-pointer"
+              placeholder="Search or type command..."
+              className="w-full pl-9 pr-10 py-2 rounded-full bg-[#F0F4F9]/80 dark:bg-[#1E1E20] border border-[#E3E3E3]/80 dark:border-[#2E2F31] focus:outline-none focus:ring-2 focus:ring-[#1A73E8] text-xs font-semibold text-[#1F1F1F] dark:text-[#E3E3E3] placeholder-[#5F6368] dark:placeholder-[#8E918F] cursor-pointer hover:bg-white dark:hover:bg-[#282A2C] transition-all"
             />
             <button
               onClick={onOpenCommandPalette}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:text-black dark:hover:text-white transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-[#5F6368] dark:text-[#8E918F] bg-white dark:bg-[#282A2C] px-1.5 py-0.5 rounded-full border border-[#E3E3E3] dark:border-[#444746]"
             >
               ⌘K
             </button>

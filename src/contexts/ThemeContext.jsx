@@ -4,10 +4,13 @@ const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
+    // Always default to clean white light mode
     const saved = localStorage.getItem('skilltrove_theme');
-    if (saved) return saved;
-    // Default to light mode for clean white Google UI
-    return 'light';
+    if (saved === 'dark') {
+      localStorage.setItem('skilltrove_theme', 'light');
+      return 'light';
+    }
+    return saved || 'light';
   });
 
   useEffect(() => {

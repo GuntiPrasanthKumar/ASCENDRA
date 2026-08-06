@@ -61,6 +61,7 @@ app.use('/api/v1/learning', learningRoutes);
 app.use('/api/learning', learningRoutes);
 app.use('/api/v1/practice', practiceRoutes);
 app.use('/api/practice', practiceRoutes);
+app.use('/api/v1/assessments', assessmentRoutes);
 app.use('/api/assessments', assessmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);

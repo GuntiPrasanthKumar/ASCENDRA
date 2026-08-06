@@ -60,9 +60,9 @@ export default function Dashboard() {
                 <button
                   key={idx}
                   onClick={() => navigate(chip.path)}
-                  className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-white border border-[#E3E3E3] text-xs font-bold text-[#1F1F1F] hover:border-[#1A73E8] hover:bg-[#F0F4F9] transition-all shadow-xs group"
+                  className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-white border border-[#E3E3E3] text-xs font-bold text-[#1F1F1F] hover:border-[#000000] hover:bg-[#F5F5F5] transition-all shadow-xs group"
                 >
-                  <span className="text-[#1A73E8] group-hover:scale-110 transition-transform">
+                  <span className="text-[#000000] group-hover:scale-110 transition-transform">
                     {chip.icon}
                   </span>
                   <span>{chip.label}</span>
@@ -78,7 +78,7 @@ export default function Dashboard() {
             className="google-card p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 w-full"
           >
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-[#1A73E8]">
+              <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-[#000000]">
                 <Compass className="w-4 h-4" /> Active Workspace Target
               </div>
               <h3 className="text-2xl font-display font-bold text-[#1F1F1F]">
@@ -91,7 +91,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => navigate('/learn/adv-algorithms/dynamic-programming/memoization-basics')}
-              className="px-8 py-4 rounded-full bg-[#1A73E8] hover:bg-[#1557B0] text-white font-bold text-xs flex items-center gap-2 transition-all shrink-0 shadow-md group"
+              className="px-8 py-4 rounded-full bg-[#000000] hover:bg-[#262626] text-white font-bold text-xs flex items-center gap-2 transition-all shrink-0 shadow-md group"
             >
               <PlayCircle className="w-4.5 h-4.5" />
               <span>Resume Workspace</span>
@@ -107,7 +107,7 @@ export default function Dashboard() {
             <div className="space-y-3 w-full">
               <div className="google-card p-5 flex items-center justify-between w-full">
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 rounded-full bg-[#E8F0FE] text-[#1A73E8]">
+                  <div className="p-2.5 rounded-full bg-[#F5F5F5] text-[#000000]">
                     <BookOpen className="w-4.5 h-4.5" />
                   </div>
                   <div>
@@ -122,7 +122,7 @@ export default function Dashboard() {
 
               <div className="google-card p-5 flex items-center justify-between w-full">
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 rounded-full bg-[#E8F0FE] text-[#1A73E8]">
+                  <div className="p-2.5 rounded-full bg-[#F5F5F5] text-[#000000]">
                     <Code className="w-4.5 h-4.5" />
                   </div>
                   <div>

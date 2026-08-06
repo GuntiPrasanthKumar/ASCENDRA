@@ -82,7 +82,7 @@ export default function LessonPage() {
             <p className="text-xs text-[#5F6368] dark:text-[#8E918F] mb-6 leading-relaxed">
               We could not find the requested lesson leaf details.
             </p>
-            <button onClick={() => navigate('/learn')} className="w-full py-3.5 rounded-full bg-[#1A73E8] text-white font-bold text-xs hover:bg-[#1557B0] transition-all shadow-xs">
+            <button onClick={() => navigate('/learn')} className="w-full py-3.5 rounded-full bg-[#000000] text-white font-bold text-xs hover:bg-[#262626] transition-all shadow-xs">
               Return to Hub
             </button>
           </div>
@@ -208,7 +208,7 @@ export default function LessonPage() {
                 <button
                   key={idx}
                   onClick={() => setAiContextText(item.label)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 dark:bg-[#1E1E20]/90 backdrop-blur-md border border-[#E3E3E3] dark:border-[#2E2F31] text-[11px] font-bold text-[#5F6368] dark:text-[#C4C7C5] hover:text-[#1A73E8] dark:hover:text-[#A8C7FA] hover:border-[#1A73E8] transition-all shadow-xs"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#E3E3E3] text-[11px] font-bold text-[#5F6368] hover:text-[#000000] hover:border-[#000000] transition-all shadow-xs"
                 >
                   {item.icon}
                   <span>{item.label}</span>
@@ -217,18 +217,18 @@ export default function LessonPage() {
             </div>
 
             {/* Main Prompt Bar */}
-            <form onSubmit={handleSendPrompt} className="relative flex items-center bg-white/95 dark:bg-[#1E1E20]/95 backdrop-blur-xl border border-[#E3E3E3] dark:border-[#2E2F31] rounded-full shadow-2xl p-2 pl-5">
-              <Sparkles className="w-4 h-4 text-[#1A73E8] dark:text-[#A8C7FA] shrink-0 mr-3 animate-pulse" />
+            <form onSubmit={handleSendPrompt} className="relative flex items-center bg-white/95 backdrop-blur-xl border border-[#E3E3E3] rounded-full shadow-2xl p-2 pl-5">
+              <Sparkles className="w-4 h-4 text-[#000000] shrink-0 mr-3 animate-pulse" />
               <input 
                 type="text"
                 value={promptInput}
                 onChange={e => setPromptInput(e.target.value)}
                 placeholder="Ask Ascendra about this lesson or concept..."
-                className="w-full bg-transparent text-xs font-semibold text-[#1F1F1F] dark:text-[#E3E3E3] placeholder-[#5F6368] dark:placeholder-[#8E918F] focus:outline-none pr-12"
+                className="w-full bg-transparent text-xs font-semibold text-[#1F1F1F] placeholder-[#5F6368] focus:outline-none pr-12"
               />
               <button 
                 type="submit"
-                className="absolute right-2.5 p-2 rounded-full bg-[#1A73E8] dark:bg-[#A8C7FA] text-white dark:text-[#041E49] hover:bg-[#1557B0] transition-colors shadow-xs"
+                className="absolute right-2.5 p-2 rounded-full bg-[#000000] text-white hover:bg-[#262626] transition-colors shadow-xs"
               >
                 <Send className="w-3.5 h-3.5" />
               </button>

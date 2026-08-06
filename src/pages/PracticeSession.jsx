@@ -61,7 +61,7 @@ export default function PracticeSession() {
             <p className="text-xs font-medium text-[#5F6368] dark:text-[#8E918F] mb-6 leading-relaxed">
               We could not find questions for the requested assessment set.
             </p>
-            <button onClick={() => navigate('/practice')} className="w-full py-3.5 rounded-full bg-[#1A73E8] text-white font-bold text-xs hover:bg-[#1557B0] transition-all">
+            <button onClick={() => navigate('/practice')} className="w-full py-3.5 rounded-full bg-[#000000] text-white font-bold text-xs hover:bg-[#262626] transition-all">
               Return to Hub
             </button>
           </div>
@@ -147,14 +147,14 @@ export default function PracticeSession() {
               {!isQuestionSubmitted ? (
                 <button
                   onClick={handleVerifyAnswer}
-                  className="px-7 py-3.5 rounded-full bg-[#1A73E8] dark:bg-[#A8C7FA] text-white dark:text-[#041E49] font-bold text-xs hover:bg-[#1557B0] transition-all shadow-xs"
+                  className="px-7 py-3.5 rounded-full bg-[#000000] text-white font-bold text-xs hover:bg-[#262626] transition-all shadow-xs"
                 >
                   Save Response
                 </button>
               ) : currentIdx < setQuestions.length - 1 ? (
                 <button
                   onClick={() => setCurrentIdx(prev => prev + 1)}
-                  className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#1A73E8] dark:bg-[#A8C7FA] text-white dark:text-[#041E49] font-bold text-xs hover:bg-[#1557B0] transition-all shadow-xs"
+                  className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#000000] text-white font-bold text-xs hover:bg-[#262626] transition-all shadow-xs"
                 >
                   Next Question <ArrowRight className="w-4 h-4" />
                 </button>

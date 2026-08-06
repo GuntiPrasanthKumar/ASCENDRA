@@ -101,7 +101,7 @@ export default function InterviewSession() {
             <p className="text-xs text-[#5F6368] dark:text-[#8E918F] mb-6 leading-relaxed">
               We could not find active questions for the requested interview.
             </p>
-            <button onClick={() => navigate('/interview')} className="w-full py-3.5 rounded-full bg-[#1A73E8] text-white font-bold text-xs hover:bg-[#1557B0] transition-all">
+            <button onClick={() => navigate('/interview')} className="w-full py-3.5 rounded-full bg-[#000000] text-white font-bold text-xs hover:bg-[#262626] transition-all">
               Return to Studio Hub
             </button>
           </div>
@@ -186,10 +186,10 @@ export default function InterviewSession() {
                 onChange={handleTranscriptChange}
               />
 
-              <div className="flex justify-end pt-4 border-t border-[#E3E3E3] dark:border-[#2E2F31]">
+              <div className="flex justify-end pt-4 border-t border-[#E3E3E3]">
                 <button
                   onClick={handleNextOrFinish}
-                  className="px-8 py-3.5 rounded-full bg-[#1A73E8] dark:bg-[#A8C7FA] text-white dark:text-[#041E49] font-bold text-xs hover:bg-[#1557B0] transition-all shadow-xs"
+                  className="px-8 py-3.5 rounded-full bg-[#000000] text-white font-bold text-xs hover:bg-[#262626] transition-all shadow-xs"
                 >
                   {currentIdx < interviewQuestions.length - 1 ? 'Next Question →' : 'Complete Interview & Evaluate'}
                 </button>

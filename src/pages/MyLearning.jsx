@@ -63,8 +63,8 @@ export default function MyLearning() {
           {/* Header Banner */}
           <div className="space-y-3 pb-8 border-b border-[#E3E3E3] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F0FE] text-xs font-bold text-[#1A73E8]">
-                <FileText className="w-3.5 h-3.5 text-[#1A73E8]" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F5F5F5] border border-[#E5E5E5] text-xs font-bold text-[#000000]">
+                <FileText className="w-3.5 h-3.5 text-[#000000]" />
                 <span>Verified Career Portfolio</span>
               </div>
               <h1 className="text-3xl md:text-4xl font-display font-bold text-[#1F1F1F] tracking-tight">
@@ -75,7 +75,7 @@ export default function MyLearning() {
               </p>
             </div>
 
-            <button className="px-5 py-2.5 rounded-full bg-[#1A73E8] hover:bg-[#1557B0] text-white font-bold text-xs flex items-center gap-2 transition-all shadow-xs shrink-0">
+            <button className="px-5 py-2.5 rounded-full bg-[#000000] hover:bg-[#262626] text-white font-bold text-xs flex items-center gap-2 transition-all shadow-xs shrink-0">
               <Download className="w-4 h-4" />
               <span>Export PDF Portfolio</span>
             </button>
@@ -86,13 +86,13 @@ export default function MyLearning() {
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#5F6368]">
               01. Executive Technical Summary
             </span>
-            <div className="p-6 rounded-2xl bg-[#F0F4F9] border border-[#E3E3E3] space-y-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#1A73E8]">
-                <Sparkles className="w-4 h-4 text-[#1A73E8]" />
+            <div className="p-6 rounded-2xl bg-[#F5F5F5] border border-[#E3E3E3] space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#000000]">
+                <Sparkles className="w-4 h-4 text-[#000000]" />
                 <span>MediaPipe Biometric Proctoring Verified</span>
               </div>
               <p className="text-xs font-medium leading-relaxed text-[#1F1F1F]">
-                Candidate has completed <strong className="text-[#1A73E8] font-bold">{completedLessons.length + 8} technical lessons</strong> and accepted <strong className="text-[#1A73E8] font-bold">{completedCoding.length + 2} CodeLab algorithmic challenges</strong> with 100% identity verification compliance.
+                Candidate has completed <strong className="text-[#000000] font-bold">{completedLessons.length + 8} technical lessons</strong> and accepted <strong className="text-[#000000] font-bold">{completedCoding.length + 2} CodeLab algorithmic challenges</strong> with 100% identity verification compliance.
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
                 <span className="text-[10px] font-mono font-bold bg-white border border-[#E3E3E3] px-3 py-1 rounded-full text-[#1F1F1F]">
@@ -115,11 +115,11 @@ export default function MyLearning() {
             </span>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {certificates.map(cert => (
-                <div key={cert.id} className="p-6 rounded-2xl bg-white border border-[#E3E3E3] hover:border-[#1A73E8] transition-all space-y-4 shadow-xs">
+                <div key={cert.id} className="p-6 rounded-2xl bg-white border border-[#E3E3E3] hover:border-[#000000] transition-all space-y-4 shadow-xs">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-full bg-[#E8F0FE] text-[#1A73E8]">
-                        <Award className="w-5 h-5 text-[#1A73E8]" />
+                      <div className="p-2.5 rounded-full bg-[#F5F5F5] text-[#000000]">
+                        <Award className="w-5 h-5 text-[#000000]" />
                       </div>
                       <div>
                         <h4 className="text-xs font-bold text-[#1F1F1F] leading-snug">{cert.title}</h4>
@@ -133,7 +133,7 @@ export default function MyLearning() {
 
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {cert.skills.map((s, idx) => (
-                      <span key={idx} className="text-[9px] font-mono bg-[#F0F4F9] border border-[#E3E3E3] px-2.5 py-0.5 rounded-full text-[#5F6368]">
+                      <span key={idx} className="text-[9px] font-mono bg-[#F5F5F5] border border-[#E3E3E3] px-2.5 py-0.5 rounded-full text-[#5F6368]">
                         {s}
                       </span>
                     ))}
@@ -141,7 +141,7 @@ export default function MyLearning() {
 
                   <div className="pt-3 border-t border-[#E3E3E3] flex justify-between items-center text-[10px] font-mono text-[#5F6368]">
                     <span>Issued {cert.issuedDate}</span>
-                    <button className="font-bold text-[#1A73E8] hover:underline flex items-center gap-1">
+                    <button className="font-bold text-[#000000] hover:underline flex items-center gap-1">
                       Download Record <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
@@ -159,17 +159,17 @@ export default function MyLearning() {
               <div className="p-6 rounded-2xl bg-white border border-[#E3E3E3] space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-[#1A73E8]" />
+                    <Star className="w-4 h-4 text-[#000000]" />
                     <span className="text-xs font-bold text-[#1F1F1F]">Advanced Algorithms</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-[#1A73E8]">85% Complete</span>
+                  <span className="text-[10px] font-mono font-bold text-[#000000]">85% Complete</span>
                 </div>
-                <div className="w-full h-2 bg-[#F0F4F9] rounded-full overflow-hidden border border-[#E3E3E3]">
-                  <div className="h-full bg-[#1A73E8] rounded-full" style={{ width: '85%' }} />
+                <div className="w-full h-2 bg-[#F5F5F5] rounded-full overflow-hidden border border-[#E3E3E3]">
+                  <div className="h-full bg-[#000000] rounded-full" style={{ width: '85%' }} />
                 </div>
                 <button 
                   onClick={() => navigate('/learn/adv-algorithms')}
-                  className="text-xs font-bold text-[#1A73E8] flex items-center gap-1 hover:underline pt-1"
+                  className="text-xs font-bold text-[#000000] flex items-center gap-1 hover:underline pt-1"
                 >
                   View Pathway Specs <ChevronRight className="w-3.5 h-3.5" />
                 </button>
@@ -178,17 +178,17 @@ export default function MyLearning() {
               <div className="p-6 rounded-2xl bg-white border border-[#E3E3E3] space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-[#1A73E8]" />
+                    <Star className="w-4 h-4 text-[#000000]" />
                     <span className="text-xs font-bold text-[#1F1F1F]">Quantitative Aptitude</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-[#1A73E8]">60% Complete</span>
+                  <span className="text-[10px] font-mono font-bold text-[#000000]">60% Complete</span>
                 </div>
-                <div className="w-full h-2 bg-[#F0F4F9] rounded-full overflow-hidden border border-[#E3E3E3]">
-                  <div className="h-full bg-[#1A73E8] rounded-full" style={{ width: '60%' }} />
+                <div className="w-full h-2 bg-[#F5F5F5] rounded-full overflow-hidden border border-[#E3E3E3]">
+                  <div className="h-full bg-[#000000] rounded-full" style={{ width: '60%' }} />
                 </div>
                 <button 
                   onClick={() => navigate('/learn/quant-aptitude')}
-                  className="text-xs font-bold text-[#1A73E8] flex items-center gap-1 hover:underline pt-1"
+                  className="text-xs font-bold text-[#000000] flex items-center gap-1 hover:underline pt-1"
                 >
                   View Pathway Specs <ChevronRight className="w-3.5 h-3.5" />
                 </button>

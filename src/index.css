@@ -6,8 +6,8 @@
   --color-background: #F8F9FA;
   --color-surface: #FFFFFF;
   --color-primary: #1F1F1F;
-  --color-accent: #1A73E8;
-  --color-accent2: #7C4DFF;
+  --color-accent: #000000;
+  --color-accent2: #2B2B2B;
   --color-muted: #F0F4F9;
   --color-textPrimary: #1F1F1F;
   --color-textMuted: #5F6368;
@@ -76,13 +76,13 @@
   }
 
   .gemini-gradient-text {
-    background: linear-gradient(135deg, #1A73E8 0%, #7C4DFF 40%, #D93025 80%);
+    background: linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .gemini-gradient-bg {
-    background: linear-gradient(135deg, #1A73E8 0%, #7C4DFF 50%, #4285F4 100%);
+    background: linear-gradient(135deg, #000000 0%, #1F1F1F 50%, #333333 100%);
   }
 
   .glass {

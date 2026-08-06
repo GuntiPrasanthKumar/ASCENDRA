@@ -159,7 +159,7 @@ export default function CodingWorkspace() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* Pane 1: Problem Specifications (Span 4) */}
-            <div className="lg:col-span-4 google-card p-6 flex flex-col gap-6">
+            <div className="lg:col-span-4 google-card p-6 h-[720px] overflow-y-auto">
               <ProblemDescription
                 description={activeProblem.description}
                 examples={activeProblem.examples}
@@ -168,29 +168,30 @@ export default function CodingWorkspace() {
             </div>
 
             {/* Pane 2: Monaco Code Editor & Integrated Execution Console (Span 5) */}
-            <div className="lg:col-span-5 flex flex-col gap-4">
-              <Toolbar
-                languages={mockLanguages}
-                selectedLangId={selectedLangId}
-                onSelectLang={handleSelectLanguage}
-                onRun={handleRunCode}
-                onSubmit={handleSubmitCode}
-                onReset={handleResetCode}
-                isRunning={isRunning}
-                isSubmitting={isSubmitting}
-              />
-
-              <div className="rounded-[1.75rem] border border-[#E3E3E3] dark:border-[#2E2F31] overflow-hidden bg-[#1E1E20] shadow-xs">
-                <CodeEditor
-                  value={code}
-                  onChange={setCode}
-                  language={selectedLangId}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              <div className="google-card p-4 flex flex-col gap-4">
+                <Toolbar
+                  languages={mockLanguages}
+                  selectedLangId={selectedLangId}
+                  onSelectLang={handleSelectLanguage}
+                  onRun={handleRunCode}
+                  onSubmit={handleSubmitCode}
+                  onReset={handleResetCode}
+                  isRunning={isRunning}
+                  isSubmitting={isSubmitting}
                 />
+                <div className="rounded-[1.75rem] border border-[#E3E3E3] overflow-hidden bg-[#1E1E20] shadow-xs">
+                  <CodeEditor
+                    value={code}
+                    onChange={setCode}
+                    language={selectedLangId}
+                  />
+                </div>
               </div>
 
               <div className="google-card p-6 flex flex-col gap-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-[#E3E3E3] dark:border-[#2E2F31]">
-                  <Terminal className="w-4 h-4 text-[#1A73E8] dark:text-[#A8C7FA]" />
+                <div className="flex items-center gap-2 pb-2 border-b border-[#E3E3E3]">
+                  <Terminal className="w-4 h-4 text-[#000000]" />
                   <span className="text-xs font-mono font-bold uppercase tracking-wider">Execution Terminal</span>
                 </div>
                 <TestCasePanel
@@ -218,9 +219,9 @@ export default function CodingWorkspace() {
             {/* Pane 3: Cursor AI Reviewer & Assistant (Span 3) */}
             <div className="lg:col-span-3 flex flex-col gap-6">
               <div className="google-card p-6 flex flex-col gap-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-[#E3E3E3] dark:border-[#2E2F31]">
-                  <Sparkles className="w-4 h-4 text-[#1A73E8] dark:text-[#A8C7FA]" />
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1F1F1F] dark:text-[#E3E3E3]">
+                <div className="flex items-center gap-2 pb-2 border-b border-[#E3E3E3]">
+                  <Sparkles className="w-4 h-4 text-[#000000]" />
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1F1F1F]">
                     Cursor AI Intelligence
                   </h4>
                 </div>

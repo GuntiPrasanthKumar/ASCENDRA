@@ -7,6 +7,7 @@ import {
   User, Settings, LogOut, Sun, Moon, Bell, Search, Menu, X, ShieldAlert, Users, ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import NotificationCenter from './NotificationCenter';
 
 const SEARCHABLE_ITEMS = [
   { title: 'Advanced Algorithms', category: 'Subject', path: '/learn/adv-algorithms' },
@@ -167,64 +168,24 @@ export default function TopNavbar({ onOpenCommandPalette }) {
             {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
           </button>
 
-          {/* Notification Dropdown */}
+          {/* Notification Center Popover */}
           <div className="relative">
             <button
               onClick={() => setNotiOpen(!notiOpen)}
               className={`p-2 rounded-full border transition-all flex items-center justify-center relative ${
                 notiOpen 
-                  ? 'bg-slate-900 text-white border-black dark:bg-white dark:text-black' 
+                  ? 'bg-black text-white border-black dark:bg-white dark:text-black' 
                   : 'bg-slate-100/80 dark:bg-slate-900 border-slate-200/70 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
               }`}
               aria-label="Notifications"
             >
               <Bell className="w-3.5 h-3.5" />
               {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-black ring-2 ring-white" />
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-black dark:bg-white ring-2 ring-white dark:ring-slate-950" />
               )}
             </button>
 
-            <AnimatePresence>
-              {notiOpen && (
-                <>
-                  <div onClick={() => setNotiOpen(false)} className="fixed inset-0 z-30" />
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] shadow-xl p-5 z-40"
-                  >
-                    <div className="flex justify-between items-center mb-4">
-                      <h4 className="text-xs font-black uppercase tracking-widest text-slate-500">Notifications</h4>
-                      {unreadCount > 0 && (
-                        <button onClick={markAllRead} className="text-[10px] font-black text-black dark:text-white uppercase tracking-widest">
-                          Mark Read
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col gap-3">
-                      {notifications.map(n => (
-                        <div key={n.id} className={`p-3 rounded-2xl text-[11px] leading-relaxed font-semibold border ${
-                          n.read 
-                            ? 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 text-slate-400' 
-                            : 'bg-slate-50 dark:bg-slate-800 border-slate-200/60 dark:border-slate-700 text-black dark:text-white'
-                        }`}>
-                          <div className="flex gap-2 items-start">
-                            {n.type === 'proctor' ? (
-                              <ShieldAlert className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-                            ) : (
-                              <Sparkles className="w-4 h-4 text-black dark:text-white shrink-0 mt-0.5" />
-                            )}
-                            <span>{n.text}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>
+            <NotificationCenter isOpen={notiOpen} onClose={() => setNotiOpen(false)} />
           </div>
 
           {/* User Profile Pill Menu */}

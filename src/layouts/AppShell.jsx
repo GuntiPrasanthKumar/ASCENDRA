@@ -8,6 +8,9 @@ export default function AppShell() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
   useEffect(() => {
+    // Strip dark class on mount to guarantee pure light mode
+    document.documentElement.classList.remove('dark');
+
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
@@ -19,7 +22,7 @@ export default function AppShell() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 flex flex-col">
+    <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] transition-colors duration-300 flex flex-col">
       {/* 1. Top Navigation Bar */}
       <TopNavbar onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
 

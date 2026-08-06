@@ -40,7 +40,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
     { path: '/practice', label: 'Practice', icon: <Activity className="w-4 h-4" /> },
     { path: '/codelab', label: 'CodeLab', icon: <Code className="w-4 h-4" /> },
     { path: '/interview', label: 'Interview', icon: <Video className="w-4 h-4" /> },
-    { path: '/ai-mentor', label: 'AI Coach', icon: <Sparkles className="w-4 h-4" /> },
+    { path: '/ai-mentor', label: 'AI Coach', icon: <Sparkles className="w-4 h-4 text-[#1A73E8]" /> },
     { path: '/my-learning', label: 'Portfolio', icon: <Award className="w-4 h-4" /> },
   ];
 
@@ -71,31 +71,31 @@ export default function TopNavbar({ onOpenCommandPalette }) {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-[#4353FF] via-[#3B46F6] to-[#4F46E5] text-white shadow-md transition-colors duration-300">
+    <header className="sticky top-0 z-50 bg-white text-[#1F1F1F] border-b border-[#E3E3E3] shadow-2xs transition-colors duration-300">
       <div className="w-full px-4 md:px-8 h-16 flex items-center justify-between gap-4">
         
         {/* Left: Brand Logo */}
         <div className="flex items-center gap-4 shrink-0">
           <button 
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2.5 focus:outline-none group p-1.5 rounded-2xl hover:bg-white/10 transition-all duration-200"
+            className="flex items-center gap-2.5 focus:outline-none group p-1.5 rounded-2xl hover:bg-[#F0F4F9] transition-all duration-200"
           >
-            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 md:h-10 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105" />
+            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 md:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
           </button>
         </div>
 
-        {/* Center: Blue Pill Bar matching user's requested style */}
-        <nav className="hidden lg:flex items-center gap-2">
+        {/* Center: Clean White Navigation Bar with Pill Buttons */}
+        <nav className="hidden lg:flex items-center gap-1.5">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-200 select-none group ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all duration-200 select-none group ${
                   isActive
-                    ? 'bg-white/25 border border-white/40 text-white shadow-sm scale-105'
-                    : 'text-white/90 hover:text-white hover:bg-white/20 hover:scale-105'
+                    ? 'bg-[#1A73E8] text-white shadow-xs scale-105'
+                    : 'text-[#5F6368] hover:text-[#1A73E8] hover:bg-[#F0F4F9] hover:scale-105'
                 }`}
               >
                 <span className="transition-transform duration-200 group-hover:scale-110">
@@ -112,18 +112,18 @@ export default function TopNavbar({ onOpenCommandPalette }) {
           
           {/* Search Input Bar */}
           <div className="relative hidden md:block w-44 lg:w-52">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/70" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#5F6368]" />
             <input
               type="text"
               readOnly
               onClick={onOpenCommandPalette}
               value={searchVal}
               placeholder="Search..."
-              className="w-full pl-9 pr-9 py-1.5 rounded-full bg-white/15 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white text-xs font-semibold text-white placeholder-white/70 cursor-pointer hover:bg-white/25 hover:scale-[1.02] transition-all duration-200"
+              className="w-full pl-9 pr-9 py-2 rounded-full bg-[#F0F4F9] border border-[#E3E3E3] focus:outline-none focus:ring-2 focus:ring-[#1A73E8] text-xs font-semibold text-[#1F1F1F] placeholder-[#5F6368] cursor-pointer hover:bg-white hover:border-[#1A73E8] hover:scale-[1.02] transition-all duration-200"
             />
             <button
               onClick={onOpenCommandPalette}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-white bg-white/20 px-1.5 py-0.5 rounded-full border border-white/30"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-[#5F6368] bg-white px-1.5 py-0.5 rounded-full border border-[#E3E3E3]"
             >
               ⌘K
             </button>
@@ -132,7 +132,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-white/15 hover:bg-white/25 hover:scale-110 text-white border border-white/30 transition-all duration-200"
+            className="p-2.5 rounded-full bg-[#F0F4F9] hover:bg-white hover:text-[#1A73E8] hover:scale-110 text-[#5F6368] border border-[#E3E3E3] hover:border-[#1A73E8] transition-all duration-200"
             aria-label="Toggle visual theme"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -142,16 +142,16 @@ export default function TopNavbar({ onOpenCommandPalette }) {
           <div className="relative">
             <button
               onClick={() => setNotiOpen(!notiOpen)}
-              className={`p-2 rounded-full border transition-all duration-200 flex items-center justify-center relative hover:scale-110 ${
+              className={`p-2.5 rounded-full border transition-all duration-200 flex items-center justify-center relative hover:scale-110 ${
                 notiOpen 
-                  ? 'bg-white text-[#3B46F6] border-white shadow-xs' 
-                  : 'bg-white/15 border-white/30 text-white hover:bg-white/25'
+                  ? 'bg-[#1A73E8] text-white border-[#1A73E8] shadow-xs' 
+                  : 'bg-[#F0F4F9] border-[#E3E3E3] text-[#5F6368] hover:bg-white hover:border-[#1A73E8] hover:text-[#1A73E8]'
               }`}
               aria-label="Notifications"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-amber-400 ring-2 ring-[#3B46F6]" />
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#D93025] ring-2 ring-white" />
               )}
             </button>
 
@@ -162,12 +162,12 @@ export default function TopNavbar({ onOpenCommandPalette }) {
           <div className="relative">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 p-1 pr-3 rounded-full border border-white/40 bg-white/20 hover:bg-white/30 hover:scale-105 transition-all duration-200 shrink-0 group"
+              className="flex items-center gap-2 p-1 pr-3.5 rounded-full border border-[#E3E3E3] bg-[#F0F4F9] hover:bg-white hover:border-[#1A73E8] hover:scale-105 transition-all duration-200 shrink-0 group"
             >
-              <div className="w-7 h-7 rounded-full bg-white text-[#3B46F6] flex items-center justify-center font-bold text-xs shadow-2xs group-hover:scale-105 transition-transform">
+              <div className="w-7 h-7 rounded-full bg-[#1A73E8] text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:scale-105 transition-transform">
                 {user?.name?.charAt(0) || 'S'}
               </div>
-              <span className="text-xs font-bold text-white hidden sm:inline">
+              <span className="text-xs font-bold text-[#1F1F1F] group-hover:text-[#1A73E8] hidden sm:inline">
                 {user?.name?.split(' ')[0] || 'Scholar'}
               </span>
             </button>
@@ -189,34 +189,34 @@ export default function TopNavbar({ onOpenCommandPalette }) {
 
                     <button
                       onClick={() => { setProfileOpen(false); navigate('/profile'); }}
-                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#4353FF] transition-all text-left"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
                     >
-                      <User className="w-4 h-4 text-[#4353FF]" /> Profile Dossier
+                      <User className="w-4 h-4 text-[#1A73E8]" /> Profile Dossier
                     </button>
 
                     {userRole === 'teacher' && (
                       <button
                         onClick={() => { setProfileOpen(false); navigate('/teacher'); }}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#4353FF] transition-all text-left"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
                       >
-                        <Users className="w-4 h-4 text-[#4353FF]" /> Educator Desk
+                        <Users className="w-4 h-4 text-[#1A73E8]" /> Educator Desk
                       </button>
                     )}
 
                     {userRole === 'admin' && (
                       <button
                         onClick={() => { setProfileOpen(false); navigate('/admin'); }}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#4353FF] transition-all text-left"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
                       >
-                        <ShieldCheck className="w-4 h-4 text-[#4353FF]" /> System Admin
+                        <ShieldCheck className="w-4 h-4 text-[#1A73E8]" /> System Admin
                       </button>
                     )}
 
                     <button
                       onClick={() => { setProfileOpen(false); navigate('/settings'); }}
-                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#4353FF] transition-all text-left"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
                     >
-                      <Settings className="w-4 h-4 text-[#4353FF]" /> Preferences
+                      <Settings className="w-4 h-4 text-[#1A73E8]" /> Preferences
                     </button>
 
                     <button
@@ -234,7 +234,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-full bg-white/15 hover:bg-white/25 text-white border border-white/30 transition-all"
+            className="lg:hidden p-2 rounded-full bg-[#F0F4F9] hover:bg-white text-[#5F6368] border border-[#E3E3E3] transition-all"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -249,7 +249,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-[#3B46F6] border-b border-white/20 px-4 py-4 space-y-2 overflow-hidden shadow-lg"
+            className="lg:hidden bg-white border-b border-[#E3E3E3] px-4 py-4 space-y-2 overflow-hidden shadow-lg"
           >
             {menuItems.map((item) => (
               <button
@@ -260,8 +260,8 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-left ${
                   location.pathname === item.path
-                    ? 'bg-white text-[#3B46F6]'
-                    : 'text-white hover:bg-white/20'
+                    ? 'bg-[#1A73E8] text-white'
+                    : 'text-[#1F1F1F] hover:bg-[#F0F4F9]'
                 }`}
               >
                 {item.icon}

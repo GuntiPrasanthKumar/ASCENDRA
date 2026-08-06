@@ -8,7 +8,7 @@ import { mockStatistics } from '../features/learning/mock/statistics';
 import SubjectCard from '../components/learn/SubjectCard';
 import { 
   BookOpen, Clock, Award, Search, ChevronRight, PlayCircle, 
-  Code2, Network, ListFilter, Binary, ArrowRight, ShieldCheck, Star
+  Code2, Network, ListFilter, Binary, Map, Activity, Check, FileText, Calculator
 } from 'lucide-react';
 
 export default function LearnHome() {
@@ -81,6 +81,16 @@ export default function LearnHome() {
       icon: <Binary className="w-5 h-5 text-amber-600" />,
       bg: 'bg-amber-50'
     }
+  ];
+
+  const roadmapSteps = [
+    { label: 'Basics', status: 'completed' },
+    { label: 'Data Structures', status: 'completed' },
+    { label: 'Algorithms', status: 'active' },
+    { label: 'Advanced DP', status: 'upcoming' },
+    { label: 'Graphs', status: 'upcoming' },
+    { label: 'Mock Tests', status: 'upcoming' },
+    { label: 'Revision', status: 'upcoming' },
   ];
 
   return (
@@ -191,7 +201,7 @@ export default function LearnHome() {
                 </div>
               </div>
 
-              {/* Action Button & 3D Soft Graphics */}
+              {/* Action Button */}
               <div className="flex items-center gap-6 z-10 w-full md:w-auto justify-end">
                 <button
                   onClick={() => navigate('/learn/adv-algorithms')}
@@ -258,31 +268,98 @@ export default function LearnHome() {
             </div>
           )}
 
-          {/* Your Learning Path / All Subjects */}
+          {/* Your Learning Path */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-slate-900 tracking-tight">Your Learning Path</h2>
+                <h2 className="text-2xl font-display font-bold text-slate-900 tracking-tight">Your Learning Path</h2>
                 <p className="text-xs text-slate-500 font-medium">Track your personalized roadmap</p>
               </div>
-              <button className="text-xs font-semibold text-blue-600 hover:underline">
-                View roadmap
+              <button 
+                onClick={() => navigate('/my-learning')}
+                className="bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-100 px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors shadow-2xs"
+              >
+                <Map className="w-4 h-4" />
+                <span>View roadmap</span>
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredSubjects.map((subj) => (
+            {/* Grid of Subject Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredSubjects.map((subj, idx) => (
                 <SubjectCard
                   key={subj.id}
                   title={subj.title}
                   description={subj.description}
-                  difficulty={subj.difficulty}
-                  estimatedHours={subj.estimatedHours}
-                  lessonsCount={subj.chapterIds?.length || 8}
-                  progress={subj.progress || 30}
+                  difficulty={subj.difficulty || (idx === 0 ? 'PRO' : 'EASY')}
+                  estimatedHours={subj.estimatedHours || (idx === 0 ? 20 : 12)}
+                  progress={subj.progress || (idx === 0 ? 74 : 40)}
+                  themeColor={idx === 0 ? 'blue' : 'emerald'}
+                  icon={idx === 0 ? <FileText className="w-4.5 h-4.5" /> : <Calculator className="w-4.5 h-4.5" />}
                   onSelect={() => navigate(`/learn/${subj.id}`)}
                 />
               ))}
+            </div>
+          </div>
+
+          {/* Roadmap Overview Section */}
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <Activity className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-display font-bold text-slate-900">Roadmap Overview</h3>
+                  <p className="text-xs text-slate-500 font-medium">You're on track! Keep the momentum going.</p>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => navigate('/my-learning')}
+                className="text-xs font-semibold text-blue-600 hover:underline inline-flex items-center gap-1"
+              >
+                View full roadmap <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Stepper Timeline Bar */}
+            <div className="relative pt-6 pb-2 overflow-x-auto">
+              <div className="min-w-[600px]">
+                {/* Connecting Line */}
+                <div className="absolute top-10 left-[8%] right-[8%] h-0.5 bg-slate-200 -z-0" />
+                
+                <div className="flex justify-between items-center relative z-10">
+                  {roadmapSteps.map((step, idx) => {
+                    const isCompleted = step.status === 'completed';
+                    const isActive = step.status === 'active';
+
+                    return (
+                      <div key={idx} className="flex flex-col items-center gap-3 text-center">
+                        {isCompleted && (
+                          <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-xs">
+                            <Check className="w-4 h-4 stroke-[3]" />
+                          </div>
+                        )}
+
+                        {isActive && (
+                          <div className="w-7 h-7 rounded-full bg-blue-600 border-4 border-blue-200 flex items-center justify-center shadow-xs animate-pulse">
+                            <div className="w-2 h-2 rounded-full bg-white" />
+                          </div>
+                        )}
+
+                        {!isCompleted && !isActive && (
+                          <div className="w-7 h-7 rounded-full border-2 border-slate-300 bg-white" />
+                        )}
+
+                        <span className={`text-xs ${isActive ? 'font-bold text-slate-900' : isCompleted ? 'font-semibold text-slate-700' : 'font-medium text-slate-400'}`}>
+                          {step.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 

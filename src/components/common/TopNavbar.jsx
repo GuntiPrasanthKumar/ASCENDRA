@@ -55,8 +55,8 @@ export default function TopNavbar({ onOpenCommandPalette }) {
         
         {/* Left: Brand Logo & Title */}
         <button 
-          onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-3 focus:outline-none shrink-0"
+          onClick={() => navigate('/')}
+          className="flex items-center gap-3 focus:outline-none shrink-0 cursor-pointer"
         >
           <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 w-auto object-contain" />
           <span className="font-display font-bold text-lg text-black tracking-tight">

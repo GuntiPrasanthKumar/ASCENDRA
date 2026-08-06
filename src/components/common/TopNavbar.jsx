@@ -40,7 +40,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
     { path: '/practice', label: 'Practice', icon: <Activity className="w-3.5 h-3.5" /> },
     { path: '/codelab', label: 'CodeLab', icon: <Code className="w-3.5 h-3.5" /> },
     { path: '/interview', label: 'Interview', icon: <Video className="w-3.5 h-3.5" /> },
-    { path: '/ai-mentor', label: 'AI Coach', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { path: '/ai-mentor', label: 'AI Coach', icon: <Sparkles className="w-3.5 h-3.5 text-[#1A73E8]" /> },
     { path: '/my-learning', label: 'Portfolio', icon: <Award className="w-3.5 h-3.5" /> },
   ];
 
@@ -68,136 +68,108 @@ export default function TopNavbar({ onOpenCommandPalette }) {
     navigate('/login');
   };
 
-  const markAllRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  };
-
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#F8F9FA]/90 dark:bg-[#131314]/90 backdrop-blur-xl border-b border-[#E3E3E3]/80 dark:border-[#2E2F31]/80 transition-colors duration-300">
+    <header className="sticky top-0 z-50 bg-[#F8F9FA]/95 backdrop-blur-xl border-b border-[#E3E3E3] transition-colors duration-300">
       <div className="w-full px-4 md:px-8 h-16 flex items-center justify-between gap-4">
         
         {/* Left: Brand Logo */}
-        <div className="flex items-center gap-6 shrink-0">
+        <div className="flex items-center gap-4 shrink-0">
           <button 
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2.5 focus:outline-none group"
+            className="flex items-center gap-2.5 focus:outline-none group p-1 rounded-2xl hover:bg-[#E8F0FE]/60 transition-all duration-200"
           >
-            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 md:h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+            <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 md:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
           </button>
         </div>
 
-        {/* Center: Curvy Google Navigation Links (Desktop) */}
-        <nav className="hidden xl:flex items-center bg-[#F0F4F9]/80 dark:bg-[#1E1E20]/90 p-1 rounded-full border border-[#E3E3E3]/70 dark:border-[#2E2F31] shadow-xs">
+        {/* Center: Directly Visible Navigation Bar (All items on screen) */}
+        <nav className="hidden lg:flex items-center bg-[#F0F4F9] p-1.5 rounded-full border border-[#E3E3E3] shadow-2xs gap-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
             return (
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 select-none ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 select-none group relative ${
                   isActive
-                    ? 'bg-[#1A73E8] text-white dark:bg-[#A8C7FA] dark:text-[#041E49] shadow-xs'
-                    : 'text-[#5F6368] dark:text-[#C4C7C5] hover:text-[#1F1F1F] dark:hover:text-white hover:bg-white/80 dark:hover:bg-[#282A2C]'
+                    ? 'bg-[#1A73E8] text-white shadow-xs scale-[1.02]'
+                    : 'text-[#5F6368] hover:text-[#1A73E8] hover:bg-white hover:shadow-2xs hover:scale-105'
                 }`}
               >
-                {item.icon}
+                <span className="transition-transform duration-200 group-hover:scale-110">
+                  {item.icon}
+                </span>
                 <span>{item.label}</span>
               </NavLink>
             );
           })}
         </nav>
 
-        {/* Right: Command Bar Search, Theme, Notifications & User Avatar */}
+        {/* Right: Search, Theme, Notifications & Profile Avatar */}
         <div className="flex items-center gap-2.5 shrink-0">
           
-          {/* Google / Cursor style Command Search Bar */}
-          <div className="relative hidden lg:block w-56 xl:w-64">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#5F6368] dark:text-[#8E918F]" />
+          {/* Interactive Search Bar */}
+          <div className="relative hidden md:block w-48 lg:w-56">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#5F6368]" />
             <input
               type="text"
               readOnly
               onClick={onOpenCommandPalette}
               value={searchVal}
-              placeholder="Search or type command..."
-              className="w-full pl-9 pr-10 py-2 rounded-full bg-[#F0F4F9]/80 dark:bg-[#1E1E20] border border-[#E3E3E3]/80 dark:border-[#2E2F31] focus:outline-none focus:ring-2 focus:ring-[#1A73E8] text-xs font-semibold text-[#1F1F1F] dark:text-[#E3E3E3] placeholder-[#5F6368] dark:placeholder-[#8E918F] cursor-pointer hover:bg-white dark:hover:bg-[#282A2C] transition-all"
+              placeholder="Search command..."
+              className="w-full pl-9 pr-10 py-2 rounded-full bg-[#F0F4F9] border border-[#E3E3E3] focus:outline-none focus:ring-2 focus:ring-[#1A73E8] text-xs font-semibold text-[#1F1F1F] placeholder-[#5F6368] cursor-pointer hover:bg-white hover:border-[#1A73E8] hover:scale-[1.02] transition-all duration-200"
             />
             <button
               onClick={onOpenCommandPalette}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-[#5F6368] dark:text-[#8E918F] bg-white dark:bg-[#282A2C] px-1.5 py-0.5 rounded-full border border-[#E3E3E3] dark:border-[#444746]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-[#5F6368] bg-white px-1.5 py-0.5 rounded-full border border-[#E3E3E3] hover:border-[#1A73E8] hover:text-[#1A73E8] transition-all"
             >
               ⌘K
             </button>
-
-            {/* Search Dropdown */}
-            {searchVal.trim().length > 0 && (
-              <div className="absolute top-11 left-0 right-0 max-h-60 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[1.5rem] shadow-xl z-50 p-2 flex flex-col gap-1">
-                {SEARCHABLE_ITEMS.filter(item =>
-                  item.title.toLowerCase().includes(searchVal.toLowerCase()) ||
-                  item.category.toLowerCase().includes(searchVal.toLowerCase())
-                ).map((item, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      navigate(item.path);
-                      setSearchVal('');
-                    }}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col gap-0.5 border border-transparent transition-all select-none"
-                  >
-                    <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider">{item.category}</span>
-                    <span className="text-xs font-bold text-black dark:text-white">{item.title}</span>
-                  </button>
-                ))}
-                {SEARCHABLE_ITEMS.filter(item =>
-                  item.title.toLowerCase().includes(searchVal.toLowerCase()) ||
-                  item.category.toLowerCase().includes(searchVal.toLowerCase())
-                ).length === 0 && (
-                  <span className="text-[10px] text-slate-400 font-bold text-center py-4 select-none">No command matches found.</span>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-slate-100/80 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/70 dark:border-slate-800 transition-all"
+            className="p-2.5 rounded-full bg-[#F0F4F9] hover:bg-white hover:text-[#1A73E8] hover:scale-110 text-[#5F6368] border border-[#E3E3E3] hover:border-[#1A73E8] transition-all duration-200"
             aria-label="Toggle visual theme"
           >
-            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
-          {/* Notification Center Popover */}
+          {/* Notification Center Trigger */}
           <div className="relative">
             <button
               onClick={() => setNotiOpen(!notiOpen)}
-              className={`p-2 rounded-full border transition-all flex items-center justify-center relative ${
+              className={`p-2.5 rounded-full border transition-all duration-200 flex items-center justify-center relative hover:scale-110 ${
                 notiOpen 
-                  ? 'bg-black text-white border-black dark:bg-white dark:text-black' 
-                  : 'bg-slate-100/80 dark:bg-slate-900 border-slate-200/70 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
+                  ? 'bg-[#1A73E8] text-white border-[#1A73E8] shadow-xs' 
+                  : 'bg-[#F0F4F9] border-[#E3E3E3] text-[#5F6368] hover:bg-white hover:border-[#1A73E8] hover:text-[#1A73E8]'
               }`}
               aria-label="Notifications"
             >
-              <Bell className="w-3.5 h-3.5" />
+              <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-black dark:bg-white ring-2 ring-white dark:ring-slate-950" />
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#D93025] ring-2 ring-white" />
               )}
             </button>
 
             <NotificationCenter isOpen={notiOpen} onClose={() => setNotiOpen(false)} />
           </div>
 
-          {/* User Profile Pill Menu */}
+          {/* User Profile Avatar Button */}
           <div className="relative">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 p-1 pr-3 rounded-full border border-slate-200/70 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all shrink-0"
+              className="flex items-center gap-2 p-1 pr-3.5 rounded-full border border-[#E3E3E3] bg-[#F0F4F9] hover:bg-white hover:border-[#1A73E8] hover:scale-105 transition-all duration-200 shrink-0 group"
             >
-              <div className="w-7 h-7 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-black text-xs">
+              <div className="w-7 h-7 rounded-full bg-[#1A73E8] text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:scale-105 transition-transform">
                 {user?.name?.charAt(0) || 'S'}
               </div>
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 hidden sm:inline">{user?.name?.split(' ')[0] || 'Scholar'}</span>
+              <span className="text-xs font-bold text-[#1F1F1F] group-hover:text-[#1A73E8] hidden sm:inline">
+                {user?.name?.split(' ')[0] || 'Scholar'}
+              </span>
             </button>
 
             <AnimatePresence>
@@ -205,55 +177,53 @@ export default function TopNavbar({ onOpenCommandPalette }) {
                 <>
                   <div onClick={() => setProfileOpen(false)} className="fixed inset-0 z-30" />
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] shadow-xl p-4 z-40 flex flex-col gap-1.5"
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-3 w-56 bg-white border border-[#E3E3E3] rounded-[1.75rem] shadow-xl p-3 z-40 flex flex-col gap-1"
                   >
-                    <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
-                      <p className="text-xs font-bold text-black dark:text-white">{user?.name || 'Scholar'}</p>
-                      <p className="text-[10px] text-slate-400 capitalize">{userRole}</p>
+                    <div className="px-4 py-2.5 border-b border-[#E3E3E3] mb-1">
+                      <p className="text-xs font-bold text-[#1F1F1F]">{user?.name || 'Scholar'}</p>
+                      <p className="text-[10px] font-mono text-[#5F6368] capitalize">{userRole}</p>
                     </div>
 
                     <button
                       onClick={() => { setProfileOpen(false); navigate('/profile'); }}
-                      className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
                     >
-                      <User className="w-4 h-4 text-black dark:text-white" /> My Profile
+                      <User className="w-4 h-4 text-[#1A73E8]" /> Profile Dossier
                     </button>
 
-                    <button
-                      onClick={() => { setProfileOpen(false); navigate('/settings'); }}
-                      className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
-                    >
-                      <Settings className="w-4 h-4 text-black dark:text-white" /> System Settings
-                    </button>
-
-                    {(userRole === 'teacher' || userRole === 'faculty') && (
+                    {userRole === 'teacher' && (
                       <button
                         onClick={() => { setProfileOpen(false); navigate('/teacher'); }}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
                       >
-                        <Users className="w-4 h-4 text-black dark:text-white" /> Teacher Console
+                        <Users className="w-4 h-4 text-[#1A73E8]" /> Educator Desk
                       </button>
                     )}
 
                     {userRole === 'admin' && (
                       <button
                         onClick={() => { setProfileOpen(false); navigate('/admin'); }}
-                        className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
                       >
-                        <ShieldCheck className="w-4 h-4 text-black dark:text-white" /> Admin Panel
+                        <ShieldCheck className="w-4 h-4 text-[#1A73E8]" /> System Admin
                       </button>
                     )}
 
-                    <div className="border-t border-slate-100 dark:border-slate-800 my-1" />
+                    <button
+                      onClick={() => { setProfileOpen(false); navigate('/settings'); }}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#1F1F1F] hover:bg-[#F0F4F9] hover:text-[#1A73E8] transition-all text-left"
+                    >
+                      <Settings className="w-4 h-4 text-[#1A73E8]" /> Preferences
+                    </button>
 
                     <button
                       onClick={handleSignOut}
-                      className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-[#D93025] hover:bg-[#FCE8E6] transition-all text-left mt-1"
                     >
-                      <LogOut className="w-4 h-4" /> Sign Out
+                      <LogOut className="w-4 h-4 text-[#D93025]" /> Sign Out
                     </button>
                   </motion.div>
                 </>
@@ -261,69 +231,44 @@ export default function TopNavbar({ onOpenCommandPalette }) {
             </AnimatePresence>
           </div>
 
-          {/* Mobile Menu Toggle Button (XL and smaller) */}
+          {/* Mobile Hamburger Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-full bg-slate-100/80 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 text-black dark:text-white xl:hidden"
-            aria-label="Toggle navigation menu"
+            className="lg:hidden p-2.5 rounded-full bg-[#F0F4F9] hover:bg-white text-[#5F6368] hover:text-[#1A73E8] border border-[#E3E3E3] transition-all"
           >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
         </div>
       </div>
 
-      {/* Mobile Drawer Navigation Modal */}
+      {/* Mobile Drawer Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs xl:hidden"
-            />
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="fixed top-16 left-4 right-4 z-50 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-[2.5rem] p-6 shadow-2xl xl:hidden flex flex-col gap-4"
-            >
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {menuItems.map((item) => {
-                  const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
-                  return (
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
-                        isActive
-                          ? 'bg-black text-white dark:bg-white dark:text-black'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                      }`}
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </NavLink>
-                  );
-                })}
-              </div>
-
-              {/* Mobile Search input */}
-              <div className="relative mt-2">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input
-                  type="text"
-                  value={searchVal}
-                  onChange={(e) => setSearchVal(e.target.value)}
-                  placeholder="Command search..."
-                  className="w-full pl-10 pr-4 py-3 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-xs font-semibold text-black dark:text-white placeholder-slate-400"
-                />
-              </div>
-            </motion.div>
-          </>
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-white border-b border-[#E3E3E3] px-4 py-4 space-y-2 overflow-hidden shadow-lg"
+          >
+            {menuItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate(item.path);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-left ${
+                  location.pathname === item.path
+                    ? 'bg-[#1A73E8] text-white'
+                    : 'text-[#1F1F1F] hover:bg-[#F0F4F9]'
+                }`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </motion.div>
         )}
       </AnimatePresence>
     </header>

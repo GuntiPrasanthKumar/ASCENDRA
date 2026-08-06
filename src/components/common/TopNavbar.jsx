@@ -19,7 +19,7 @@ const SEARCHABLE_ITEMS = [
   { title: 'Technical Algorithm Round', category: 'Interview Category', path: '/interview/int-tech/setup' }
 ];
 
-export default function TopNavbar() {
+export default function TopNavbar({ onOpenCommandPalette }) {
   const { user, logout } = useAuthStore();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -116,14 +116,18 @@ export default function TopNavbar() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
             <input
               type="text"
+              readOnly
+              onClick={onOpenCommandPalette}
               value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
               placeholder="Command search..."
-              className="w-full pl-9 pr-10 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-black text-xs font-semibold text-black dark:text-white placeholder-slate-400"
+              className="w-full pl-9 pr-10 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-black text-xs font-semibold text-black dark:text-white placeholder-slate-400 cursor-pointer"
             />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+            <button
+              onClick={onOpenCommandPalette}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 hover:text-black dark:hover:text-white transition-colors"
+            >
               ⌘K
-            </span>
+            </button>
 
             {/* Search Dropdown */}
             {searchVal.trim().length > 0 && (

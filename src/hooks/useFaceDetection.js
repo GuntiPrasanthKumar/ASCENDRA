@@ -133,9 +133,11 @@ export const useFaceDetection = () => {
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        await videoRef.current.play().catch(e => console.warn("Video element play warning:", e));
       }
       return true;
     } catch (err) {
+      console.error("Camera access error:", err);
       setError("Camera permission denied or not available.");
       return false;
     }
@@ -156,7 +158,7 @@ export const useFaceDetection = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
-      if (!videoRef.current || videoRef.current.readyState !== 4 || !cachedLandmarker || !cachedEmbedder) return;
+      if (!videoRef.current || videoRef.current.readyState < 2 || !cachedLandmarker || !cachedEmbedder) return;
 
       try {
         const now = performance.now();
@@ -193,8 +195,8 @@ export const useFaceDetection = () => {
 
           if (canvasRef.current) {
             const ctx = canvasRef.current.getContext('2d');
-            const width = videoRef.current.videoWidth;
-            const height = videoRef.current.videoHeight;
+            const width = videoRef.current.videoWidth || 640;
+            const height = videoRef.current.videoHeight || 480;
             canvasRef.current.width = width;
             canvasRef.current.height = height;
 
@@ -233,6 +235,7 @@ export const useFaceDetection = () => {
   }, [loadModels, stopDetection]);
 
   return {
+    videoRef,
     canvasRef,
     isModelLoaded,
     isDetecting,

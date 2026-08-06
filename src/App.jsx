@@ -58,7 +58,7 @@ const EvaluationReport = lazy(() => import('./pages/EvaluationReport'));
 
 function PublicLayout() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-[#F8F9FA] text-slate-900">
       <Navbar />
       <main className="flex-1">
         <Outlet />

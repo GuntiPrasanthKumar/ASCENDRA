@@ -75,12 +75,13 @@ const itemVariants = {
 export default function Home() {
   return (
     <PageTransition>
-      <Suspense fallback={null}>
-        <HeroScene />
-      </Suspense>
+      <div className="w-full min-h-screen bg-[#F8F9FA] text-slate-900 relative">
+        <Suspense fallback={null}>
+          <HeroScene />
+        </Suspense>
 
-      {/* Hero Header */}
-      <div className="relative z-10 pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[88vh] text-center">
+        {/* Hero Header */}
+        <div className="relative z-10 pt-20 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[85vh] text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -220,6 +221,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
+      </div>
     </PageTransition>
   );
 }

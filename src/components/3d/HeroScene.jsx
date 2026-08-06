@@ -74,7 +74,7 @@ export default function HeroScene() {
         <ContactShadows position={[0, -2.5, 0]} opacity={0.5} scale={10} blur={2} far={4} frames={1} />
         <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
       </Canvas>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F8F9FA]/50 to-[#F8F9FA] pointer-events-none" />
     </div>
   );
 }

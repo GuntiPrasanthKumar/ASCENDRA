@@ -1,199 +1,203 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, BrainCircuit, LogOut, LayoutDashboard, User } from 'lucide-react';
+import { Menu, X, User, Settings, LogOut, ShieldCheck, Users, Search, Bell } from 'lucide-react';
 import { useAuthStore } from '../../hooks/useAuthStore';
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
+const Navbar = ({ onOpenCommandPalette }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthStore();
 
+  const userRole = user?.role?.toLowerCase() || 'student';
+
   const guestLinks = [
-    { name: 'Home', path: '/' },
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/learn', label: 'Learn' },
+    { path: '/practice', label: 'Practice' },
+    { path: '/codelab', label: 'CodeLab' },
+    { path: '/ai-mentor', label: 'AI Mentor' },
+    { path: '/interview', label: 'Interview Studio' },
   ];
 
   const authLinks = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Learn', path: '/learn' },
-    { name: 'Practice', path: '/practice' },
-    { name: 'CodeLab', path: '/codelab' },
-    { name: 'AI Mentor', path: '/ai-mentor' },
-    { name: 'Interview Studio', path: '/interview-studio' },
-    { name: 'Progress', path: '/progress' },
-    { name: 'Profile', path: '/profile' },
-    { name: 'Settings', path: '/settings' },
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/learn', label: 'Learn' },
+    { path: '/practice', label: 'Practice' },
+    { path: '/codelab', label: 'CodeLab' },
+    { path: '/ai-mentor', label: 'AI Mentor' },
+    { path: '/interview', label: 'Interview Studio' },
+    { path: '/my-learning', label: 'Progress' },
+    { path: '/profile', label: 'Profile' },
+    { path: '/settings', label: 'Settings' },
   ];
 
-  if (user?.role?.toLowerCase() === 'teacher' || user?.role?.toLowerCase() === 'faculty') {
-    authLinks.push({ name: 'Teacher Dashboard', path: '/teacher' });
-  } else if (user?.role?.toLowerCase() === 'admin') {
-    authLinks.push({ name: 'Admin Dashboard', path: '/admin' });
+  if (userRole === 'teacher' || userRole === 'faculty') {
+    authLinks.push({ path: '/teacher', label: 'Teacher Desk' });
+  } else if (userRole === 'admin') {
+    authLinks.push({ path: '/admin', label: 'Admin Desk' });
   }
 
-  const links = isAuthenticated ? authLinks : guestLinks;
+  const menuItems = isAuthenticated ? authLinks : guestLinks;
 
-  const handleLogout = () => {
+  const handleSignOut = () => {
     logout();
-    setShowUserMenu(false);
+    setProfileOpen(false);
     navigate('/');
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-[100] bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4" aria-label="Global Main Navigation">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" className="flex items-center group">
-          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-13 md:h-15 w-auto object-contain transition-transform hover:scale-105" />
-        </Link>
-
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className={`relative font-body text-sm font-medium transition-colors ${location.pathname === link.path ? 'text-black' : 'text-slate-500 hover:text-black'
-                }`}
-            >
-              {link.name}
-              {location.pathname === link.path && (
-                <motion.div
-                  layoutId="navbar-indicator"
-                  className="absolute -bottom-1 left-0 w-full h-[2px] bg-black rounded-full"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-            </Link>
-          ))}
-        </div>
-
-        {/* Auth Area Desktop */}
-        <div className="hidden md:flex items-center gap-4">
-          {isAuthenticated ? (
-            <div className="relative">
-              <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
-              >
-                <div className="w-7 h-7 rounded-full bg-black flex items-center justify-center text-white font-bold text-sm">
-                  {(user?.name || 'U').charAt(0).toUpperCase()}
-                </div>
-                <span className="text-sm font-medium text-black">{user?.name || 'Student'}</span>
-              </button>
-
-              <AnimatePresence>
-                {showUserMenu && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                    className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden"
-                  >
-                    <div className="p-4 border-b border-slate-100">
-                      <p className="font-bold text-black text-sm">{user?.name || 'Student'}</p>
-                      <p className="text-slate-500 text-xs">{user?.email || 'student@ascendra.edu'}</p>
-                    </div>
-                    <div className="p-2">
-                      <Link
-                        to="/dashboard"
-                        onClick={() => setShowUserMenu(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-black transition-colors"
-                      >
-                        <LayoutDashboard className="w-4 h-4" /> Dashboard
-                      </Link>
-                      <Link
-                        to="/my-learning"
-                        onClick={() => setShowUserMenu(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-black transition-colors"
-                      >
-                        <User className="w-4 h-4" /> My Learning
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-black transition-colors"
-                      >
-                        <LogOut className="w-4 h-4" /> Sign Out
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <>
-              <Link to="/login" className="text-sm font-medium text-slate-600 hover:text-black transition-colors">
-                Log In
-              </Link>
-              <Link to="/signup" className="bg-black text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition-all">
-                Get Started
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Menu Toggle */}
-        <button
-          className="md:hidden text-black"
-          onClick={() => setIsOpen(!isOpen)}
+    <header className="w-full bg-[#F8F9FA] text-black transition-colors duration-200 border-b border-neutral-200/60 sticky top-0 z-[100]">
+      <div className="w-full px-6 md:px-12 h-16 flex items-center justify-between">
+        
+        {/* Left: Brand Logo & Title */}
+        <button 
+          onClick={() => navigate('/')}
+          className="flex items-center gap-3 focus:outline-none shrink-0"
         >
-          {isOpen ? <X /> : <Menu />}
+          <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-9 w-auto object-contain" />
+          <span className="font-display font-bold text-lg text-black tracking-tight">
+            ASCENDRA
+          </span>
         </button>
+
+        {/* Right Pushed Navigation & Actions */}
+        <div className="hidden lg:flex items-center gap-8">
+          <nav className="flex items-center gap-7">
+            {menuItems.map((item) => {
+              const isActive = location.pathname === item.path || (item.path !== '/' && item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={`text-sm transition-colors duration-150 select-none py-1 ${
+                    isActive
+                      ? 'text-black font-bold border-b-2 border-black'
+                      : 'text-neutral-600 hover:text-black font-medium'
+                  }`}
+                >
+                  {item.label}
+                </NavLink>
+              );
+            })}
+          </nav>
+
+          {/* Quick Action Controls */}
+          <div className="flex items-center gap-5 border-l border-neutral-300 pl-6">
+            
+            {isAuthenticated ? (
+              <div className="relative">
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors focus:outline-none"
+                >
+                  <div className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
+                    {(user?.name || 'S').charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-sm font-medium text-black">{user?.name || 'Student'}</span>
+                </button>
+
+                <AnimatePresence>
+                  {profileOpen && (
+                    <>
+                      <div onClick={() => setProfileOpen(false)} className="fixed inset-0 z-30" />
+                      <motion.div
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        className="absolute right-0 mt-2 w-52 bg-white text-black border border-neutral-200 rounded-md shadow-md p-2 z-40 flex flex-col gap-0.5"
+                      >
+                        <div className="px-3 py-2 border-b border-neutral-100 mb-1">
+                          <p className="text-sm font-bold text-black">{user?.name || 'Student'}</p>
+                          <p className="text-xs text-neutral-500 capitalize">{userRole}</p>
+                        </div>
+
+                        <button
+                          onClick={() => { setProfileOpen(false); navigate('/profile'); }}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
+                        >
+                          <User className="w-4 h-4" /> Profile Dossier
+                        </button>
+
+                        <button
+                          onClick={() => { setProfileOpen(false); navigate('/settings'); }}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
+                        >
+                          <Settings className="w-4 h-4" /> Preferences
+                        </button>
+
+                        <button
+                          onClick={handleSignOut}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left mt-1 border-t border-neutral-100"
+                        >
+                          <LogOut className="w-4 h-4" /> Sign Out
+                        </button>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <NavLink
+                  to="/login"
+                  className="text-sm font-medium text-neutral-600 hover:text-black transition-colors px-3 py-1.5"
+                >
+                  Sign In
+                </NavLink>
+                <NavLink
+                  to="/signup"
+                  className="text-sm font-medium text-white bg-black hover:bg-neutral-800 transition-colors px-4 py-1.5 rounded-full"
+                >
+                  Get Started
+                </NavLink>
+              </div>
+            )}
+
+          </div>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="lg:hidden p-2 text-black transition-colors"
+        >
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+
       </div>
 
       {/* Mobile Drawer */}
       <AnimatePresence>
-        {isOpen && (
+        {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-200 overflow-hidden"
+            className="lg:hidden bg-[#F8F9FA] px-6 py-4 space-y-2 overflow-hidden border-t border-neutral-200"
           >
-            <div className="flex flex-col p-6 gap-4">
-              {links.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`font-body text-lg ${location.pathname === link.path ? 'text-black font-bold' : 'text-slate-500'
-                    }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <hr className="border-slate-200 my-2" />
-              {isAuthenticated ? (
-                <button
-                  onClick={() => { handleLogout(); setIsOpen(false); }}
-                  className="flex items-center gap-2 font-body text-lg text-slate-700"
-                >
-                  <LogOut className="w-5 h-5" /> Sign Out
-                </button>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="font-body text-lg text-slate-600"
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    to="/signup"
-                    onClick={() => setIsOpen(false)}
-                    className="bg-black text-white text-center py-3 rounded-xl font-medium mt-2"
-                  >
-                    Get Started
-                  </Link>
-                </>
-              )}
-            </div>
+            {menuItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate(item.path);
+                }}
+                className={`w-full text-left py-2.5 text-sm font-medium ${
+                  location.pathname === item.path
+                    ? 'text-black font-bold'
+                    : 'text-neutral-600 hover:text-black'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 };
 

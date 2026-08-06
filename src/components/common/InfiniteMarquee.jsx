@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function InfiniteMarquee({ items, direction = 'left', speed = 30, className = '' }) {
+export default function InfiniteMarquee({ items, direction = 'left', speed = 30, className = '', isLight = true }) {
   // Duplicate array 4 times for seamless continuous infinite looping
   const marqueeItems = [...items, ...items, ...items, ...items];
 
@@ -33,22 +33,34 @@ export default function InfiniteMarquee({ items, direction = 'left', speed = 30,
           {marqueeItems.map((item, idx) => (
             <div
               key={`${item.title}-${idx}`}
-              className="group/card relative shrink-0 rounded-none bg-white/5 border border-white/10 px-5 py-4 min-w-[240px] md:min-w-[270px] backdrop-blur-xl hover:border-white/30 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 flex items-center gap-4 cursor-pointer overflow-hidden"
+              className={`group/card relative shrink-0 rounded-2xl border px-5 py-4 min-w-[240px] md:min-w-[270px] transition-all duration-300 flex items-center gap-4 cursor-pointer overflow-hidden ${
+                isLight 
+                  ? 'bg-white border-slate-200/80 shadow-xs hover:shadow-md hover:border-slate-400 hover:-translate-y-1'
+                  : 'bg-white/5 border-white/10 backdrop-blur-xl hover:border-white/30 hover:bg-white/10 hover:-translate-y-1'
+              }`}
             >
-              {/* Icon Container - Sharp Edges */}
+              {/* Icon Container */}
               {item.icon && (
-                <div className="w-10 h-10 rounded-none bg-white/10 border border-white/15 flex items-center justify-center shrink-0 group-hover/card:scale-105 group-hover/card:border-white/30 transition-all duration-300">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${
+                  isLight 
+                    ? 'bg-slate-900 text-white' 
+                    : 'bg-white/10 border border-white/15 text-white'
+                }`}>
                   {item.icon}
                 </div>
               )}
 
               {/* Text Label */}
               <div className="overflow-hidden">
-                <h4 className="text-xs md:text-sm font-display font-extrabold text-white tracking-tight group-hover/card:text-white transition-colors truncate">
+                <h4 className={`text-xs md:text-sm font-display font-bold tracking-tight truncate ${
+                  isLight ? 'text-slate-900' : 'text-white'
+                }`}>
                   {item.title}
                 </h4>
                 {item.subtitle && (
-                  <p className="text-[11px] font-semibold text-white/50 truncate mt-0.5">
+                  <p className={`text-[11px] font-medium truncate mt-0.5 ${
+                    isLight ? 'text-slate-500' : 'text-white/50'
+                  }`}>
                     {item.subtitle}
                   </p>
                 )}

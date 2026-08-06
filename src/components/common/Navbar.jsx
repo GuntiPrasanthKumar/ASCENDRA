@@ -49,7 +49,7 @@ const Navbar = ({ onOpenCommandPalette }) => {
   };
 
   return (
-    <header className="w-full bg-[#F8F9FA] text-black transition-colors duration-200 border-b border-neutral-200/60 sticky top-0 z-[100]">
+    <header className="w-full bg-[#F8F9FA] text-black transition-colors duration-200">
       <div className="w-full px-6 md:px-12 h-16 flex items-center justify-between">
         
         {/* Left: Brand Logo & Title */}

@@ -6,8 +6,8 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('skilltrove_theme');
     if (saved) return saved;
-    // Default to dark mode as defined in the spec
-    return 'dark';
+    // Default to light mode for clean white Google UI
+    return 'light';
   });
 
   useEffect(() => {

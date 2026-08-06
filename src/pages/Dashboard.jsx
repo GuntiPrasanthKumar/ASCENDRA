@@ -40,13 +40,8 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="space-y-5"
+            className="space-y-4"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E8F0FE] dark:bg-[#1E1E20] border border-[#1A73E8]/20 dark:border-[#4285F4]/30 text-xs font-bold text-[#1A73E8] dark:text-[#A8C7FA]">
-              <Sparkles className="w-4 h-4 text-[#1A73E8] dark:text-[#A8C7FA] animate-pulse" />
-              <span>ASCENDRA Gemini AI Intelligence</span>
-            </div>
-            
             <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight leading-tight">
               {greeting}, <span className="gemini-gradient-text">{studentName}</span>
             </h1>
@@ -143,13 +138,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-        </div>
-
-        {/* Minimalist Google Footer */}
-        <div className="pt-8 mt-12 border-t border-[#E3E3E3] dark:border-[#2E2F31] text-center">
-          <p className="text-xs font-medium text-[#5F6368] dark:text-[#8E918F]">
-            ASCENDRA AI Operating System • Google NotebookLM & Antigravity Inspired Architecture
-          </p>
         </div>
       </div>
     </PageTransition>

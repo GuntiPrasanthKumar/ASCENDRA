@@ -22,7 +22,7 @@ export default function AppShell() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] transition-colors duration-300 flex flex-col">
+    <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] transition-colors duration-300 flex flex-col w-full">
       {/* 1. Top Navigation Bar */}
       <TopNavbar onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
 
@@ -32,8 +32,8 @@ export default function AppShell() {
         onClose={() => setCommandPaletteOpen(false)} 
       />
 
-      {/* 3. Main Workspace Area */}
-      <main className="flex-1 px-4 md:px-8 py-4 max-w-7xl w-full mx-auto">
+      {/* 3. Main Full-Screen Workspace Area */}
+      <main className="flex-1 px-4 md:px-8 py-4 w-full">
         <Breadcrumbs />
         <Outlet />
       </main>

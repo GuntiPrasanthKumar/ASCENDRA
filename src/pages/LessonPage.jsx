@@ -142,8 +142,8 @@ export default function LessonPage() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#131314] text-[#1F1F1F] dark:text-[#E3E3E3] pb-28 px-4 md:px-6 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto space-y-6">
+      <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] pb-28 w-full transition-colors duration-300">
+        <div className="w-full space-y-6">
           
           {/* NotebookLM Header */}
           <LessonHeader 

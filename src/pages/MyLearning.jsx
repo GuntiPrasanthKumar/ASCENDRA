@@ -53,10 +53,10 @@ export default function MyLearning() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#131314] text-[#1F1F1F] dark:text-[#E3E3E3] pb-20 px-4 md:px-6 transition-colors duration-300">
+      <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] pb-20 w-full transition-colors duration-300">
         
         {/* Google Docs Inspired White Sheet Document Workspace */}
-        <div className="max-w-4xl mx-auto bg-white dark:bg-[#1E1E20] border border-[#E3E3E3] dark:border-[#2E2F31] rounded-[2rem] p-8 md:p-14 shadow-sm space-y-12 my-6">
+        <div className="w-full bg-white border border-[#E3E3E3] rounded-[2rem] p-8 md:p-14 shadow-sm space-y-12 my-4">
           
           {/* Document Title Header */}
           <div className="space-y-4 pb-8 border-b border-[#E3E3E3] dark:border-[#2E2F31]">

@@ -76,7 +76,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
 
   return (
     <header className="sticky top-0 z-50 bg-[#F8F9FA]/90 dark:bg-[#131314]/90 backdrop-blur-xl border-b border-[#E3E3E3]/80 dark:border-[#2E2F31]/80 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
+      <div className="w-full px-4 md:px-8 h-16 flex items-center justify-between gap-4">
         
         {/* Left: Brand Logo */}
         <div className="flex items-center gap-6 shrink-0">

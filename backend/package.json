@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node app/tests/health.test.js && node app/tests/auth.test.js && node app/tests/profile.test.js && node app/tests/learning.test.js && node app/tests/practice.test.js && node app/tests/assessment.test.js"
+    "test": "node app/tests/health.test.js && node app/tests/auth.test.js && node app/tests/profile.test.js && node app/tests/learning.test.js && node app/tests/practice.test.js && node app/tests/assessment.test.js && node app/tests/codelab.test.js && node app/tests/interview.test.js && node app/tests/career.test.js"
   },
   "keywords": [],
   "author": "",

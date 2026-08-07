@@ -24,6 +24,7 @@ const proctorRoutes = require('./app/routes/proctor.routes');
 const aiRoutes = require('./app/routes/ai.routes');
 const codelabRoutes = require('./app/routes/codelab.routes');
 const interviewRoutes = require('./app/routes/interview.routes');
+const careerRoutes = require('./app/routes/career.routes');
 
 // Connect to database
 connectDB();
@@ -76,6 +77,8 @@ app.use('/api/v1/codelab', codelabRoutes);
 app.use('/api/codelab', codelabRoutes);
 app.use('/api/v1/interview', interviewRoutes);
 app.use('/api/interview', interviewRoutes);
+app.use('/api/v1/career', careerRoutes);
+app.use('/api/career', careerRoutes);
 
 // Root Welcome Endpoint
 app.get('/', (req, res) => {

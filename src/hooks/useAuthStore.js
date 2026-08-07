@@ -75,12 +75,14 @@ export const useAuthStore = create(
           return { success: true };
         } catch (error) {
           console.error('Face Login error:', error);
-          return { success: false, message: 'Face recognition failed' };
+          return { success: false, message: error?.response?.data?.message || 'Face recognition failed' };
         }
       },
 
       logout: () => {
         localStorage.removeItem('skilltrove_token');
+        localStorage.removeItem('token');
+        localStorage.removeItem('skilltrove-auth');
         set({
           user: null,
           token: null,

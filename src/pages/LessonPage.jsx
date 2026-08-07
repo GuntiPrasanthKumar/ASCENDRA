@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import PageTransition from '../components/common/PageTransition';
 import { PageSkeleton } from '../components/common/FeedbackStates';
 import { mockSubjects } from '../features/learning/mock/subjects';
@@ -7,7 +8,6 @@ import { mockChapters } from '../features/learning/mock/chapters';
 import { mockLessons } from '../features/learning/mock/lessons';
 import { useToastStore } from '../components/common/Toast';
 
-// Reusable Learn Components
 import LessonHeader from '../components/learn/LessonHeader';
 import LessonContent from '../components/learn/LessonContent';
 import LessonSidebar from '../components/learn/LessonSidebar';
@@ -15,8 +15,7 @@ import LessonNavigation from '../components/learn/LessonNavigation';
 import LessonFooter from '../components/learn/LessonFooter';
 import LessonProgress from '../components/learn/LessonProgress';
 
-// Icons
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert, Sparkles, Send, HelpCircle, FileText, Lightbulb } from 'lucide-react';
 
 export default function LessonPage() {
   const { subjectId, chapterId, lessonId } = useParams();
@@ -25,8 +24,8 @@ export default function LessonPage() {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [completedLessonIds, setCompletedLessonIds] = useState([]);
   
-  // State for AI context
   const [aiContextText, setAiContextText] = useState('');
+  const [promptInput, setPromptInput] = useState('');
 
   const navigate = useNavigate();
   const { addToast } = useToastStore();
@@ -41,23 +40,20 @@ export default function LessonPage() {
       if (subject && chapter && lesson) {
         setData({ subject, chapter, lesson, chapterLessons });
         
-        // Load bookmark state
         const bookmarks = JSON.parse(localStorage.getItem('bookmarked_lessons') || '[]');
         setIsBookmarked(bookmarks.includes(lesson.id));
 
-        // Load completed lessons list
         const completed = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
         setCompletedLessonIds(completed);
       } else {
         setData(null);
       }
       setIsLoading(false);
-    }, 600);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [subjectId, chapterId, lessonId]);
 
-  // Reset states when changing lessons
   useEffect(() => {
     setAiContextText('');
   }, [lessonId]);
@@ -65,7 +61,7 @@ export default function LessonPage() {
   if (isLoading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6">
+        <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#131314] pt-8 pb-20 px-4 md:px-6">
           <div className="max-w-7xl mx-auto">
             <PageSkeleton />
           </div>
@@ -77,14 +73,16 @@ export default function LessonPage() {
   if (!data) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
-          <div className="glass max-w-md w-full p-8 rounded-[2.5rem] border border-slate-200/50 text-center flex flex-col items-center">
-            <ShieldAlert className="w-12 h-12 text-error mb-4" />
-            <h2 className="text-xl font-bold text-primary mb-2">Lesson Workspace Not Found</h2>
-            <p className="text-xs text-textMuted mb-6 leading-relaxed">
+        <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#131314] pt-8 pb-20 px-4 md:px-6 flex items-center justify-center">
+          <div className="google-card max-w-md w-full p-8 text-center flex flex-col items-center">
+            <ShieldAlert className="w-12 h-12 text-[#D93025] mb-4" />
+            <h2 className="text-xl font-display font-bold text-[#1F1F1F] dark:text-[#E3E3E3] mb-2">
+              Lesson Workspace Not Found
+            </h2>
+            <p className="text-xs text-[#5F6368] dark:text-[#8E918F] mb-6 leading-relaxed">
               We could not find the requested lesson leaf details.
             </p>
-            <button onClick={() => navigate('/learn')} className="w-full py-4 rounded-2xl bg-primary text-white font-bold text-xs hover:bg-accent transition-all">
+            <button onClick={() => navigate('/learn')} className="w-full py-3.5 rounded-full bg-[#000000] text-white font-bold text-xs hover:bg-[#262626] transition-all shadow-xs">
               Return to Hub
             </button>
           </div>
@@ -96,7 +94,6 @@ export default function LessonPage() {
   const { subject, chapter, lesson, chapterLessons } = data;
   const isLessonCompleted = completedLessonIds.includes(lesson.id);
 
-  // Bookmark Toggle
   const toggleBookmark = () => {
     const bookmarks = JSON.parse(localStorage.getItem('bookmarked_lessons') || '[]');
     let updated;
@@ -111,36 +108,31 @@ export default function LessonPage() {
     setIsBookmarked(!isBookmarked);
   };
 
-  // Complete and Continue
   const handleComplete = () => {
     if (!isLessonCompleted) {
       const updated = [...completedLessonIds, lesson.id];
       setCompletedLessonIds(updated);
       localStorage.setItem('completed_lessons', JSON.stringify(updated));
 
-      // 1. Increment streak
       const currentStreak = parseInt(localStorage.getItem('skilltrove_streak') || '7');
       localStorage.setItem('skilltrove_streak', currentStreak + 1);
-
-      // 2. Log recent activity
-      const activities = JSON.parse(localStorage.getItem('skilltrove_activities') || '[]');
-      activities.unshift({
-        title: `Lesson Completed: ${lesson.title}`,
-        time: 'Just now',
-        xp: `+${lesson.pointsAwarded} XP`
-      });
-      localStorage.setItem('skilltrove_activities', JSON.stringify(activities.slice(0, 5)));
-
-      // 3. Mark goal checklist item completed
-      const savedGoals = JSON.parse(localStorage.getItem('skilltrove_today_goals') || '[]');
-      if (savedGoals.length > 0) {
-        const updatedGoals = savedGoals.map(g => g.id === 'goal-2' ? { ...g, done: true } : g);
-        localStorage.setItem('skilltrove_today_goals', JSON.stringify(updatedGoals));
-      }
 
       addToast(`Lesson completed! +${lesson.pointsAwarded} points awarded.`, 'success');
     }
   };
+
+  const handleSendPrompt = (e) => {
+    e.preventDefault();
+    if (!promptInput.trim()) return;
+    setAiContextText(promptInput.trim());
+    setPromptInput('');
+  };
+
+  const quickPrompts = [
+    { label: 'Summarize Key Takeaways', icon: <FileText className="w-3 h-3" /> },
+    { label: 'Explain with Intuitive Analogy', icon: <Lightbulb className="w-3 h-3" /> },
+    { label: 'Generate Self-Check Quiz', icon: <HelpCircle className="w-3 h-3" /> }
+  ];
 
   const currentIndex = chapterLessons.findIndex(l => l.id === lesson.id);
   const prevLesson = currentIndex > 0 ? chapterLessons[currentIndex - 1] : null;
@@ -150,10 +142,10 @@ export default function LessonPage() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-8 pb-20 px-4 md:px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
+      <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] pb-28 w-full transition-colors duration-300">
+        <div className="w-full space-y-6">
           
-          {/* Header */}
+          {/* NotebookLM Header */}
           <LessonHeader 
             title={lesson.title}
             subjectTitle={subject.title}
@@ -163,15 +155,15 @@ export default function LessonPage() {
             onBack={() => navigate(`/learn/${subject.id}/${chapter.id}`)}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+          {/* NotebookLM 3-Panel Grid Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 items-start">
             
-            {/* Collapsible Lesson Navigation menu (Left Column, span 1) */}
-            <div className="glass p-5 rounded-[2rem] border border-slate-200/50 flex flex-col gap-6">
+            {/* Panel 1: Sources & Navigation (Span 2) */}
+            <div className="lg:col-span-2 google-card p-5 flex flex-col gap-6">
               <LessonProgress 
                 completedCount={completedCountInChapter}
                 totalCount={chapterLessons.length}
               />
-              
               <LessonNavigation 
                 lessons={chapterLessons}
                 activeLessonId={lesson.id}
@@ -180,26 +172,24 @@ export default function LessonPage() {
               />
             </div>
 
-            {/* Content Pane (Middle Columns, span 2) */}
-            <div className="lg:col-span-2 glass p-8 rounded-[2.5rem] border border-slate-200/50 min-h-[460px] flex flex-col justify-between">
-              
-              {/* Block Based Learning Workspace */}
+            {/* Panel 2: Core Workspace Reading Document (Span 5) */}
+            <div className="lg:col-span-5 google-card p-8 min-h-[520px] flex flex-col justify-between">
               <LessonContent 
                 contentBlocks={lesson.contentBlocks}
                 onAskAI={(prompt) => setAiContextText(prompt)}
               />
-
-              {/* Bottom Nav controls */}
-              <LessonFooter 
-                onPrev={prevLesson ? () => navigate(`/learn/${subject.id}/${chapter.id}/${prevLesson.id}`) : null}
-                onNext={nextLesson ? () => navigate(`/learn/${subject.id}/${chapter.id}/${nextLesson.id}`) : null}
-                isCompleted={isLessonCompleted}
-                onComplete={handleComplete}
-              />
+              <div className="pt-6 border-t border-[#E3E3E3] dark:border-[#2E2F31] mt-6">
+                <LessonFooter 
+                  onPrev={prevLesson ? () => navigate(`/learn/${subject.id}/${chapter.id}/${prevLesson.id}`) : null}
+                  onNext={nextLesson ? () => navigate(`/learn/${subject.id}/${chapter.id}/${nextLesson.id}`) : null}
+                  isCompleted={isLessonCompleted}
+                  onComplete={handleComplete}
+                />
+              </div>
             </div>
 
-            {/* Workspace Sidebar (Right Column, span 1) */}
-            <div className="flex flex-col gap-6">
+            {/* Panel 3: AI Synthesis & Notes Workspace (Span 3) */}
+            <div className="lg:col-span-3 flex flex-col gap-6">
               <LessonSidebar 
                 lessonId={lesson.id}
                 aiContext={aiContextText}
@@ -208,6 +198,43 @@ export default function LessonPage() {
             </div>
 
           </div>
+
+          {/* NotebookLM Floating Interactive Prompt Capsule */}
+          <div className="fixed bottom-5 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-[680px] z-40 space-y-2">
+            
+            {/* Quick Prompt Pills */}
+            <div className="hidden sm:flex items-center justify-center gap-2">
+              {quickPrompts.map((item, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setAiContextText(item.label)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-[#E3E3E3] text-[11px] font-bold text-[#5F6368] hover:text-[#000000] hover:border-[#000000] transition-all shadow-xs"
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Main Prompt Bar */}
+            <form onSubmit={handleSendPrompt} className="relative flex items-center bg-white/95 backdrop-blur-xl border border-[#E3E3E3] rounded-full shadow-2xl p-2 pl-5">
+              <Sparkles className="w-4 h-4 text-[#000000] shrink-0 mr-3 animate-pulse" />
+              <input 
+                type="text"
+                value={promptInput}
+                onChange={e => setPromptInput(e.target.value)}
+                placeholder="Ask Ascendra about this lesson or concept..."
+                className="w-full bg-transparent text-xs font-semibold text-[#1F1F1F] placeholder-[#5F6368] focus:outline-none pr-12"
+              />
+              <button 
+                type="submit"
+                className="absolute right-2.5 p-2 rounded-full bg-[#000000] text-white hover:bg-[#262626] transition-colors shadow-xs"
+              >
+                <Send className="w-3.5 h-3.5" />
+              </button>
+            </form>
+          </div>
+
         </div>
       </div>
     </PageTransition>

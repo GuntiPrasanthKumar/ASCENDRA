@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
   department: { type: String, default: 'CSE' },
   faceImage: { type: String, default: null },
   faceDescriptor: { type: [Number], default: [] },
+  isEmailVerified: { type: Boolean, default: false },
+  emailVerificationToken: { type: String, default: null },
+  failedLoginAttempts: { type: Number, default: 0 },
+  lockoutUntil: { type: Date, default: null },
   total_score: { type: Number, default: 0 },
   streak: { type: Number, default: 0 },
   badges: { type: Array, default: [] },
@@ -19,7 +23,7 @@ const userSchema = new mongoose.Schema({
 }, { 
   timestamps: true,
   strict: false
-})
+});
 
 // Modern Mongoose async pre-save hook
 userSchema.pre('save', async function() {
@@ -28,4 +32,4 @@ userSchema.pre('save', async function() {
   }
 });
 
-module.exports = mongoose.models.User || mongoose.model('User', userSchema)
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);

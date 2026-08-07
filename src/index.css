@@ -3,19 +3,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #FAF9F5;
+  --color-background: #F8F9FA;
   --color-surface: #FFFFFF;
-  --color-primary: #09090B;
-  --color-accent: #6C63FF;
-  --color-accent2: #FF6584;
-  --color-muted: #F1F1EE;
-  --color-textPrimary: #09090B;
-  --color-textMuted: #71717A;
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
+  --color-primary: #1F1F1F;
+  --color-accent: #000000;
+  --color-accent2: #2B2B2B;
+  --color-muted: #F0F4F9;
+  --color-textPrimary: #1F1F1F;
+  --color-textMuted: #5F6368;
+  --color-success: #1E8E3E;
+  --color-warning: #F9AB00;
+  --color-error: #D93025;
 
-  --font-display: 'Google Sans Display', 'Google Sans', 'Product Sans', 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-display: 'Google Sans Display', 'Google Sans', 'Product Sans', system-ui, -apple-system, sans-serif;
   --font-body: 'Google Sans', 'Google Sans Text', 'Product Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
@@ -32,12 +32,17 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
+  }
+
+  .dark body {
+    background-color: #131314;
+    color: #E3E3E3;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
     font-weight: 500;
   }
 
@@ -50,25 +55,69 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #E4E4E7;
+    background-color: #E3E3E3;
     border-radius: 9999px;
   }
+  .dark ::-webkit-scrollbar-thumb {
+    background-color: #2E2F31;
+  }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #A1A1AA;
+    background-color: #C4C7C5;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #444746;
   }
 }
 
 @layer utilities {
+  .google-pill {
+    border-radius: 9999px;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .gemini-gradient-text {
+    background: linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gemini-gradient-bg {
+    background: linear-gradient(135deg, #000000 0%, #1F1F1F 50%, #333333 100%);
+  }
+
   .glass {
-    background-color: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(16px);
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
     border: 1px solid rgba(0, 0, 0, 0.06);
   }
   
   .glass-dark {
-    background-color: rgba(9, 9, 11, 0.85);
-    backdrop-filter: blur(16px);
+    background-color: rgba(30, 30, 32, 0.85);
+    backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .google-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E3E3E3;
+    border-radius: 1.75rem;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .dark .google-card {
+    background-color: #1E1E20;
+    border: 1px solid #2E2F31;
+    border-radius: 1.75rem;
+  }
+
+  .google-card:hover {
+    border-color: #C4C7C5;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .google-card:hover {
+    border-color: #444746;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -76,23 +125,27 @@
 .markdown-body p { margin-bottom: 0.5rem; }
 .markdown-body p:last-child { margin-bottom: 0; }
 .markdown-body pre {
-  background-color: #09090B;
-  color: #F4F4F5;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
+  background-color: #1E1E20;
+  color: #E3E3E3;
+  padding: 0.85rem 1.15rem;
+  border-radius: 1rem;
   overflow-x: auto;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.825rem;
   margin: 0.5rem 0;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid #2E2F31;
 }
 .markdown-body code {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  background-color: rgba(0,0,0,0.05);
-  color: #18181B;
-  padding: 0.15rem 0.35rem;
+  background-color: #F0F4F9;
+  color: #1F1F1F;
+  padding: 0.15rem 0.4rem;
   border-radius: 0.35rem;
+}
+.dark .markdown-body code {
+  background-color: #2E2F31;
+  color: #E3E3E3;
 }
 .markdown-body pre code {
   background: none;

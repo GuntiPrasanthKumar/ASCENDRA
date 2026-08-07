@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import PageTransition from '../components/common/PageTransition';
 import { PageSkeleton } from '../components/common/FeedbackStates';
 import { mockPracticeSets } from '../features/practice/mock/practiceSets';
 import { mockResults } from '../features/practice/mock/results';
-import SectionHeader from '../components/dashboard/SectionHeader';
-import { Brain, ArrowRight, Star, AlertTriangle, History, ChevronRight } from 'lucide-react';
+import { 
+  Target, Brain, Star, AlertTriangle, History, ChevronRight, 
+  Percent, PlayCircle, ArrowRight, CheckCircle2, Clock
+} from 'lucide-react';
 
 export default function Practice() {
   const [sets, setSets] = useState([]);
@@ -18,15 +21,15 @@ export default function Practice() {
       setSets(mockPracticeSets);
       setResults(mockResults);
       setIsLoading(false);
-    }, 600);
+    }, 400);
     return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6">
-          <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#F8F9FA] px-4 md:px-12 py-6 w-full">
+          <div className="w-full">
             <PageSkeleton />
           </div>
         </div>
@@ -39,169 +42,287 @@ export default function Practice() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
+      <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] px-4 md:px-12 py-6 w-full font-body">
+        <div className="w-full space-y-8">
           
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
+            <span className="hover:text-slate-600 cursor-pointer" onClick={() => navigate('/dashboard')}>Home</span>
+            <span>&gt;</span>
+            <span className="text-slate-900 font-semibold">Practice</span>
+          </div>
+
           {/* Header */}
-          <div className="flex items-center gap-3.5 mb-10 pb-6 border-b border-slate-200">
-            <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 text-black flex items-center justify-center">
-              <Brain className="w-6 h-6 text-black" />
+          <div className="flex items-center gap-4 pb-2">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+              <Brain className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-display font-extrabold text-black tracking-tight">Practice Hub</h1>
-              <p className="text-xs font-semibold text-slate-500 mt-1">Strengthen your quantitative aptitude and logic accuracy levels.</p>
+              <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 tracking-tight">Practice Hub</h1>
+              <p className="text-xs md:text-sm text-slate-500 font-medium mt-0.5">Strengthen your quantitative aptitude and logic accuracy levels.</p>
             </div>
           </div>
 
-          <div className="flex flex-col gap-10">
+          {/* Main 2-Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            {/* Continue Practice Banner */}
-            {continueSet && (
-              <div>
-                <SectionHeader title="Continue Practice" subtitle="Resume active assessment cycles" />
-                <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200/80 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-xs">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-black mb-3 inline-block">
-                      Aptitude Prep
-                    </span>
-                    <h3 className="text-xl font-display font-extrabold text-black mb-1 tracking-tight">
-                      {continueSet.title}
-                    </h3>
-                    <p className="text-xs font-medium text-slate-500 leading-relaxed">{continueSet.description}</p>
-                  </div>
-                  <button
-                    onClick={() => navigate(`/practice/${continueSet.subjectId}/${continueSet.id}`)}
-                    className="px-6 py-3.5 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all flex items-center gap-1.5 shrink-0 active:scale-[0.98]"
-                  >
-                    <span>Start Practice Set</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            {/* Left Main Column (2/3 width) */}
+            <div className="lg:col-span-2 space-y-8">
               
-              {/* Left Column */}
-              <div className="lg:col-span-2 flex flex-col gap-8">
-                
-                {/* Recommended Practice */}
-                {recommendedSet && (
-                  <div>
-                    <SectionHeader title="Recommended Practice" subtitle="AI suggestion to balance logic metrics" />
-                    <div className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 flex items-center justify-between gap-4 shadow-xs">
-                      <div className="flex gap-4 items-center">
-                        <div className="w-11 h-11 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-black">
-                          <Star className="w-5 h-5 text-black" />
-                        </div>
-                        <div>
-                          <h4 className="text-base font-display font-extrabold text-black tracking-tight">{recommendedSet.title}</h4>
-                          <span className="text-[10px] font-black uppercase text-slate-500 block mt-0.5 tracking-wider">Logical Reasoning • {recommendedSet.timeLimit}</span>
-                        </div>
+              {/* Section 1: Continue Practice */}
+              <div className="space-y-3">
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900 tracking-tight">Continue Practice</h2>
+                  <p className="text-xs text-slate-500 font-medium">Resume active assessment cycles</p>
+                </div>
+
+                {continueSet && (
+                  <div className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-2xs">
+                    <div className="space-y-2 max-w-md">
+                      <span className="bg-blue-100 text-blue-700 font-bold px-3 py-1 rounded-full text-[10px] tracking-wider uppercase inline-block">
+                        APTITUDE PREP
+                      </span>
+                      <h3 className="text-xl font-display font-bold text-slate-900">
+                        Percentages &amp; Ratios Set
+                      </h3>
+                      <p className="text-xs font-medium text-slate-500 leading-relaxed">
+                        10 quick ratio computations and percentage adjustments.
+                      </p>
+                    </div>
+
+                    {/* Circular Progress Ring & Action Button */}
+                    <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                      {/* Circular Progress SVG */}
+                      <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+                        <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                          <path
+                            className="text-slate-100"
+                            strokeWidth="3.5"
+                            stroke="currentColor"
+                            fill="none"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <path
+                            className="text-blue-600"
+                            strokeDasharray="65, 100"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            stroke="currentColor"
+                            fill="none"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                        </svg>
+                        <span className="absolute text-xs font-bold text-slate-900">65%</span>
                       </div>
+
                       <button
-                        onClick={() => navigate(`/practice/${recommendedSet.subjectId}/${recommendedSet.id}`)}
-                        className="px-5 py-2.5 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all flex items-center gap-1"
+                        onClick={() => navigate(`/practice/${continueSet.subjectId}/${continueSet.id}`)}
+                        className="px-6 py-3.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs md:text-sm flex items-center gap-1.5 shadow-xs shrink-0 group transition-all"
                       >
-                        <span>Launch</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
+                        <span>Start Practice Set</span>
+                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
                     </div>
                   </div>
                 )}
+              </div>
 
-                {/* Subject Practice Sets List */}
+              {/* Section 2: Recommended Practice */}
+              <div className="space-y-3">
                 <div>
-                  <SectionHeader title="Subject Practice Tracks" subtitle="Browse available logic pathways" />
-                  <div className="flex flex-col gap-4">
-                    {sets.map((set) => (
-                      <div
-                        key={set.id}
-                        className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group hover:border-slate-300 transition-all duration-300 shadow-xs"
-                      >
-                        <div>
-                          <span className="text-[10px] font-black uppercase text-black bg-slate-100 border border-slate-200 px-3 py-0.5 rounded-full tracking-wider block w-fit mb-2">
-                            {set.subjectId === 'aptitude' ? 'Aptitude' : 'Logical Reasoning'}
-                          </span>
-                          <h4 className="text-base font-display font-extrabold text-black group-hover:text-slate-600 transition-colors tracking-tight">
-                            {set.title}
-                          </h4>
-                          <p className="text-xs font-medium text-slate-500 mt-1 leading-relaxed">{set.description}</p>
-                        </div>
+                  <h2 className="text-lg font-bold text-slate-900 tracking-tight">Recommended Practice</h2>
+                  <p className="text-xs text-slate-500 font-medium">AI suggestion to balance logic metrics</p>
+                </div>
 
-                        <button
-                          onClick={() => navigate(`/practice/${set.subjectId}/${set.id}`)}
-                          className="px-5 py-2.5 rounded-full bg-black text-white hover:bg-slate-800 transition-all flex items-center gap-1 shrink-0 text-xs font-bold"
-                        >
-                          <span>Start</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
+                {recommendedSet && (
+                  <div className="bg-purple-50/60 border border-purple-100 rounded-2xl p-5 flex items-center justify-between gap-4 shadow-2xs">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                        <Star className="w-6 h-6 fill-white" />
                       </div>
-                    ))}
+                      <div>
+                        <h4 className="text-base font-display font-bold text-slate-900 tracking-tight">Syllogisms &amp; Sequences Set</h4>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mt-0.5">
+                          LOGICAL REASONING • 3 MINS
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => navigate(`/practice/${recommendedSet.subjectId}/${recommendedSet.id}`)}
+                      className="px-5 py-2.5 rounded-full bg-white text-purple-600 border border-purple-200 hover:bg-purple-50 font-semibold text-xs transition-all flex items-center gap-1 shadow-2xs shrink-0"
+                    >
+                      <span>Launch</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Section 3: Subject Practice Tracks */}
+              <div className="space-y-3">
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900 tracking-tight">Subject Practice Tracks</h2>
+                  <p className="text-xs text-slate-500 font-medium">Browse available logic pathways</p>
+                </div>
+
+                <div className="bg-white border border-slate-200/80 rounded-2xl p-6 space-y-5 shadow-2xs">
+                  {/* Track 1: Aptitude */}
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-5 border-b border-slate-100">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 font-bold text-xl flex items-center justify-center shrink-0">
+                        %
+                      </div>
+                      <div className="space-y-1">
+                        <span className="bg-blue-50 text-blue-700 font-bold px-2.5 py-0.5 rounded-full text-[10px] uppercase">
+                          APTITUDE
+                        </span>
+                        <h4 className="text-base font-display font-bold text-slate-900">Percentages &amp; Ratios Set</h4>
+                        <p className="text-xs font-medium text-slate-400">10 quick ratio computations and percentage adjustments.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                      <div className="space-y-1 text-right">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase block">Progress</span>
+                        <span className="text-xs font-bold text-slate-900 block">12 / 20 Sets</span>
+                        <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-600 rounded-full" style={{ width: '60%' }} />
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => navigate('/practice/aptitude/set-1')}
+                        className="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs flex items-center gap-1 shadow-xs transition-all shrink-0"
+                      >
+                        <span>Start</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Track 2: Logical Reasoning */}
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                        <Brain className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="bg-purple-50 text-purple-700 font-bold px-2.5 py-0.5 rounded-full text-[10px] uppercase">
+                          LOGICAL REASONING
+                        </span>
+                        <h4 className="text-base font-display font-bold text-slate-900">Syllogisms &amp; Sequences Set</h4>
+                        <p className="text-xs font-medium text-slate-400">Logic puzzles and Venn Diagram relations.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                      <div className="space-y-1 text-right">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase block">Progress</span>
+                        <span className="text-xs font-bold text-slate-900 block">8 / 15 Sets</span>
+                        <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-purple-600 rounded-full" style={{ width: '53%' }} />
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => navigate('/practice/logical-reasoning/set-1')}
+                        className="px-5 py-2 rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs flex items-center gap-1 shadow-xs transition-all shrink-0"
+                      >
+                        <span>Start</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Sidebar Column (1/3 width) */}
+            <div className="space-y-6">
+              
+              {/* Daily Practice Challenge Card */}
+              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full text-[10px] tracking-wider uppercase">
+                    DAILY PRACTICE
+                  </span>
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <Target className="w-5 h-5" />
                   </div>
                 </div>
 
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-display font-bold text-slate-900">Daily Aptitude Challenge</h3>
+                  <p className="text-xs font-medium text-slate-500 leading-relaxed">
+                    Complete 3 questions in percentages to gain daily double XP points.
+                  </p>
+                </div>
+
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex justify-between text-xs font-bold text-slate-700">
+                    <span>1 / 3 completed</span>
+                  </div>
+                  <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: '33%' }} />
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => navigate('/practice/aptitude/set-1')}
+                  className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-all"
+                >
+                  <span>Start Challenge</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
 
-              {/* Right Column */}
-              <div className="flex flex-col gap-8">
-                
-                {/* Daily Practice Quest */}
-                <div className="bg-white p-7 rounded-[1.75rem] border border-slate-200/80 flex flex-col justify-between h-full group hover:border-slate-300 transition-all duration-300 shadow-xs">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-black flex items-center gap-1 w-fit mb-4">
-                      Daily Practice
-                    </span>
-                    <h3 className="text-lg font-display font-extrabold text-black mb-2 tracking-tight">Daily Aptitude Challenge</h3>
-                    <p className="text-xs font-medium text-slate-500 leading-relaxed mb-6">Complete 3 questions in percentages to gain daily double XP points.</p>
+              {/* Recent Activity Card */}
+              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                    <History className="w-4 h-4 text-slate-600" />
+                    <span>Recent Activity</span>
                   </div>
-                  <button
-                    onClick={() => navigate('/practice/aptitude/set-1')}
-                    className="w-full py-3.5 rounded-full bg-black text-white font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-1.5 text-xs"
+                  <button 
+                    onClick={() => navigate('/my-learning')}
+                    className="text-xs font-semibold text-blue-600 hover:underline"
                   >
-                    <span>Start Challenge</span>
-                    <ArrowRight className="w-4 h-4" />
+                    View all
                   </button>
                 </div>
 
-                {/* Recent Practice History */}
-                <div className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 shadow-xs">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-500 mb-4 flex items-center gap-2">
-                    <History className="w-4 h-4 text-black" /> Recent Activity
-                  </h4>
-                  <div className="flex flex-col gap-2.5">
-                    {results.map((res, i) => (
-                      <div key={i} className="p-3 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs text-slate-600 flex justify-between items-center">
-                        <div>
-                          <span className="font-black text-[9px] uppercase tracking-wider block text-slate-400">Aptitude Set 1</span>
-                          <span className="font-bold text-black">Accuracy: {res.accuracy}%</span>
-                        </div>
-                        <span className="text-[10px] font-bold text-slate-500">{res.completedAt}</span>
-                      </div>
-                    ))}
+                <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">APTITUDE SET 1</span>
+                    <span className="font-bold text-slate-900 mt-0.5 block">Accuracy: 66%</span>
                   </div>
+                  <span className="text-[11px] font-medium text-slate-400">Yesterday</span>
+                </div>
+              </div>
+
+              {/* Focus Gaps Card */}
+              <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs space-y-4">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  <span>Focus Gaps</span>
                 </div>
 
-                {/* Focus Gaps */}
-                <div className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 shadow-xs">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-500 mb-4 flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-black" /> Focus Gaps
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-black">
-                      Venn Diagrams
-                    </span>
-                    <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-black">
-                      Ratios Subtraction
-                    </span>
-                  </div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="bg-amber-50 text-amber-800 border border-amber-200/60 font-semibold px-3.5 py-1.5 rounded-full text-xs">
+                    Venn Diagrams
+                  </span>
+                  <span className="bg-amber-50 text-amber-800 border border-amber-200/60 font-semibold px-3.5 py-1.5 rounded-full text-xs">
+                    Ratios Subtraction
+                  </span>
                 </div>
-
               </div>
 
             </div>
 
           </div>
+
         </div>
       </div>
     </PageTransition>

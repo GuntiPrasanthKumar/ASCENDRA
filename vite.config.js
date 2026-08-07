@@ -5,6 +5,16 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  },
   build: {
     rollupOptions: {
       external: ['fs', 'path', 'crypto'],
@@ -14,8 +24,8 @@ export default defineConfig({
             if (id.includes('three') || id.includes('@react-three')) {
               return 'vendor-three';
             }
-            if (id.includes('face-api.js')) {
-              return 'vendor-faceapi';
+            if (id.includes('@mediapipe')) {
+              return 'vendor-mediapipe';
             }
             if (id.includes('lucide-react')) {
               return 'vendor-lucide';
@@ -27,6 +37,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['face-api.js'],
+    exclude: ['@mediapipe/tasks-vision'],
   },
 })

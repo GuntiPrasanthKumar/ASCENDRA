@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageTransition from '../components/common/PageTransition';
 import { useAuthStore } from '../hooks/useAuthStore';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToastStore } from '../components/common/Toast';
-import { Settings as SettingsIcon, Sun, Moon, Bell, Shield, Globe, User } from 'lucide-react';
+import { 
+  Settings as SettingsIcon, Sun, Moon, Bell, Shield, Globe, User, 
+  ChevronRight, Save, ChevronDown
+} from 'lucide-react';
 
 export default function Settings() {
   const { user } = useAuthStore();
   const { theme, toggleTheme } = useTheme();
   const { addToast } = useToastStore();
+  const navigate = useNavigate();
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -18,131 +23,159 @@ export default function Settings() {
     addToast('Preferences saved successfully!', 'success');
   };
 
+  const userName = user?.name || 'Vijay Kiran';
+  const userEmail = user?.email || 'kannidivijaykiran22@gmail.com';
+
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background pt-2 pb-12 px-4 md:px-6 relative overflow-hidden">
-        <div className="max-w-3xl mx-auto relative z-10">
+      <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] px-4 md:px-12 py-6 w-full font-body">
+        <div className="w-full space-y-8">
           
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
+            <span className="hover:text-slate-600 cursor-pointer" onClick={() => navigate('/dashboard')}>Home</span>
+            <span>&gt;</span>
+            <span className="text-slate-900 font-semibold">Settings</span>
+          </div>
+
           {/* Header */}
-          <div className="flex items-center gap-3.5 mb-10 pb-6 border-b border-slate-200">
-            <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 text-black flex items-center justify-center">
-              <SettingsIcon className="w-6 h-6 text-black" />
+          <div className="flex items-center gap-4 pb-2">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+              <SettingsIcon className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-display font-extrabold text-black tracking-tight">System Preferences</h1>
-              <p className="text-xs font-semibold text-slate-500 mt-1">Configure layout themes, proctor permissions, and profile configurations.</p>
+              <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 tracking-tight">System Preferences</h1>
+              <p className="text-xs md:text-sm text-slate-500 font-medium mt-0.5">Configure layout themes, proctor permissions, and profile configurations.</p>
             </div>
           </div>
 
-          <form onSubmit={handleSaveSettings} className="flex flex-col gap-6">
+          {/* Settings Form */}
+          <form onSubmit={handleSaveSettings} className="space-y-6">
             
-            {/* Account Info */}
-            <div className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 flex flex-col gap-4 shadow-xs">
-              <span className="flex items-center gap-1.5 font-black uppercase tracking-wider text-[10px] text-slate-500 select-none">
-                <User className="w-4 h-4 text-black" /> Account Information
-              </span>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-black text-slate-500 uppercase select-none">Full Name</label>
+            {/* Account Information Card */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 md:p-8 space-y-4 shadow-2xs">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                <User className="w-4 h-4 text-slate-600" />
+                <span>ACCOUNT INFORMATION</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">FULL NAME</label>
                   <input
                     type="text"
-                    defaultValue={user?.name || 'Scholar'}
+                    defaultValue={userName}
                     disabled
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-100 border border-slate-200/60 text-xs font-semibold text-slate-500 cursor-not-allowed focus:outline-none"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs font-bold text-slate-800 cursor-not-allowed focus:outline-none"
                   />
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-black text-slate-500 uppercase select-none">Email Address</label>
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">EMAIL ADDRESS</label>
                   <input
                     type="email"
-                    defaultValue={user?.email || 'scholar@ascendra.edu'}
+                    defaultValue={userEmail}
                     disabled
-                    className="w-full px-4 py-3 rounded-2xl bg-slate-100 border border-slate-200/60 text-xs font-semibold text-slate-500 cursor-not-allowed focus:outline-none"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs font-bold text-slate-800 cursor-not-allowed focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Layout Preferences */}
-            <div className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 flex flex-col gap-4 shadow-xs">
-              <span className="flex items-center gap-1.5 font-black uppercase tracking-wider text-[10px] text-slate-500 select-none">
-                <Globe className="w-4 h-4 text-black" /> Display & Localization
-              </span>
-              
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-2">
+            {/* Display & Localization Card */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xs">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                <Globe className="w-4 h-4 text-slate-600" />
+                <span>DISPLAY &amp; LOCALIZATION</span>
+              </div>
+
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                  <h4 className="text-xs font-display font-extrabold text-black">Visual Dark Mode</h4>
-                  <p className="text-[10px] font-medium text-slate-500 mt-0.5">Toggle interface design palette styles</p>
+                  <h4 className="text-sm font-bold text-slate-900">Visual Dark Mode</h4>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">Toggle interface design palette styles</p>
                 </div>
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  className="px-5 py-2.5 rounded-full bg-black hover:bg-slate-800 text-white font-bold text-xs transition-all flex items-center gap-1.5 shadow-xs"
+                  className="px-5 py-2.5 rounded-full bg-black hover:bg-slate-800 text-white font-semibold text-xs transition-all flex items-center gap-2 shadow-xs shrink-0"
                 >
                   {theme === 'dark' ? (
                     <>
-                      <Sun className="w-4 h-4 text-white" /> Light Mode
+                      <Sun className="w-4 h-4 text-white" />
+                      <span>Light Mode</span>
                     </>
                   ) : (
                     <>
-                      <Moon className="w-4 h-4" /> Dark Mode
+                      <Moon className="w-4 h-4 text-white" />
+                      <span>Dark Mode</span>
                     </>
                   )}
                 </button>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-2 border-t border-slate-100 pt-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 border-t border-slate-100">
                 <div>
-                  <h4 className="text-xs font-display font-extrabold text-black">Interface Language</h4>
-                  <p className="text-[10px] font-medium text-slate-500 mt-0.5">Select localization parameter values</p>
+                  <h4 className="text-sm font-bold text-slate-900">Interface Language</h4>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">Select localization parameter values</p>
                 </div>
-                <select
-                  value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value)}
-                  className="px-4 py-2 rounded-full bg-slate-100 border border-slate-200/60 text-xs font-semibold focus:outline-none text-black"
-                >
-                  <option value="en">English (US)</option>
-                  <option value="ko">한국어 (Korean)</option>
-                  <option value="de">Deutsch (German)</option>
-                </select>
+
+                <div className="relative">
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value)}
+                    className="appearance-none px-6 py-2.5 pr-10 rounded-full bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+                  >
+                    <option value="en">English (US)</option>
+                    <option value="ko">한국어 (Korean)</option>
+                    <option value="de">Deutsch (German)</option>
+                  </select>
+                  <ChevronDown className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+                </div>
               </div>
             </div>
 
-            {/* Notification and privacy settings */}
-            <div className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 flex flex-col gap-4 shadow-xs">
-              <span className="flex items-center gap-1.5 font-black uppercase tracking-wider text-[10px] text-slate-500 select-none">
-                <Bell className="w-4 h-4 text-black" /> Notifications & Alerts
-              </span>
+            {/* Notifications & Alerts Card */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 md:p-8 space-y-4 shadow-2xs">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                <Bell className="w-4 h-4 text-slate-600" />
+                <span>NOTIFICATIONS &amp; ALERTS</span>
+              </div>
 
-              <div className="flex justify-between items-center py-2">
+              <div className="flex justify-between items-center pt-1">
                 <div>
-                  <h4 className="text-xs font-display font-extrabold text-black">Syllabus Reminder Email Alerts</h4>
-                  <p className="text-[10px] font-medium text-slate-500 mt-0.5">Receive reminders regarding incomplete daily goals</p>
+                  <h4 className="text-sm font-bold text-slate-900">Syllabus Reminder Email Alerts</h4>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">Receive reminders regarding incomplete daily goals</p>
                 </div>
                 <input
                   type="checkbox"
                   checked={notificationsEnabled}
                   onChange={(e) => setNotificationsEnabled(e.target.checked)}
-                  className="w-4 h-4 text-black border-slate-300 rounded focus:ring-black"
+                  className="w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer"
                 />
               </div>
             </div>
 
-            {/* Proctor privacy notice */}
-            <div className="bg-white p-6 rounded-[1.75rem] border border-slate-200/80 flex flex-col gap-4 shadow-xs">
-              <span className="flex items-center gap-1.5 font-black uppercase tracking-wider text-[10px] text-slate-500 select-none">
-                <Shield className="w-4 h-4 text-black" /> Proctor Privacy Policy
-              </span>
-              <p className="text-[10px] font-medium text-slate-500 leading-relaxed">
-                Biometric face descriptors and gaze metrics are computed locally on client engines using browser APIs. No stream frames are uploaded or saved to remote databases.
-              </p>
+            {/* Proctor Privacy Policy Card */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 md:p-8 shadow-2xs hover:border-slate-300 transition-colors cursor-pointer flex items-center justify-between gap-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  <Shield className="w-4 h-4 text-slate-600" />
+                  <span>PROCTOR PRIVACY POLICY</span>
+                </div>
+                <p className="text-xs font-medium text-slate-500 leading-relaxed max-w-3xl">
+                  Biometric face descriptors and gaze metrics are computed locally on client engines using browser APIs. No stream frames are uploaded or saved to remote databases.
+                </p>
+              </div>
+
+              <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
             </div>
 
+            {/* Bottom Save Action Button */}
             <button
               type="submit"
-              className="w-full py-3.5 rounded-full bg-black text-white font-bold text-xs hover:bg-slate-800 transition-all shadow-xs mt-2"
+              className="w-full py-4 rounded-full bg-black hover:bg-slate-800 text-white font-semibold text-xs md:text-sm flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.99]"
             >
-              Save Preferences Configuration
+              <Save className="w-4 h-4" />
+              <span>Save Preferences Configuration</span>
             </button>
 
           </form>

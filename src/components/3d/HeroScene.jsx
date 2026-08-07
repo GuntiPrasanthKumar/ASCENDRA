@@ -58,7 +58,7 @@ const Dodecahedron = () => {
 
 export default function HeroScene() {
   return (
-    <div className="absolute inset-0 -z-10 h-screen w-full">
+    <div className="absolute inset-0 z-0 h-screen w-full pointer-events-none">
       <Canvas 
         camera={{ position: [0, 0, 5], fov: 50 }}
         dpr={[1, 1.5]}
@@ -74,7 +74,7 @@ export default function HeroScene() {
         <ContactShadows position={[0, -2.5, 0]} opacity={0.5} scale={10} blur={2} far={4} frames={1} />
         <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
       </Canvas>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#F8F9FA] pointer-events-none" />
     </div>
   );
 }

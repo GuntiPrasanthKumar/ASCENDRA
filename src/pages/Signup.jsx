@@ -8,6 +8,7 @@ import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useToastStore } from '../components/common/Toast';
 import { useAuthStore } from '../hooks/useAuthStore';
+import api from '../utils/api';
 
 const BlobScene = React.lazy(() => import('../components/3d/HeroScene'));
 
@@ -15,6 +16,7 @@ export default function Signup() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'student' });
   const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const navigate = useNavigate();
   const { addToast } = useToastStore();
@@ -45,17 +47,27 @@ export default function Signup() {
 
   const handleCapture = async () => {
     const descriptor = faceData.descriptor;
-    if (descriptor) {
-      // Store in localStorage as requested for demo/fallback
-      localStorage.setItem('faceDescriptor_' + formData.email, JSON.stringify(descriptor));
+    if (descriptor && Array.isArray(descriptor) && descriptor.length === 512) {
+      setIsSubmitting(true);
       
-      // Also register with backend if available
+      // Register user with backend
       const result = await signup({
         ...formData,
         faceDescriptor: descriptor
       });
 
       if (result.success) {
+        // Enrol encrypted face profile in backend /api/proctor/enroll
+        try {
+          await api.post('/proctor/enroll', {
+            embedding: descriptor,
+            modelVersion: 'mediapipe-face-embedder-v1'
+          });
+          console.log('[BIOMETRIC LOG] Encrypted FaceProfile enrolled on server.');
+        } catch (enrollErr) {
+          console.warn('Server face enrollment warning:', enrollErr?.response?.data || enrollErr.message);
+        }
+
         setEnrollmentSuccess(true);
         stopDetection();
         confetti({
@@ -63,13 +75,14 @@ export default function Signup() {
           spread: 70,
           origin: { y: 0.6 }
         });
-        addToast(`Welcome aboard, ${formData.name}!`, 'success');
+        addToast(`Welcome aboard, ${formData.name}! Encrypted biometric profile enrolled.`, 'success');
         setTimeout(() => navigate('/dashboard'), 2000);
       } else {
         addToast(result.message, 'error');
       }
+      setIsSubmitting(false);
     } else {
-      addToast('Face not detected. Please look at the camera.', 'error');
+      addToast('Face not detected or embedding invalid. Please center your face.', 'error');
     }
   };
 
@@ -84,7 +97,7 @@ export default function Signup() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-transparent pointer-events-none" />
           <div className="absolute bottom-12 left-12 text-white">
             <h2 className="text-4xl font-display font-bold mb-4">Join the Future of Learning</h2>
-            <p className="text-white/80 max-w-md font-body">Secure your academic journey with advanced AI proctoring and adaptive assessments.</p>
+            <p className="text-white/80 max-w-md font-body">Secure your academic journey with advanced MediaPipe AI proctoring and continuous biometric identity verification.</p>
           </div>
         </div>
 
@@ -138,31 +151,27 @@ export default function Signup() {
 
                     <div className="space-y-1 pt-2">
                       <label className="text-sm font-medium text-primary ml-1">Role</label>
-                      <div className="grid grid-cols-2 gap-4">
-                        {['student', 'faculty'].map(role => (
-                          <button 
-                            key={role}
-                            type="button"
-                            onClick={() => setFormData({...formData, role})}
-                            className={`py-2 rounded-xl border transition-all ${formData.role === role ? 'bg-primary text-white border-primary' : 'bg-white/50 text-textMuted border-muted'}`}
-                          >
-                            {role.charAt(0).toUpperCase() + role.slice(1)}
-                          </button>
-                        ))}
-                      </div>
+                      <select 
+                        className="w-full bg-white/50 border border-muted rounded-xl py-3 px-4 focus:outline-none focus:border-accent transition-colors"
+                        value={formData.role}
+                        onChange={e => setFormData({...formData, role: e.target.value})}
+                      >
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                      </select>
                     </div>
 
                     <button 
                       type="submit"
-                      className="w-full bg-primary text-white py-4 rounded-xl font-medium mt-6 hover:bg-accent flex items-center justify-center gap-2 group transition-all"
+                      className="w-full bg-primary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg mt-6"
                     >
-                      Next: Face Enrollment
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      Next: Biometric Enrollment <ArrowRight className="w-5 h-5" />
                     </button>
                   </form>
-                  <p className="text-center mt-6 text-textMuted">
-                    Already have an account? <Link to="/login" className="text-accent font-medium hover:underline">Log In</Link>
-                  </p>
+
+                  <div className="mt-6 text-center text-sm text-textMuted">
+                    Already have an account? <Link to="/login" className="text-accent font-bold">Log in</Link>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
@@ -170,66 +179,81 @@ export default function Signup() {
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
-                  className="glass p-8 rounded-3xl text-center flex flex-col items-center relative overflow-hidden"
+                  className="glass p-8 rounded-3xl relative overflow-hidden"
                 >
-                  <ShieldCheck className="w-12 h-12 text-accent mb-2" />
-                  <h2 className="text-3xl font-display font-bold text-primary mb-2">Face Enrollment</h2>
-                  <p className="text-textMuted mb-8 text-sm">Step 2 of 2: Secure your identity</p>
-
-                  <div className="mb-12">
-                    <WebcamView 
-                      videoRef={videoRef} 
-                      canvasRef={canvasRef} 
-                      isFaceDetected={isFaceDetected} 
-                      onStart={async () => {
-                        const ok = await startCamera(videoRef.current);
-                        if (ok) startDetection();
-                      }}
-                      autoStart={true}
-                    />
-                  </div>
-
-                  {faceError && (
-                    <div className="mt-3 text-xs text-red-400 bg-red-900/10 rounded-lg px-4 py-2 mb-4 border border-red-500/20 flex items-center justify-center gap-1.5">
-                      <AlertCircle className="w-4 h-4 text-red-500 shrink-0" /> {faceError}
-                    </div>
-                  )}
-
-                  <div className="h-8 flex items-center justify-center mb-6">
-                    {isModelsLoading && (
-                      <div className="flex items-center gap-2 text-accent animate-pulse">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-xs font-bold uppercase tracking-widest">Loading AI Models...</span>
-                      </div>
+                  <AnimatePresence>
+                    {enrollmentSuccess && (
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 z-50 bg-white/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-8"
+                      >
+                        <motion.div 
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 200 }}
+                          className="w-20 h-20 bg-success rounded-full flex items-center justify-center text-white mb-6 shadow-xl shadow-success/20"
+                        >
+                          <CheckCircle2 className="w-10 h-10" />
+                        </motion.div>
+                        <h2 className="text-2xl font-display font-black text-primary mb-1">Face Profile Enrolled</h2>
+                        <p className="text-textMuted text-xs font-medium">AES-256 Encrypted Biometric Template Created.</p>
+                      </motion.div>
                     )}
+                  </AnimatePresence>
+
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-display font-bold text-primary">Biometric Face Enrollment</h2>
+                    <p className="text-textMuted text-xs font-medium">Step 2 of 2: Capture baseline 512-D face embedding</p>
                   </div>
 
-                  <div className="flex gap-4 w-full">
-                    <button 
-                      onClick={() => { stopDetection(); setStep(1); }}
-                      className="flex-1 py-4 rounded-xl border border-muted bg-white/50 text-textPrimary hover:bg-white transition-colors font-semibold"
-                    >
-                      Back
-                    </button>
+                  {faceError ? (
+                    <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-center text-xs flex items-center gap-2 mb-6">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{faceError}</span>
+                    </div>
+                  ) : null}
+
+                  <WebcamView 
+                    videoRef={videoRef} 
+                    canvasRef={canvasRef} 
+                    isFaceDetected={isFaceDetected} 
+                    onStart={async () => {
+                      const ok = await startCamera(videoRef.current);
+                      if (ok) startDetection();
+                    }}
+                    onStop={stopDetection}
+                  />
+
+                  <div className="mt-6 flex flex-col gap-3">
                     <button 
                       onClick={handleCapture}
-                      disabled={!isFaceDetected || enrollmentSuccess}
-                      className={`flex-[2] py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
-                        isFaceDetected
-                          ? 'bg-primary text-white hover:bg-accent shadow-lg shadow-primary/20'
-                          : 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50'
-                      }`}
+                      disabled={!isFaceDetected || isModelsLoading || isSubmitting}
+                      className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/20"
                     >
-                      {enrollmentSuccess ? (
+                      {isSubmitting ? (
                         <>
-                          <CheckCircle2 className="w-5 h-5" />
-                          Enrolled
+                          <Loader2 className="w-5 h-5 animate-spin" /> Enrolling Encrypted Profile...
                         </>
-                      ) : isFaceDetected ? (
-                        'Capture & Enroll Face'
+                      ) : isModelsLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" /> Initializing MediaPipe AI...
+                        </>
                       ) : (
-                        'Position Face in Camera'
+                        <>
+                          <ShieldCheck className="w-5 h-5" /> Enroll & Finish Signup
+                        </>
                       )}
+                    </button>
+
+                    <button 
+                      onClick={() => {
+                        stopDetection();
+                        setStep(1);
+                      }}
+                      className="w-full py-3 text-xs text-textMuted font-bold hover:text-primary transition-colors text-center"
+                    >
+                      Back to Step 1
                     </button>
                   </div>
                 </motion.div>

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { Mail, User, Lock, ArrowRight, ShieldCheck, Loader2, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import { Mail, User, ArrowRight, ShieldCheck, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import PageTransition from '../components/common/PageTransition';
 import WebcamView from '../components/auth/WebcamView';
 import { useFaceDetection } from '../hooks/useFaceDetection';
@@ -14,7 +14,7 @@ const BlobScene = React.lazy(() => import('../components/3d/HeroScene'));
 
 export default function Signup() {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Student' });
+  const [formData, setFormData] = useState({ name: '', email: '', role: 'Student' });
   const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -36,39 +36,12 @@ export default function Signup() {
   const isFaceDetected = faceData.detected;
   const isModelsLoading = !isModelLoaded;
 
-  // Direct Standard Registration without requiring Webcam
-  const handleStandardSignup = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password) {
-      addToast('Please enter your Name, Email, and Password.', 'warning');
-      return;
-    }
-
-    setIsSubmitting(true);
-    const result = await signup({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      role: formData.role
-    });
-
-    setIsSubmitting(false);
-
-    if (result.success) {
-      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-      addToast(`Welcome to ASCENDRA, ${formData.name}!`, 'success');
-      navigate('/dashboard');
-    } else {
-      addToast(result.message, 'error');
-    }
-  };
-
   const handleNextStep = (e) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.password) {
+    if (formData.name && formData.email) {
       setStep(2);
     } else {
-      addToast('Please fill all fields including password', 'warning');
+      addToast('Please enter your Name and Email address.', 'warning');
     }
   };
 
@@ -78,7 +51,9 @@ export default function Signup() {
       setIsSubmitting(true);
       
       const result = await signup({
-        ...formData,
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
         faceDescriptor: descriptor
       });
 
@@ -95,7 +70,7 @@ export default function Signup() {
         setEnrollmentSuccess(true);
         stopDetection();
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        addToast(`Welcome aboard, ${formData.name}! Biometric profile enrolled.`, 'success');
+        addToast(`Welcome aboard, ${formData.name}! Encrypted biometric profile enrolled.`, 'success');
         setTimeout(() => navigate('/dashboard'), 1800);
       } else {
         addToast(result.message, 'error');
@@ -116,8 +91,8 @@ export default function Signup() {
           </React.Suspense>
           <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-transparent pointer-events-none" />
           <div className="absolute bottom-12 left-12 text-white">
-            <h2 className="text-4xl font-display font-bold mb-4">Join the Future of Learning</h2>
-            <p className="text-white/80 max-w-md font-body">Secure your academic journey with advanced AI proctoring, CodeLab, and career intelligence.</p>
+            <h2 className="text-4xl font-display font-bold mb-4">Biometric Identity Registration</h2>
+            <p className="text-white/80 max-w-md font-body">Secure your academic journey with encrypted MediaPipe 512d face biometric authentication.</p>
           </div>
         </div>
 
@@ -135,10 +110,10 @@ export default function Signup() {
                 >
                   <div className="text-center mb-6 flex flex-col items-center">
                     <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-20 md:h-28 w-auto object-contain mb-1" />
-                    <p className="text-textMuted text-xs font-medium mt-1">Create your ASCENDRA Enterprise account</p>
+                    <p className="text-textMuted text-xs font-medium mt-1">Step 1 of 2: Basic Details</p>
                   </div>
 
-                  <form onSubmit={handleStandardSignup} className="space-y-4">
+                  <form onSubmit={handleNextStep} className="space-y-4">
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-primary ml-1 uppercase tracking-wider">Full Name</label>
                       <div className="relative">
@@ -169,21 +144,6 @@ export default function Signup() {
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-primary ml-1 uppercase tracking-wider">Password</label>
-                      <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-textMuted w-5 h-5" />
-                        <input 
-                          type="password" 
-                          required
-                          className="w-full bg-white/50 border border-muted rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-accent text-xs font-semibold"
-                          placeholder="••••••••"
-                          value={formData.password}
-                          onChange={e => setFormData({...formData, password: e.target.value})}
-                        />
-                      </div>
-                    </div>
-
                     <div className="space-y-1 pt-1">
                       <label className="text-xs font-bold text-primary ml-1 uppercase tracking-wider">Role</label>
                       <select 
@@ -196,35 +156,16 @@ export default function Signup() {
                       </select>
                     </div>
 
-                    <div className="pt-4 space-y-2">
-                      <button 
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-primary text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg text-xs"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 className="w-4 h-4 animate-spin" /> Creating Account...
-                          </>
-                        ) : (
-                          <>
-                            Create Account <ArrowRight className="w-4 h-4" />
-                          </>
-                        )}
-                      </button>
-
-                      <button 
-                        type="button"
-                        onClick={handleNextStep}
-                        className="w-full bg-indigo-50 text-indigo-700 border border-indigo-200 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-100 transition-colors text-xs"
-                      >
-                        <Sparkles className="w-4 h-4" /> Enroll Face Biometrics (Optional)
-                      </button>
-                    </div>
+                    <button 
+                      type="submit"
+                      className="w-full bg-primary text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg text-xs mt-6"
+                    >
+                      Next: Biometric Face Enrollment <ArrowRight className="w-4 h-4" />
+                    </button>
                   </form>
 
                   <div className="mt-6 text-center text-xs text-textMuted font-medium">
-                    Already have an account? <Link to="/login" className="text-accent font-bold">Log in</Link>
+                    Already registered? <Link to="/login" className="text-accent font-bold">Biometric Log in</Link>
                   </div>
                 </motion.div>
               ) : (
@@ -258,7 +199,7 @@ export default function Signup() {
 
                   <div className="text-center mb-6">
                     <h2 className="text-2xl font-display font-bold text-primary">Biometric Face Enrollment</h2>
-                    <p className="text-textMuted text-xs font-medium">Capture baseline face embedding for AI proctoring</p>
+                    <p className="text-textMuted text-xs font-medium">Step 2 of 2: Capture baseline 512d face embedding</p>
                   </div>
 
                   {faceError ? (
@@ -295,7 +236,7 @@ export default function Signup() {
                         </>
                       ) : (
                         <>
-                          <ShieldCheck className="w-4 h-4" /> Enroll &amp; Finish Registration
+                          <ShieldCheck className="w-4 h-4" /> Enroll &amp; Complete Registration
                         </>
                       )}
                     </button>

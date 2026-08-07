@@ -27,6 +27,7 @@ const interviewRoutes = require('./app/routes/interview.routes');
 const careerRoutes = require('./app/routes/career.routes');
 const insightsRoutes = require('./app/routes/insights.routes');
 const notificationRoutes = require('./app/routes/notification.routes');
+const adminRoutes = require('./app/routes/admin.routes');
 
 // Connect to database
 connectDB();
@@ -85,6 +86,8 @@ app.use('/api/v1/insights', insightsRoutes);
 app.use('/api/insights', insightsRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Root Welcome Endpoint
 app.get('/', (req, res) => {

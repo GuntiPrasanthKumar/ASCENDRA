@@ -75,7 +75,7 @@ export default function InterviewSession() {
     }
   };
 
-  const proctor = useProctor(!!data, faceData, handleStrike);
+  const proctor = useProctor(!!data, faceData, videoRef, handleStrike, interviewId || 'interview-session');
 
   if (isLoading) {
     return (

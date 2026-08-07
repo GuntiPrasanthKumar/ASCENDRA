@@ -22,6 +22,7 @@ const leaderboardRoutes = require('./app/routes/leaderboard.routes');
 const chatRoutes = require('./app/routes/chat.routes');
 const proctorRoutes = require('./app/routes/proctor.routes');
 const aiRoutes = require('./app/routes/ai.routes');
+const codelabRoutes = require('./app/routes/codelab.routes');
 
 // Connect to database
 connectDB();
@@ -70,6 +71,8 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/proctor', proctorRoutes);
 app.use('/api/v1/ai', aiRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/v1/codelab', codelabRoutes);
+app.use('/api/codelab', codelabRoutes);
 
 // Root Welcome Endpoint
 app.get('/', (req, res) => {

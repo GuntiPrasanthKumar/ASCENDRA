@@ -119,6 +119,25 @@ Return AI Feedback JSON strictly:
   "recommendations": ["Rec 1", "Rec 2"]
 }
 `);
+
+    // 7. Adaptive Diagnostic Question Prompt
+    this.register('diagnostic_question', ({ domain, difficulty, questionIndex, totalQuestions, priorTopics }) => `
+Generate 1 single highly factual, adaptive multiple choice diagnostic question for domain "${domain}".
+Current Question Number: ${questionIndex + 1} of ${totalQuestions}.
+Target Difficulty: ${difficulty || 'Medium'}.
+Avoid these previously tested topics: ${(priorTopics || []).join(', ') || 'None'}.
+
+SCHEMA (JSON without markdown formatting):
+{
+  "questionId": "diag-q-${questionIndex + 1}",
+  "questionText": "Clear, rigorous factual question for ${domain} at ${difficulty} level...",
+  "options": ["Option A", "Option B", "Option C", "Option D"],
+  "correctOptionIndex": 0,
+  "topic": "Specific Subtopic Name",
+  "bloomsLevel": "Apply",
+  "explanation": "Detailed explanation of why correctOptionIndex is right and others are incorrect."
+}
+`);
   }
 }
 

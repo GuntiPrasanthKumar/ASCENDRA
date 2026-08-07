@@ -21,6 +21,7 @@ const analyticsRoutes = require('./app/routes/analytics.routes');
 const leaderboardRoutes = require('./app/routes/leaderboard.routes');
 const chatRoutes = require('./app/routes/chat.routes');
 const proctorRoutes = require('./app/routes/proctor.routes');
+const aiRoutes = require('./app/routes/ai.routes');
 
 // Connect to database
 connectDB();
@@ -67,6 +68,8 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/proctor', proctorRoutes);
+app.use('/api/v1/ai', aiRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Root Welcome Endpoint
 app.get('/', (req, res) => {

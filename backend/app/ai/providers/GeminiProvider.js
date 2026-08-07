@@ -3,7 +3,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 class GeminiProvider {
   constructor() {
     this.name = 'gemini';
-    this.modelName = 'gemini-1.5-flash';
+    this.candidateModels = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-2.0-flash', 'gemini-1.5-pro'];
   }
 
   isAvailable() {
@@ -17,23 +17,38 @@ class GeminiProvider {
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const config = isJson ? { responseMimeType: 'application/json' } : {};
-    const model = genAI.getGenerativeModel({
-      model: this.modelName,
-      generationConfig: config
-    });
+    let lastError = null;
 
-    const startTime = Date.now();
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    const latencyMs = Date.now() - startTime;
+    for (const modelName of this.candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          generationConfig: config
+        });
 
-    return {
-      text,
-      latencyMs,
-      model: this.modelName,
-      provider: this.name
-    };
+        const startTime = Date.now();
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        const latencyMs = Date.now() - startTime;
+
+        return {
+          text,
+          latencyMs,
+          model: modelName,
+          provider: this.name
+        };
+      } catch (err) {
+        lastError = err;
+        // If 404 model not found, try next candidate model
+        if (err.message && (err.message.includes('404') || err.message.includes('not found'))) {
+          continue;
+        }
+        throw err; // throw non-404 errors immediately
+      }
+    }
+
+    throw lastError || new Error('All Gemini candidate models failed.');
   }
 }
 

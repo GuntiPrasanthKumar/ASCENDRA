@@ -26,6 +26,7 @@ const codelabRoutes = require('./app/routes/codelab.routes');
 const interviewRoutes = require('./app/routes/interview.routes');
 const careerRoutes = require('./app/routes/career.routes');
 const insightsRoutes = require('./app/routes/insights.routes');
+const notificationRoutes = require('./app/routes/notification.routes');
 
 // Connect to database
 connectDB();
@@ -82,6 +83,8 @@ app.use('/api/v1/career', careerRoutes);
 app.use('/api/career', careerRoutes);
 app.use('/api/v1/insights', insightsRoutes);
 app.use('/api/insights', insightsRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Root Welcome Endpoint
 app.get('/', (req, res) => {

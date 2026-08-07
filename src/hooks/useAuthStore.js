@@ -12,12 +12,14 @@ export const useAuthStore = create(
       login: async (credentials) => {
         try {
           const response = await api.post('/auth/login', credentials);
-          const { user, token } = response.data;
-          
+          const data = response.data?.data || response.data;
+          const user = data.user;
+          const token = data.token;
+
           if (token) {
             localStorage.setItem('skilltrove_token', token);
           }
-          
+
           set({
             user,
             token,
@@ -26,18 +28,21 @@ export const useAuthStore = create(
           return { success: true };
         } catch (error) {
           console.error('Login error:', error);
-          return { 
-            success: false, 
-            message: error.response?.data?.message || 'Login failed' 
-          };
+          const msg = error.response?.data?.error?.message || 
+                      error.response?.data?.message || 
+                      error.message || 
+                      'Login failed';
+          return { success: false, message: msg };
         }
       },
 
       signup: async (userData) => {
         try {
           const response = await api.post('/auth/register', userData);
-          const { user, token } = response.data;
-          
+          const data = response.data?.data || response.data;
+          const user = data.user;
+          const token = data.token;
+
           if (token) {
             localStorage.setItem('skilltrove_token', token);
           }
@@ -50,19 +55,21 @@ export const useAuthStore = create(
           return { success: true };
         } catch (error) {
           console.error('Signup error:', error);
-          return { 
-            success: false, 
-            message: error.response?.data?.message || 'Registration failed' 
-          };
+          const msg = error.response?.data?.error?.message || 
+                      error.response?.data?.message || 
+                      error.message || 
+                      'Registration failed';
+          return { success: false, message: msg };
         }
       },
 
       faceLogin: async (email, faceDescriptor) => {
         try {
           const response = await api.post('/auth/face-login', { email, faceDescriptor });
+          const data = response.data?.data || response.data;
+          const user = data.user;
+          const token = data.token;
 
-          const { user, token } = response.data;
-          
           if (token) {
             localStorage.setItem('skilltrove_token', token);
           }
@@ -75,7 +82,11 @@ export const useAuthStore = create(
           return { success: true };
         } catch (error) {
           console.error('Face Login error:', error);
-          return { success: false, message: error?.response?.data?.message || 'Face recognition failed' };
+          const msg = error.response?.data?.error?.message || 
+                      error.response?.data?.message || 
+                      error.message || 
+                      'Face recognition failed';
+          return { success: false, message: msg };
         }
       },
 

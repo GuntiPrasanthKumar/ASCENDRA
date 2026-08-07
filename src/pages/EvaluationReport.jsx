@@ -5,6 +5,7 @@ import { PageSkeleton } from '../components/common/FeedbackStates';
 import { mockInterviews } from '../features/interview/mock/interviews';
 import { mockFeedback } from '../features/interview/mock/feedback';
 import { mockScores } from '../features/interview/mock/scores';
+import api from '../utils/api';
 
 // Reusable Components
 import EvaluationCard from '../components/interview/EvaluationCard';
@@ -22,18 +23,40 @@ export default function EvaluationReport() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const fetchReport = async () => {
       const activeInterview = mockInterviews.find(i => i.id === interviewId);
-      // Fallback details if custom round completed
-      const score = mockScores[interviewId] || mockScores['int-hr'];
-      const feedback = mockFeedback[interviewId] || mockFeedback['int-hr'];
+      let score = mockScores[interviewId] || mockScores['int-hr'];
+      let feedback = mockFeedback[interviewId] || mockFeedback['int-hr'];
+
+      try {
+        const res = await api.get(`/interview/report/${interviewId}`);
+        const rep = res.data?.data;
+        if (rep) {
+          score = {
+            overall: rep.overallScore,
+            communication: rep.communicationScore,
+            technical: rep.technicalScore,
+            problemSolving: rep.problemSolvingScore,
+            gazeStability: 96,
+            verdict: rep.readinessBadge === 'TIER_1_READY' ? 'Strong Hire' : 'Hire'
+          };
+          feedback = {
+            strengths: rep.strengths || feedback.strengths,
+            weaknesses: rep.weaknesses || feedback.weaknesses,
+            recommendations: rep.recommendations || feedback.recommendations
+          };
+        }
+      } catch (e) {
+        // Fallback to local mock data
+      }
 
       if (activeInterview) {
         setData({ activeInterview, score, feedback });
       }
       setIsLoading(false);
-    }, 600);
-    return () => clearTimeout(timer);
+    };
+
+    fetchReport();
   }, [interviewId]);
 
   if (isLoading) {

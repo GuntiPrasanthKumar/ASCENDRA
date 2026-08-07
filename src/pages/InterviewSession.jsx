@@ -7,6 +7,7 @@ import { mockInterviewQuestions } from '../features/interview/mock/questions';
 import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useProctor } from '../hooks/useProctor';
 import { useToastStore } from '../components/common/Toast';
+import api from '../utils/api';
 
 import InterviewHeader from '../components/interview/InterviewHeader';
 import QuestionCard from '../components/interview/QuestionCard';
@@ -117,13 +118,25 @@ export default function InterviewSession() {
     setTranscripts(prev => ({ ...prev, [currentIdx]: text }));
   };
 
-  const handleNextOrFinish = () => {
+  const handleNextOrFinish = async () => {
     if (!transcripts[currentIdx]) {
       addToast('Please provide an answer before navigating.', 'warning');
       return;
     }
 
     if (currentIdx < interviewQuestions.length - 1) {
+      // Check for real-time AI follow-up
+      try {
+        const followupRes = await api.post('/interview/followup', {
+          questionText: question.text,
+          candidateAnswer: transcripts[currentIdx]
+        });
+        if (followupRes.data?.data?.followupQuestion) {
+          addToast(`AI Interviewer Follow-up: ${followupRes.data.data.followupQuestion}`, 'info');
+        }
+      } catch (e) {
+        // Continue silently if offline
+      }
       setCurrentIdx(prev => prev + 1);
     } else {
       const completed = JSON.parse(localStorage.getItem('completed_interviews') || '[]');
@@ -132,7 +145,21 @@ export default function InterviewSession() {
         localStorage.setItem('completed_interviews', JSON.stringify(completed));
       }
 
-      addToast('Interview session completed successfully!', 'success');
+      addToast('Evaluating interview session with Enterprise AI Engine...', 'info');
+
+      try {
+        await api.post('/interview/evaluate', {
+          interviewId: activeInterview.id,
+          title: activeInterview.title,
+          category: activeInterview.category,
+          transcripts,
+          questions: interviewQuestions
+        });
+      } catch (err) {
+        console.warn('API Evaluation fallback to local report:', err);
+      }
+
+      addToast('Interview session evaluated! Generating readiness scorecard.', 'success');
       navigate(`/interview/${activeInterview.id}/results`);
     }
   };

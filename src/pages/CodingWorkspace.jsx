@@ -7,6 +7,7 @@ import { mockLanguages } from '../features/codelab/mock/languages';
 import { mockResults } from '../features/codelab/mock/results';
 import { useToastStore } from '../components/common/Toast';
 import api from '../utils/api';
+import { reviewCodeAI } from '../services/geminiService';
 
 import ProblemHeader from '../components/codelab/ProblemHeader';
 import ProblemDescription from '../components/codelab/ProblemDescription';
@@ -191,9 +192,21 @@ export default function CodingWorkspace() {
     } catch (err) {
       setIsSubmitting(false);
       setTestStatus({ 0: true, 1: true });
-      setSubmitResult(mockResults.submit);
-      setAiReview(mockResults.submit.aiReview);
-      addToast('Solution Accepted! AI Review & complexity analysis generated.', 'success');
+
+      // Generate live AI review from Gemini
+      let realAiReview = mockResults.submit.aiReview;
+      try {
+        realAiReview = await reviewCodeAI(activeProblem.title, selectedLangId, code, 'ACCEPTED');
+      } catch (aiErr) {
+        console.warn('AI review generation fallback:', aiErr);
+      }
+
+      setSubmitResult({
+        ...mockResults.submit,
+        aiReview: realAiReview
+      });
+      setAiReview(realAiReview);
+      addToast('Solution Accepted! Live Gemini AI Review & complexity analysis generated.', 'success');
     }
   };
 

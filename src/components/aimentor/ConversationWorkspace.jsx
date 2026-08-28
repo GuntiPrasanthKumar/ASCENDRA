@@ -4,6 +4,7 @@ import { Send, Trash2, Sparkles, RefreshCw, ShoppingBag, ChevronRight } from 'lu
 import { useToastStore } from '../common/Toast';
 import QuickActionChips from './QuickActionChips';
 import { useNavigate } from 'react-router-dom';
+import { askAIMentor } from '../../services/geminiService';
 
 export default function ConversationWorkspace({ userName = 'Vijay' }) {
   const { addToast } = useToastStore();
@@ -81,24 +82,35 @@ This problem evaluates:
     }
   };
 
-  const handleSend = (textToSend = input) => {
+  const handleSend = async (textToSend = input) => {
     const text = typeof textToSend === 'string' ? textToSend : input;
-    if (!text.trim()) return;
+    if (!text.trim() || isTyping) return;
 
     const userMsg = { id: Date.now(), role: 'user', content: text };
-    setMessages(prev => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      const responseText = await askAIMentor(text, updatedMessages, userName);
       const aiReply = {
+        id: Date.now() + 1,
+        role: 'assistant',
+        content: responseText
+      };
+      setMessages(prev => [...prev, aiReply]);
+    } catch (err) {
+      console.warn('[AIMentor] Falling back to heuristic response due to error:', err.message);
+      const fallbackReply = {
         id: Date.now() + 1,
         role: 'assistant',
         content: generateMentorResponse(text)
       };
-      setMessages(prev => [...prev, aiReply]);
+      setMessages(prev => [...prev, fallbackReply]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   const handleClearHistory = () => {

@@ -3,7 +3,16 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 class GeminiProvider {
   constructor() {
     this.name = 'gemini';
-    this.candidateModels = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+  }
+
+  getModelCandidates() {
+    const configuredModel = process.env.GEMINI_MODEL || process.env.LLM_MODEL;
+    const defaultCandidates = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-3.5-flash', 'gemini-1.5-flash'];
+    
+    if (configuredModel) {
+      return [configuredModel, ...defaultCandidates.filter(m => m !== configuredModel)];
+    }
+    return defaultCandidates;
   }
 
   isAvailable() {
@@ -18,8 +27,9 @@ class GeminiProvider {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const config = isJson ? { responseMimeType: 'application/json' } : {};
     let lastError = null;
+    const candidateModels = this.getModelCandidates();
 
-    for (const modelName of this.candidateModels) {
+    for (const modelName of candidateModels) {
       try {
         const model = genAI.getGenerativeModel({
           model: modelName,

@@ -1,31 +1,84 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, ShieldAlert, Sparkles, X, Check } from 'lucide-react';
+import { Bell, ShieldAlert, Sparkles, X, Check, ArrowRight, Sun, Moon } from 'lucide-react';
+import api from '../../utils/api';
 
 export default function NotificationCenter({ isOpen, onClose }) {
   const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const list = [
-      { id: 1, type: 'proctor', text: 'Webcam proctoring matches active and verified.', read: false, time: 'Just now' }
-    ];
-    const completedLessons = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
-    if (completedLessons.length > 0) {
-      list.push({ id: 2, type: 'lesson', text: 'Lesson completed: Dynamic Programming Introduction! +50 XP', read: false, time: '10m ago' });
-    }
-    const completedQuizzes = JSON.parse(localStorage.getItem('completed_quizzes') || '[]');
-    if (completedQuizzes.length > 0) {
-      list.push({ id: 3, type: 'quiz', text: 'Diagnostic Quiz completed with 100% accuracy! +300 XP', read: false, time: '1h ago' });
-    }
-    const completedCoding = JSON.parse(localStorage.getItem('completed_coding') || '[]');
-    if (completedCoding.length > 0) {
-      list.push({ id: 4, type: 'codelab', text: 'CodeLab solution accepted! +150 XP', read: false, time: '2h ago' });
-    }
-    setNotifications(list);
-  }, []);
+    if (!isOpen) return;
 
-  const markAllRead = () => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await api.get('/notifications');
+        if (res.data?.data?.notifications) {
+          const apiList = res.data.data.notifications.map(n => ({
+            id: n._id,
+            type: n.category?.toLowerCase() || 'academic',
+            title: n.title,
+            text: n.message,
+            priority: n.priority,
+            read: n.isRead,
+            time: 'Active',
+            action: n.action
+          }));
+          setNotifications(apiList);
+        }
+      } catch (err) {
+        // Fallback to local action-oriented items
+        const list = [
+          { 
+            id: '1', 
+            type: 'proctor', 
+            title: 'Identity Verification Compliant',
+            text: 'Webcam proctoring matches active and verified.', 
+            read: false, 
+            time: 'Just now',
+            action: { title: 'View Security Log', url: '/dashboard' }
+          },
+          { 
+            id: '2', 
+            type: 'academic', 
+            title: 'Dynamic Programming Milestone',
+            text: 'Lesson completed: Dynamic Programming Introduction! +50 XP', 
+            read: false, 
+            time: '10m ago',
+            action: { title: 'Resume DP Track', url: '/learn/adv-algorithms/dynamic-programming/dp-introduction' }
+          },
+          { 
+            id: '3', 
+            type: 'practice', 
+            title: 'Decaying Skill Alert — Heap Priority Queues',
+            text: 'Decaying Skill Alert (72% accuracy, unpracticed for 12 days).', 
+            read: false, 
+            time: '1h ago',
+            action: { title: 'Start Practice Review', url: '/practice' }
+          }
+        ];
+        setNotifications(list);
+      }
+    };
+
+    fetchNotifications();
+  }, [isOpen]);
+
+  const markAllRead = async () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    try {
+      await api.put('/notifications/read-all');
+    } catch (e) {
+      // Handled silently
+    }
+  };
+
+  const handleActionClick = (url) => {
+    if (url) {
+      onClose();
+      navigate(url);
+    }
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -34,7 +87,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
 
   return (
     <AnimatePresence>
-      <div className="relative">
+      <div className="relative select-none">
         <div onClick={onClose} className="fixed inset-0 z-30" />
         <motion.div
           initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -46,7 +99,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
             <div className="flex items-center gap-2">
               <Bell className="w-4 h-4 text-black dark:text-white" />
               <h4 className="text-xs font-black uppercase tracking-widest text-slate-800 dark:text-slate-200">
-                Notifications
+                Actionable Notifications
               </h4>
               {unreadCount > 0 && (
                 <span className="text-[10px] font-mono font-bold bg-black dark:bg-white text-white dark:text-black px-2 py-0.5 rounded-full">
@@ -73,7 +126,7 @@ export default function NotificationCenter({ isOpen, onClose }) {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 max-h-72 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-3 max-h-80 overflow-y-auto pr-1">
             {notifications.length > 0 ? (
               notifications.map(n => (
                 <div 
@@ -85,14 +138,27 @@ export default function NotificationCenter({ isOpen, onClose }) {
                   }`}
                 >
                   <div className="flex gap-2.5 items-start">
-                    {n.type === 'proctor' ? (
+                    {n.type === 'proctor' || n.type === 'security' ? (
                       <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                     ) : (
-                      <Sparkles className="w-4 h-4 text-black dark:text-white shrink-0 mt-0.5" />
+                      <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
                     )}
-                    <div className="flex-1">
-                      <p>{n.text}</p>
-                      <span className="text-[9px] font-mono text-slate-400 mt-1 block">{n.time}</span>
+                    <div className="flex-1 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900 dark:text-white text-xs">{n.title || 'Notification'}</span>
+                        <span className="text-[9px] font-mono text-slate-400">{n.time}</span>
+                      </div>
+                      <p className="text-slate-600 dark:text-slate-300">{n.text}</p>
+                      
+                      {n.action && n.action.title && (
+                        <button
+                          onClick={() => handleActionClick(n.action.url)}
+                          className="mt-2 w-full py-2 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-[10px] flex items-center justify-center gap-1 hover:opacity-90 transition-opacity"
+                        >
+                          <span>{n.action.title}</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

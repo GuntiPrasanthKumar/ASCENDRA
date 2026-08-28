@@ -2,6 +2,7 @@ const ProviderRouter = require('./ProviderRouter');
 const ResponseFormatter = require('./ResponseFormatter');
 const AICache = require('./AICache');
 const AILogger = require('./AILogger');
+const SafetyLayer = require('./SafetyLayer');
 
 // Rate limiting in-memory map: userId -> { count, windowStart }
 const userRateLimits = new Map();
@@ -9,28 +10,6 @@ const RATE_LIMIT_MAX = 30; // max 30 requests per minute
 const RATE_LIMIT_WINDOW = 60 * 1000;
 
 class AIGateway {
-  sanitizeInput(input) {
-    if (typeof input !== 'string') return '';
-    return input.trim();
-  }
-
-  detectPromptInjection(prompt) {
-    const PROHIBITED_PATTERNS = [
-      /ignore\s+all\s+previous\s+instructions/i,
-      /disregard\s+system\s+prompt/i,
-      /you\s+are\s+now\s+DAN/i,
-      /system\s+override/i,
-      /eval\(|exec\(/i
-    ];
-
-    for (const pattern of PROHIBITED_PATTERNS) {
-      if (pattern.test(prompt)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   checkRateLimit(userId) {
     const now = Date.now();
     const userRecord = userRateLimits.get(String(userId)) || { count: 0, windowStart: now };
@@ -51,25 +30,20 @@ class AIGateway {
     return true;
   }
 
-  async processRequest({ userId = 'anonymous', promptType, prompt, isJson = false, useCache = true, cacheTtlMs }) {
-    const cleanPrompt = this.sanitizeInput(prompt);
-
-    if (!cleanPrompt) {
-      return ResponseFormatter.formatError('Prompt cannot be empty', { code: 'INVALID_INPUT' });
+  async processRequest({ userId = 'anonymous', promptType = 'general', prompt, isJson = false, useCache = true, cacheTtlMs }) {
+    // 1. Safety & Input Validation
+    const validation = SafetyLayer.validatePrompt(userId, prompt);
+    if (!validation.valid) {
+      return ResponseFormatter.formatError(validation.error, { code: validation.reason });
     }
+    const cleanPrompt = validation.sanitizedPrompt;
 
-    // Security Check: Prompt Injection
-    if (this.detectPromptInjection(cleanPrompt)) {
-      AILogger.logSecurityAlert({ userId, prompt: cleanPrompt, reason: 'PROMPT_INJECTION_SUSPECTED' });
-      return ResponseFormatter.formatError('Forbidden prompt patterns detected', { code: 'SECURITY_VIOLATION' });
-    }
-
-    // Rate Limit Check
+    // 2. Rate Limit Check
     if (!this.checkRateLimit(userId)) {
       return ResponseFormatter.formatError('AI API rate limit exceeded. Please wait a minute.', { code: 'RATE_LIMIT_EXCEEDED' });
     }
 
-    // Cache Check
+    // 3. Cache Check
     if (useCache) {
       const cached = AICache.get(promptType, cleanPrompt);
       if (cached) {
@@ -78,7 +52,7 @@ class AIGateway {
       }
     }
 
-    // Execute via Provider Router
+    // 4. Provider Execution
     try {
       const result = await ProviderRouter.execute(cleanPrompt, isJson, userId, promptType);
       

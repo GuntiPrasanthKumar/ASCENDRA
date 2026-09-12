@@ -88,70 +88,88 @@ const Navbar = ({ onOpenCommandPalette }) => {
           <div className="flex items-center gap-5 border-l border-neutral-300 pl-6">
             
             {isAuthenticated ? (
-              <div className="relative">
-                <button
-                  onClick={() => setProfileOpen(!profileOpen)}
-                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors focus:outline-none"
-                >
-                  <div className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
-                    {(user?.name || 'S').charAt(0).toUpperCase()}
-                  </div>
-                  <span className="text-sm font-medium text-black">{user?.name || 'Student'}</span>
-                </button>
+              <div className="flex items-center gap-3">
+                {location.pathname === '/' && (
+                  <NavLink
+                    to="/dashboard"
+                    className="text-xs font-semibold text-white bg-gradient-to-r from-[#1A73E8] to-[#7C4DFF] hover:opacity-95 transition-all px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1.5"
+                  >
+                    <span>Dashboard</span>
+                  </NavLink>
+                )}
+                
+                <div className="relative">
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors focus:outline-none cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
+                      {(user?.name || 'S').charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-sm font-medium text-black">{user?.name || 'Student'}</span>
+                  </button>
 
-                <AnimatePresence>
-                  {profileOpen && (
-                    <>
-                      <div onClick={() => setProfileOpen(false)} className="fixed inset-0 z-30" />
-                      <motion.div
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 5 }}
-                        className="absolute right-0 mt-2 w-52 bg-white text-black border border-neutral-200 rounded-md shadow-md p-2 z-40 flex flex-col gap-0.5"
-                      >
-                        <div className="px-3 py-2 border-b border-neutral-100 mb-1">
-                          <p className="text-sm font-bold text-black">{user?.name || 'Student'}</p>
-                          <p className="text-xs text-neutral-500 capitalize">{userRole}</p>
-                        </div>
-
-                        <button
-                          onClick={() => { setProfileOpen(false); navigate('/profile'); }}
-                          className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
+                  <AnimatePresence>
+                    {profileOpen && (
+                      <>
+                        <div onClick={() => setProfileOpen(false)} className="fixed inset-0 z-30" />
+                        <motion.div
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          className="absolute right-0 mt-2 w-52 bg-white text-black border border-neutral-200 rounded-md shadow-md p-2 z-40 flex flex-col gap-0.5"
                         >
-                          <User className="w-4 h-4" /> Profile Dossier
-                        </button>
+                          <div className="px-3 py-2 border-b border-neutral-100 mb-1">
+                            <p className="text-sm font-bold text-black">{user?.name || 'Student'}</p>
+                            <p className="text-xs text-neutral-500 capitalize">{userRole}</p>
+                          </div>
 
-                        <button
-                          onClick={() => { setProfileOpen(false); navigate('/settings'); }}
-                          className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
-                        >
-                          <Settings className="w-4 h-4" /> Preferences
-                        </button>
+                          <button
+                            onClick={() => { setProfileOpen(false); navigate('/dashboard'); }}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
+                          >
+                            <User className="w-4 h-4" /> Go to Dashboard
+                          </button>
 
-                        <button
-                          onClick={handleSignOut}
-                          className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left mt-1 border-t border-neutral-100"
-                        >
-                          <LogOut className="w-4 h-4" /> Sign Out
-                        </button>
-                      </motion.div>
-                    </>
-                  )}
-                </AnimatePresence>
+                          <button
+                            onClick={() => { setProfileOpen(false); navigate('/profile'); }}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
+                          >
+                            <User className="w-4 h-4" /> Profile Dossier
+                          </button>
+
+                          <button
+                            onClick={() => { setProfileOpen(false); navigate('/settings'); }}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left"
+                          >
+                            <Settings className="w-4 h-4" /> Preferences
+                          </button>
+
+                          <button
+                            onClick={handleSignOut}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded text-xs font-medium text-black hover:bg-neutral-100 transition-colors text-left mt-1 border-t border-neutral-100"
+                          >
+                            <LogOut className="w-4 h-4" /> Sign Out
+                          </button>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             ) : (
               <div className="flex items-center gap-3">
+                <NavLink
+                  to="/dashboard"
+                  className="text-sm font-medium text-white bg-black hover:bg-neutral-800 transition-colors px-4 py-1.5 rounded-full"
+                >
+                  Enter Dashboard
+                </NavLink>
                 <NavLink
                   to="/login"
                   className="text-sm font-medium text-neutral-600 hover:text-black transition-colors px-3 py-1.5"
                 >
                   Sign In
-                </NavLink>
-                <NavLink
-                  to="/signup"
-                  className="text-sm font-medium text-white bg-black hover:bg-neutral-800 transition-colors px-4 py-1.5 rounded-full"
-                >
-                  Get Started
                 </NavLink>
               </div>
             )}

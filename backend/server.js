@@ -23,6 +23,12 @@ const chatRoutes = require('./app/routes/chat.routes');
 const proctorRoutes = require('./app/routes/proctor.routes');
 const aiRoutes = require('./app/routes/ai.routes');
 const codelabRoutes = require('./app/routes/codelab.routes');
+const interviewRoutes = require('./app/routes/interview.routes');
+const careerRoutes = require('./app/routes/career.routes');
+const insightsRoutes = require('./app/routes/insights.routes');
+const notificationRoutes = require('./app/routes/notification.routes');
+const adminRoutes = require('./app/routes/admin.routes');
+const facultyRoutes = require('./app/routes/faculty.routes');
 
 // Connect to database
 connectDB();
@@ -73,6 +79,18 @@ app.use('/api/v1/ai', aiRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/v1/codelab', codelabRoutes);
 app.use('/api/codelab', codelabRoutes);
+app.use('/api/v1/interview', interviewRoutes);
+app.use('/api/interview', interviewRoutes);
+app.use('/api/v1/career', careerRoutes);
+app.use('/api/career', careerRoutes);
+app.use('/api/v1/insights', insightsRoutes);
+app.use('/api/insights', insightsRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/v1/faculty', facultyRoutes);
+app.use('/api/faculty', facultyRoutes);
 
 // Root Welcome Endpoint
 app.get('/', (req, res) => {

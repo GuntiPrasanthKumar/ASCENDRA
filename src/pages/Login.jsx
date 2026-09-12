@@ -8,19 +8,6 @@ import { useFaceDetection } from '../hooks/useFaceDetection';
 import { useToastStore } from '../components/common/Toast';
 import { useAuthStore } from '../hooks/useAuthStore';
 
-// Cosine similarity for Float32Array MediaPipe embeddings
-function computeCosineSimilarity(a, b) {
-  if (!a || !b || a.length !== b.length) return 0;
-  let dot = 0, normA = 0, normB = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
-  }
-  if (normA === 0 || normB === 0) return 0;
-  return dot / (Math.sqrt(normA) * Math.sqrt(normB));
-}
-
 export default function Login() {
   const [email, setEmail] = useState('');
   const [loginSuccess, setLoginSuccess] = useState(false);
@@ -36,46 +23,51 @@ export default function Login() {
     faceData, 
     startCamera,
     startDetection, 
-    stopDetection, 
-    error: faceApiError
+    stopDetection
   } = useFaceDetection();
 
   const videoRef = useRef(null);
   const isFaceDetected = faceData.detected;
 
+  // Strict Face Biometric Authentication
   const handleFaceVerify = async () => {
     if (!email) {
-      addToast('Please enter your email first to verify face.', 'warning');
+      addToast('Please enter your registered email first.', 'warning');
       return;
     }
 
     if (!faceData.descriptor || !Array.isArray(faceData.descriptor) || faceData.descriptor.length !== 512) {
-      setLoginError('No valid MediaPipe face embedding detected. Please position your face clearly in the camera frame.');
+      setLoginError('No valid MediaPipe face embedding detected. Position your face clearly in the camera frame.');
       return;
     }
 
     setIsLoading(true);
     setLoginError(null);
 
-    const current = faceData.descriptor;
-    const result = await faceLogin(email, current);
+    const result = await faceLogin(email, faceData.descriptor);
     setIsLoading(false);
 
     if (result.success) {
       setLoginSuccess(true);
       stopDetection();
-      addToast('Face matched! Access Granted.', 'success');
-      setTimeout(() => navigate('/dashboard'), 1500);
+      addToast('Face matched! Biometric Identity Verified.', 'success');
+      setTimeout(() => navigate('/dashboard'), 1200);
     } else {
-      setLoginError(result.message || 'Face identity mismatch. Please try again.');
+      setLoginError(result.message || 'Biometric face identity mismatch. Please try again.');
     }
+  };
+
+  // Pre-fill demo emails for biometric verification test
+  const handleSelectDemo = (demoEmail) => {
+    setEmail(demoEmail);
+    addToast(`Selected ${demoEmail}. Align your face with camera to verify.`, 'info');
   };
 
   return (
     <PageTransition>
-      <div className="min-h-[80vh] flex items-center justify-center p-6 relative">
+      <div className="min-h-[85vh] flex items-center justify-center p-6 relative">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent2/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="w-full max-w-md relative z-10">
           <motion.div
@@ -89,7 +81,7 @@ export default function Login() {
                 <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="absolute inset-0 z-50 bg-white/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-8"
+                  className="absolute inset-0 z-50 bg-white/95 backdrop-blur-md flex flex-col items-center justify-center text-center p-8"
                 >
                    <motion.div 
                     initial={{ scale: 0 }}
@@ -99,73 +91,102 @@ export default function Login() {
                    >
                      <CheckCircle2 className="w-10 h-10" />
                    </motion.div>
-                   <h2 className="text-2xl font-display font-black text-primary">Access Granted</h2>
-                   <p className="text-textMuted font-medium">Identity verified via MediaPipe AI. Entering Academy...</p>
+                   <h2 className="text-2xl font-display font-black text-primary">Biometric Identity Verified</h2>
+                   <p className="text-textMuted font-medium text-xs">Entering ASCENDRA Enterprise Platform...</p>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div className="text-center mb-6 flex flex-col items-center">
               <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-20 md:h-28 w-auto object-contain mb-2" />
-              <p className="text-textMuted text-xs font-medium">AI-powered learning and career platform</p>
+              <p className="text-textMuted text-xs font-medium">Biometric Authentication Console</p>
             </div>
 
-            <div className="flex flex-col items-center">
-              <div className="mb-4 w-full">
-                <label className="text-xs font-bold text-primary ml-1 uppercase tracking-widest mb-2 block">Confirm Email First</label>
-                <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-textMuted w-5 h-5 group-focus-within:text-accent transition-colors" />
+            {loginError && (
+              <div className="p-3.5 rounded-xl bg-error/10 border border-error/20 text-error text-center text-xs flex items-center gap-2 mb-4 w-full">
+                <ShieldAlert className="w-4 h-4 shrink-0" />
+                <span>{loginError}</span>
+              </div>
+            )}
+
+            {/* Strict Face Biometric Form */}
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-primary ml-1 uppercase tracking-wider">Registered Email</label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-textMuted w-5 h-5" />
                   <input 
                     type="email" 
                     required
-                    className="w-full bg-white/50 border border-muted rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-accent transition-all text-center"
-                    placeholder="Enter enrolled email"
+                    className="w-full bg-white/50 border border-muted rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-accent text-xs font-semibold"
+                    placeholder="vijay@ascendra.io"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                   />
                 </div>
               </div>
 
-              <div className="mb-8">
-                <WebcamView 
-                  videoRef={videoRef} 
-                  canvasRef={canvasRef} 
-                  isFaceDetected={isFaceDetected} 
-                  onStart={async () => {
-                    const ok = await startCamera(videoRef.current);
-                    if (ok) startDetection();
-                  }}
-                  onStop={stopDetection}
-                />
-              </div>
-
-              {loginError && (
-                <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-center text-xs flex items-center gap-2 mb-6 w-full">
-                  <ShieldAlert className="w-4 h-4 shrink-0" />
-                  <span>{loginError}</span>
-                </div>
-              )}
+              <WebcamView 
+                videoRef={videoRef} 
+                canvasRef={canvasRef} 
+                isFaceDetected={isFaceDetected} 
+                onStart={async () => {
+                  const ok = await startCamera(videoRef.current);
+                  if (ok) startDetection();
+                }}
+                onStop={stopDetection}
+              />
 
               <button
+                type="button"
                 onClick={handleFaceVerify}
                 disabled={isLoading || !isFaceDetected || !email}
-                className="w-full py-4 rounded-2xl bg-accent hover:bg-accent/90 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/20"
+                className="w-full py-3.5 rounded-xl bg-accent hover:bg-accent/90 disabled:opacity-50 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/20"
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" /> Verifying Biometrics...
+                    <Loader2 className="w-4 h-4 animate-spin" /> Verifying Biometrics...
                   </>
                 ) : (
                   <>
-                    <Fingerprint className="w-5 h-5" /> Verify Face & Login
+                    <Fingerprint className="w-4 h-4" /> Verify Face &amp; Login
                   </>
                 )}
               </button>
+            </div>
 
-              <div className="mt-6 text-center text-xs text-textMuted font-medium">
-                Don't have an account yet? <Link to="/signup" className="text-accent font-bold">Sign up here</Link>
+            {/* Select Demo Emails */}
+            <div className="mt-6 pt-4 border-t border-slate-200/80 space-y-2">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block text-center">Quick Select Enrolled Demo Email</span>
+              <div className="grid grid-cols-3 gap-2 text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => handleSelectDemo('student@ascendra.io')}
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-colors text-center"
+                >
+                  Student
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectDemo('teacher@ascendra.io')}
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-colors text-center"
+                >
+                  Faculty
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectDemo('admin@ascendra.io')}
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-colors text-center"
+                >
+                  Admin
+                </button>
               </div>
             </div>
+
+            <div className="mt-4 text-center text-xs text-textMuted font-medium">
+              Don't have an enrolled profile yet? <Link to="/signup" className="text-accent font-bold">Register Biometrics</Link>
+            </div>
+
           </motion.div>
         </div>
       </div>

@@ -27,6 +27,24 @@ class LocalFallbackProvider {
         return { text, latencyMs: Date.now() - startTime, model: this.modelName, provider: this.name };
       }
 
+      if (prompt.includes('diagnostic_question') || prompt.includes('diagnostic')) {
+        const text = JSON.stringify({
+          questionId: "diag-fallback-q1",
+          questionText: "Which of the following is a primary core design pattern in object-oriented software engineering?",
+          options: [
+            "Singleton Pattern",
+            "Linear Iteration Loop",
+            "Direct Address Table",
+            "Garbage Collection Algorithm"
+          ],
+          correctOptionIndex: 0,
+          topic: "Design Patterns",
+          bloomsLevel: "Apply",
+          explanation: "The Singleton Pattern restricts class instantiation to a single instance across an application."
+        });
+        return { text, latencyMs: Date.now() - startTime, model: this.modelName, provider: this.name };
+      }
+
       if (prompt.includes('recommendedPathways')) {
         const text = JSON.stringify({
           recommendedPathways: [

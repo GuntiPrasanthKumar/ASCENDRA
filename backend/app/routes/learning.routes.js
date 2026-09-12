@@ -12,6 +12,7 @@ const {
   getBookmarks, 
   getRecommendations 
 } = require('../controllers/learning.controller');
+const { startDiagnostic, submitAnswer } = require('../controllers/diagnostic.controller');
 const { protect } = require('../middleware/auth.middleware');
 const { validateRequest } = require('../middleware/validation.middleware');
 
@@ -52,5 +53,9 @@ router.get('/notes', getNotes);
 router.post('/bookmarks', validateRequest(bookmarkSchema), toggleBookmark);
 router.get('/bookmarks', getBookmarks);
 router.get('/recommendations', getRecommendations);
+
+// Diagnostic Assessment Engine Routes
+router.post('/diagnostic/start', startDiagnostic);
+router.post('/diagnostic/answer', submitAnswer);
 
 module.exports = router;

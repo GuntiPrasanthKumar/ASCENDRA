@@ -1,40 +1,18 @@
 const AIGateway = require('./AIGateway');
 const ContextEngine = require('./ContextEngine');
-const SessionMemory = require('./SessionMemory');
-const LongTermMemory = require('./LongTermMemory');
-const PromptBuilder = require('./PromptBuilder');
+const MemoryEngine = require('./MemoryEngine');
+const ConversationEngine = require('./ConversationEngine');
+const PromptRegistry = require('./PromptRegistry');
 const RecommendationEngine = require('./RecommendationEngine');
 const StreamingSupport = require('./StreamingSupport');
 
 class AIService {
   async chat(userId, userMessage, activeSkill = 'general') {
-    const userContext = await ContextEngine.assembleUserContext(userId);
-    const chatHistory = await SessionMemory.getSessionHistory(userId, 8);
-
-    const prompt = PromptBuilder.buildTutorPrompt({
-      userContext,
-      chatHistory,
-      userMessage,
-      domain: activeSkill
-    });
-
-    const response = await AIGateway.processRequest({
-      userId,
-      promptType: 'chat',
-      prompt,
-      isJson: false,
-      useCache: false
-    });
-
-    if (response.success && typeof response.data === 'string') {
-      await SessionMemory.appendTurn(userId, userMessage, response.data, activeSkill);
-    }
-
-    return response;
+    return await ConversationEngine.processTurn(userId, userMessage, activeSkill);
   }
 
   async discoverKnowledge(userId, query) {
-    const prompt = PromptBuilder.buildDiscoveryPrompt(query);
+    const prompt = PromptRegistry.getPrompt('discovery', { query });
 
     return await AIGateway.processRequest({
       userId,
@@ -47,7 +25,7 @@ class AIService {
   }
 
   async generateAssessment(userId, subject, topic, numQuestions = 20) {
-    const prompt = PromptBuilder.buildAssessmentPrompt({ subject, topic, numQuestions });
+    const prompt = PromptRegistry.getPrompt('assessment', { subject, topic, numQuestions });
 
     return await AIGateway.processRequest({
       userId,
@@ -60,15 +38,14 @@ class AIService {
   }
 
   async getRecommendations(userId) {
-    const recommendations = await RecommendationEngine.generatePersonalizedRecommendations(userId);
-    return recommendations;
+    return await RecommendationEngine.generatePersonalizedRecommendations(userId);
   }
 
   async streamChat(userId, userMessage, activeSkill, res) {
     const userContext = await ContextEngine.assembleUserContext(userId);
-    const chatHistory = await SessionMemory.getSessionHistory(userId, 6);
+    const chatHistory = await MemoryEngine.getSessionHistory(userId, 6);
 
-    const prompt = PromptBuilder.buildTutorPrompt({
+    const prompt = PromptRegistry.getPrompt('tutor', {
       userContext,
       chatHistory,
       userMessage,
@@ -79,7 +56,7 @@ class AIService {
   }
 
   async clearMemory(userId) {
-    return await SessionMemory.clearMemory(userId);
+    return await MemoryEngine.clearSessionMemory(userId);
   }
 }
 

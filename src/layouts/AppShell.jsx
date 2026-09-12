@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import TopNavbar from '../components/common/TopNavbar';
 import Breadcrumbs from '../components/common/Breadcrumbs';
 import CommandPalette from '../components/common/CommandPalette';
+import GlobalAIAssistant from '../components/common/GlobalAIAssistant';
 
 export default function AppShell() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function AppShell() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] transition-colors duration-300 flex flex-col w-full">
+    <div className="min-h-screen bg-[#F8F9FA] text-[#1F1F1F] transition-colors duration-300 flex flex-col w-full relative">
       {/* 1. Top Navigation Bar */}
       <TopNavbar onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
 
@@ -32,7 +33,10 @@ export default function AppShell() {
         onClose={() => setCommandPaletteOpen(false)} 
       />
 
-      {/* 3. Main Full-Screen Workspace Area */}
+      {/* 3. Global AI Copilot Assistant (Ctrl + J) */}
+      <GlobalAIAssistant />
+
+      {/* 4. Main Full-Screen Workspace Area */}
       <main className="flex-1 px-4 md:px-8 py-4 w-full">
         <Breadcrumbs />
         <Outlet />

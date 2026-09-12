@@ -1,8 +1,12 @@
+const mongoose = require('mongoose');
 const Chat = require('../models/Chat.model');
 
 class SessionMemory {
   async getSessionHistory(userId, maxTurns = 10) {
     try {
+      if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+        return [];
+      }
       const chat = await Chat.findOne({ user: userId }).lean();
       if (!chat || !Array.isArray(chat.messages)) return [];
 
@@ -15,6 +19,9 @@ class SessionMemory {
 
   async appendTurn(userId, userMessage, aiMessage, activeSkill) {
     try {
+      if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+        return null;
+      }
       let chat = await Chat.findOne({ user: userId });
       if (!chat) {
         chat = new Chat({ user: userId, messages: [] });
@@ -35,6 +42,9 @@ class SessionMemory {
 
   async clearMemory(userId) {
     try {
+      if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+        return true;
+      }
       await Chat.findOneAndDelete({ user: userId });
       return true;
     } catch (err) {

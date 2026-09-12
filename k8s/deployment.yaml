@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ascendra-api-deployment
+  labels:
+    app: ascendra-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ascendra-api
+  template:
+    metadata:
+      labels:
+        app: ascendra-api
+    spec:
+      containers:
+      - name: ascendra-api
+        image: gcr.io/ascendra-prod/ascendra-api:v1.0.0
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "5000"
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"

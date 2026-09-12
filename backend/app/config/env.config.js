@@ -105,6 +105,11 @@ class ConfigurationSystem {
         uploadDir: getOptional('STORAGE_UPLOAD_DIR', path.resolve(__dirname, '../../uploads')),
       },
 
+      ai: {
+        geminiApiKey: getOptional('GEMINI_API_KEY', ''),
+        model: getOptional('GEMINI_MODEL', getOptional('LLM_MODEL', 'gemini-2.5-flash')),
+      },
+
       featureFlags: {
         enableAiProctoring: getBoolean('FF_AI_PROCTORING', true),
         enableCodeLabMonaco: getBoolean('FF_CODELAB_MONACO', true),

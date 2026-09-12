@@ -7,6 +7,7 @@ const questionSchema = new mongoose.Schema({
   correctIdx: { type: Number, required: true },
   explanation: { type: String, default: '' },
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard', 'Pro'], default: 'Medium' },
+  bloomsLevel: { type: String, enum: ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create'], default: 'Understand' },
   points: { type: Number, default: 10 }
 });
 

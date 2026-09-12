@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Zap, BookOpen, AlertTriangle, Code, Video, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 
 export default function AIRecommendationGrid() {
   const navigate = useNavigate();
-
-  const recommendations = [
+  const [recommendations, setRecommendations] = useState([
     {
       id: 'next-lesson',
       type: 'Next Lesson',
@@ -46,7 +46,27 @@ export default function AIRecommendationGrid() {
       actionText: 'Start Rehearsal',
       path: '/interview'
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchRecs = async () => {
+      try {
+        const res = await api.get('/insights/recommendations');
+        if (res.data?.data && Array.isArray(res.data.data)) {
+          const apiRecs = res.data.data.map(item => ({
+            ...item,
+            icon: item.type?.includes('Lesson') ? <BookOpen className="w-4 h-4" /> :
+                  item.type?.includes('Weak') ? <AlertTriangle className="w-4 h-4" /> :
+                  item.type?.includes('Coding') ? <Code className="w-4 h-4" /> : <Video className="w-4 h-4" />
+          }));
+          setRecommendations(apiRecs);
+        }
+      } catch (e) {
+        // Keep default fallback items
+      }
+    };
+    fetchRecs();
+  }, []);
 
   return (
     <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 mb-8 shadow-xs">

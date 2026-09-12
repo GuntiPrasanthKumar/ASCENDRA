@@ -14,7 +14,7 @@ const BlobScene = React.lazy(() => import('../components/3d/HeroScene'));
 
 export default function Signup() {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'student' });
+  const [formData, setFormData] = useState({ name: '', email: '', role: 'Student' });
   const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -41,48 +41,43 @@ export default function Signup() {
     if (formData.name && formData.email) {
       setStep(2);
     } else {
-      addToast('Please fill all fields', 'warning');
+      addToast('Please enter your Name and Email address.', 'warning');
     }
   };
 
-  const handleCapture = async () => {
+  const handleCaptureBiometric = async () => {
     const descriptor = faceData.descriptor;
     if (descriptor && Array.isArray(descriptor) && descriptor.length === 512) {
       setIsSubmitting(true);
       
-      // Register user with backend
       const result = await signup({
-        ...formData,
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
         faceDescriptor: descriptor
       });
 
       if (result.success) {
-        // Enrol encrypted face profile in backend /api/proctor/enroll
         try {
           await api.post('/proctor/enroll', {
             embedding: descriptor,
             modelVersion: 'mediapipe-face-embedder-v1'
           });
-          console.log('[BIOMETRIC LOG] Encrypted FaceProfile enrolled on server.');
         } catch (enrollErr) {
-          console.warn('Server face enrollment warning:', enrollErr?.response?.data || enrollErr.message);
+          console.warn('Server face enrollment warning:', enrollErr);
         }
 
         setEnrollmentSuccess(true);
         stopDetection();
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         addToast(`Welcome aboard, ${formData.name}! Encrypted biometric profile enrolled.`, 'success');
-        setTimeout(() => navigate('/dashboard'), 2000);
+        setTimeout(() => navigate('/dashboard'), 1800);
       } else {
         addToast(result.message, 'error');
       }
       setIsSubmitting(false);
     } else {
-      addToast('Face not detected or embedding invalid. Please center your face.', 'error');
+      addToast('Face not detected or embedding invalid. Please center your face in camera.', 'error');
     }
   };
 
@@ -96,8 +91,8 @@ export default function Signup() {
           </React.Suspense>
           <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-transparent pointer-events-none" />
           <div className="absolute bottom-12 left-12 text-white">
-            <h2 className="text-4xl font-display font-bold mb-4">Join the Future of Learning</h2>
-            <p className="text-white/80 max-w-md font-body">Secure your academic journey with advanced MediaPipe AI proctoring and continuous biometric identity verification.</p>
+            <h2 className="text-4xl font-display font-bold mb-4">Biometric Identity Registration</h2>
+            <p className="text-white/80 max-w-md font-body">Secure your academic journey with encrypted MediaPipe 512d face biometric authentication.</p>
           </div>
         </div>
 
@@ -115,19 +110,19 @@ export default function Signup() {
                 >
                   <div className="text-center mb-6 flex flex-col items-center">
                     <img src="/ascendra-logo.png" alt="ASCENDRA" className="h-20 md:h-28 w-auto object-contain mb-1" />
-                    <p className="text-textMuted text-xs font-medium mt-1">Step 1 of 2: Account Registration</p>
+                    <p className="text-textMuted text-xs font-medium mt-1">Step 1 of 2: Basic Details</p>
                   </div>
 
                   <form onSubmit={handleNextStep} className="space-y-4">
                     <div className="space-y-1">
-                      <label className="text-sm font-medium text-primary ml-1">Full Name</label>
+                      <label className="text-xs font-bold text-primary ml-1 uppercase tracking-wider">Full Name</label>
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 text-textMuted w-5 h-5" />
                         <input 
                           type="text" 
                           required
-                          className="w-full bg-white/50 border border-muted rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-accent transition-colors"
-                          placeholder="John Doe"
+                          className="w-full bg-white/50 border border-muted rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-accent text-xs font-semibold"
+                          placeholder="Vijay Kiran"
                           value={formData.name}
                           onChange={e => setFormData({...formData, name: e.target.value})}
                         />
@@ -135,42 +130,42 @@ export default function Signup() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-sm font-medium text-primary ml-1">Email Address</label>
+                      <label className="text-xs font-bold text-primary ml-1 uppercase tracking-wider">Email Address</label>
                       <div className="relative">
                         <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-textMuted w-5 h-5" />
                         <input 
                           type="email" 
                           required
-                          className="w-full bg-white/50 border border-muted rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-accent transition-colors"
-                          placeholder="john@university.edu"
+                          className="w-full bg-white/50 border border-muted rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:border-accent text-xs font-semibold"
+                          placeholder="vijay@ascendra.io"
                           value={formData.email}
                           onChange={e => setFormData({...formData, email: e.target.value})}
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-1 pt-2">
-                      <label className="text-sm font-medium text-primary ml-1">Role</label>
+                    <div className="space-y-1 pt-1">
+                      <label className="text-xs font-bold text-primary ml-1 uppercase tracking-wider">Role</label>
                       <select 
-                        className="w-full bg-white/50 border border-muted rounded-xl py-3 px-4 focus:outline-none focus:border-accent transition-colors"
+                        className="w-full bg-white/50 border border-muted rounded-xl py-3 px-4 focus:outline-none focus:border-accent text-xs font-semibold"
                         value={formData.role}
                         onChange={e => setFormData({...formData, role: e.target.value})}
                       >
-                        <option value="student">Student</option>
-                        <option value="faculty">Faculty</option>
+                        <option value="Student">Student</option>
+                        <option value="Faculty">Faculty</option>
                       </select>
                     </div>
 
                     <button 
                       type="submit"
-                      className="w-full bg-primary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg mt-6"
+                      className="w-full bg-primary text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-lg text-xs mt-6"
                     >
-                      Next: Biometric Enrollment <ArrowRight className="w-5 h-5" />
+                      Next: Biometric Face Enrollment <ArrowRight className="w-4 h-4" />
                     </button>
                   </form>
 
-                  <div className="mt-6 text-center text-sm text-textMuted">
-                    Already have an account? <Link to="/login" className="text-accent font-bold">Log in</Link>
+                  <div className="mt-6 text-center text-xs text-textMuted font-medium">
+                    Already registered? <Link to="/login" className="text-accent font-bold">Biometric Log in</Link>
                   </div>
                 </motion.div>
               ) : (
@@ -204,7 +199,7 @@ export default function Signup() {
 
                   <div className="text-center mb-6">
                     <h2 className="text-2xl font-display font-bold text-primary">Biometric Face Enrollment</h2>
-                    <p className="text-textMuted text-xs font-medium">Step 2 of 2: Capture baseline 512-D face embedding</p>
+                    <p className="text-textMuted text-xs font-medium">Step 2 of 2: Capture baseline 512d face embedding</p>
                   </div>
 
                   {faceError ? (
@@ -227,21 +222,21 @@ export default function Signup() {
 
                   <div className="mt-6 flex flex-col gap-3">
                     <button 
-                      onClick={handleCapture}
+                      onClick={handleCaptureBiometric}
                       disabled={!isFaceDetected || isModelsLoading || isSubmitting}
-                      className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/20"
+                      className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg text-xs shadow-accent/20"
                     >
                       {isSubmitting ? (
                         <>
-                          <Loader2 className="w-5 h-5 animate-spin" /> Enrolling Encrypted Profile...
+                          <Loader2 className="w-4 h-4 animate-spin" /> Enrolling Encrypted Profile...
                         </>
                       ) : isModelsLoading ? (
                         <>
-                          <Loader2 className="w-5 h-5 animate-spin" /> Initializing MediaPipe AI...
+                          <Loader2 className="w-4 h-4 animate-spin" /> Initializing MediaPipe AI...
                         </>
                       ) : (
                         <>
-                          <ShieldCheck className="w-5 h-5" /> Enroll & Finish Signup
+                          <ShieldCheck className="w-4 h-4" /> Enroll &amp; Complete Registration
                         </>
                       )}
                     </button>
@@ -251,7 +246,7 @@ export default function Signup() {
                         stopDetection();
                         setStep(1);
                       }}
-                      className="w-full py-3 text-xs text-textMuted font-bold hover:text-primary transition-colors text-center"
+                      className="w-full py-2.5 text-xs text-textMuted font-bold hover:text-primary transition-colors text-center"
                     >
                       Back to Step 1
                     </button>

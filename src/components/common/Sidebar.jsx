@@ -25,7 +25,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const handleSignOut = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   return (

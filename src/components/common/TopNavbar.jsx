@@ -44,7 +44,7 @@ export default function TopNavbar({ onOpenCommandPalette }) {
 
   const handleSignOut = () => {
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;

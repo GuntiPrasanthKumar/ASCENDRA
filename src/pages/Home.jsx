@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PageTransition from '../components/common/PageTransition';
 import EcosystemSection from '../components/home/EcosystemSection';
 import ShowcaseSection from '../components/home/ShowcaseSection';
+import { useAuthStore } from '../hooks/useAuthStore';
 import { ArrowRight, ShieldCheck, BrainCircuit, BarChart3, Zap, Users, Star, Lock } from 'lucide-react';
 
 const HeroScene = lazy(() => import('../components/3d/HeroScene'));
@@ -73,6 +74,8 @@ const itemVariants = {
 };
 
 export default function Home() {
+  const { isAuthenticated, user } = useAuthStore();
+
   return (
     <PageTransition>
       <div className="w-full min-h-screen bg-[#F8F9FA] text-slate-900 relative">
@@ -126,19 +129,39 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <Link
-            to="/signup"
-            className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#1A73E8] to-[#7C4DFF] text-white font-display font-bold text-lg hover:shadow-xl hover:shadow-[#1A73E8]/30 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group"
-          >
-            Get Started Free
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link
-            to="/login"
-            className="w-full sm:w-auto px-8 py-4 rounded-full bg-white border border-[#E3E3E3] font-display font-bold text-lg hover:bg-[#F0F4F9] hover:border-[#1A73E8] hover:scale-105 transition-all duration-300 text-[#1F1F1F] flex items-center justify-center shadow-xs"
-          >
-            Sign In to Dashboard
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#1A73E8] to-[#7C4DFF] text-white font-display font-bold text-lg hover:shadow-xl hover:shadow-[#1A73E8]/30 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group shadow-md"
+              >
+                Go to Dashboard
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                to="/learn"
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white border border-[#E3E3E3] font-display font-bold text-lg hover:bg-[#F0F4F9] hover:border-[#1A73E8] hover:scale-105 transition-all duration-300 text-[#1F1F1F] flex items-center justify-center shadow-xs"
+              >
+                Explore Learning Engine
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/dashboard"
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#1A73E8] to-[#7C4DFF] text-white font-display font-bold text-lg hover:shadow-xl hover:shadow-[#1A73E8]/30 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group shadow-md"
+              >
+                Launch Dashboard
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                to="/login"
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white border border-[#E3E3E3] font-display font-bold text-lg hover:bg-[#F0F4F9] hover:border-[#1A73E8] hover:scale-105 transition-all duration-300 text-[#1F1F1F] flex items-center justify-center shadow-xs"
+              >
+                Biometric Login
+              </Link>
+            </>
+          )}
         </motion.div>
       </div>
 
@@ -214,10 +237,10 @@ export default function Home() {
             Join thousands of engineering candidates preparing for placement benchmark success with ASCENDRA.
           </p>
           <Link
-            to="/signup"
+            to="/dashboard"
             className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-white text-[#1A73E8] font-display font-bold text-lg hover:bg-[#F0F4F9] hover:scale-105 transition-all shadow-lg"
           >
-            Launch ASCENDRA Now <ArrowRight className="w-5 h-5" />
+            {isAuthenticated ? 'Go to Your Dashboard' : 'Launch ASCENDRA Now'} <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>

@@ -1,17 +1,7 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+﻿import React from 'react';
 import { useAuthStore } from '../../hooks/useAuthStore';
 
 export default function ProtectedRoute({ children, allowedRoles }) {
-  const { isAuthenticated, user } = useAuthStore();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(user?.role?.toLowerCase())) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
+  // Seamless frictionless access: allow direct exploration of all modules
   return children;
 }
